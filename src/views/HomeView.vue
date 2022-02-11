@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import TheWelcome from '@/components/TheWelcome.vue'
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <el-card class="box-card" :body-style="{ margin: '1rem' }">
+    <div v-for="o in 14" :key="o" class="text item">{{ 'List item ' + o }}</div>
+  </el-card>
 </template>

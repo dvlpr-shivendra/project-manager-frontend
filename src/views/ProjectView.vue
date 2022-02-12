@@ -1,8 +1,10 @@
 <template>
   <div>
-    <h1>{{ project.name }}</h1>
-
-    <p>{{ project.description }}</p>
+    <el-collapse>
+      <el-collapse-item :title="project.name" name="1">
+        {{ project.description }}
+      </el-collapse-item>
+    </el-collapse>
   </div>
 </template>
 

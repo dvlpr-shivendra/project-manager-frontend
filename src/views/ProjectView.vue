@@ -13,7 +13,7 @@
 <script lang="ts" setup>
 import { get, url } from '@/helpers/http';
 import { onMounted, ref, type Ref } from 'vue';
-import TaskList from '../components/tasks/TaskList.vue';
+import TaskList from '@/components/tasks/TaskList.vue';
 
 const props = defineProps<{
   id: string

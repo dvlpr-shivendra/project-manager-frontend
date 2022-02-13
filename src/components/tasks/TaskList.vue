@@ -1,5 +1,10 @@
 <template>
-  <el-table :data="tasks.list" style="width: 100%" :border="true">
+  <el-table
+    :data="tasks.list"
+    style="width: 100%"
+    :border="true"
+    :row-class-name="tableRowClassName"
+  >
     <el-table-column type="selection" width="55" />
     <el-table-column label="Title">
       <template #default="scope">
@@ -19,11 +24,16 @@
       </template>
     </el-table-column>
   </el-table>
+
+  <task-drawer :task="activeTask" @close="activeTask = null" />
+  
 </template>
 
 <script lang="ts" setup>
 
+import { ref, type Ref } from 'vue';
 import { useTasks } from '@/stores/tasks';
+import TaskDrawer from '@/components/tasks/TaskDrawer.vue'
 
 const props = defineProps<{
   projectId: number
@@ -31,10 +41,22 @@ const props = defineProps<{
 
 const tasks = useTasks()
 
+let activeTask: Ref<Task | null> = ref(<Task | null>null)
+
 tasks.getAll(props.projectId.toString())
 
 function openTask(task: Task) {
-  alert(task.title);
+  activeTask.value = task
+}
+
+const tableRowClassName = ({ row }: { row: Task}) => {
+  return row.is_complete ? 'success-row' : ''
 }
 
 </script>
+
+<style>
+.el-table .success-row {
+  --el-table-tr-bg-color: var(--el-color-success-lighter);
+}
+</style>

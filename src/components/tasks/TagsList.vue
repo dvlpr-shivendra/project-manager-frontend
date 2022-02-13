@@ -1,13 +1,14 @@
 <template>
   <el-tag
-    v-for="tag in dynamicTags"
-    :key="tag"
+    v-for="tag in tags"
+    :key="tag.id"
     class="mx-1"
+    :type="tag.type"
     closable
     :disable-transitions="false"
     @close="handleClose(tag)"
   >
-    {{ tag }}
+    {{ tag.title }}
   </el-tag>
   <el-input
     v-if="inputVisible"
@@ -28,13 +29,17 @@
 import { ref, nextTick } from 'vue'
 import type { ElInput } from 'element-plus'
 
+const props = defineProps<{
+  tags: Tag[]
+}>()
+
 const inputValue = ref('')
 const dynamicTags = ref(['Tag 1', 'Tag 2', 'Tag 3'])
 const inputVisible = ref(false)
 const InputRef = ref<InstanceType<typeof ElInput>>()
 
-const handleClose = (tag: string) => {
-  dynamicTags.value.splice(dynamicTags.value.indexOf(tag), 1)
+const handleClose = (tag: Tag) => {
+  console.log(tag);
 }
 
 const showInput = () => {

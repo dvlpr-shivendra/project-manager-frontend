@@ -40,9 +40,10 @@ type Task = {
   title: string,
   description: string,
   deadline: string,
-  tags: string[],
+  tags: Tag[],
   user: User,
   project_id: number,
+  is_complete: boolean,
   created_at: string,
   updated_at: string
 }

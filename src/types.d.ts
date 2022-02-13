@@ -4,11 +4,32 @@ type Pagination = {
   last_page: string,
 }
 
+type User = {
+  id: number,
+  name: string,
+  email: string,
+  email_verified_at: string
+  created_at: string,
+  updated_at: string,
+}
+
 type Project = {
   id: number,
   name: string,
   description: string,
   user_id: number,
+  created_at: string,
+  updated_at: string
+}
+
+type Task = {
+  id: number,
+  title: string,
+  description: string,
+  deadline: string,
+  tags: string[],
+  user: User,
+  project_id: number,
   created_at: string,
   updated_at: string
 }

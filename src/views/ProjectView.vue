@@ -5,12 +5,15 @@
         {{ project.description }}
       </el-collapse-item>
     </el-collapse>
+
+    <task-list v-if="project.id" :projectId="project.id" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { get, url } from '@/helpers/http';
 import { onMounted, ref, type Ref } from 'vue';
+import TaskList from '../components/tasks/TaskList.vue';
 
 const props = defineProps<{
   id: string

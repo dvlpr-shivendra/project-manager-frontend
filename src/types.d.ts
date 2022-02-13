@@ -13,6 +13,19 @@ type User = {
   updated_at: string,
 }
 
+type Pivot = {
+  taggable_id: number,
+  tag_id: number,
+  taggable_type: string
+}
+
+type Tag = {
+  id: number,
+  title: string,
+  type: 'success' | 'info' | 'warning' | 'danger',
+  pivot: Pivot
+}
+
 type Project = {
   id: number,
   name: string,

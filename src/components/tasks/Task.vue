@@ -10,9 +10,7 @@
       />
     </el-col>
     <el-col :span="12">
-      <el-select class="w-full ml-2" v-model="task.user.id" placeholder="Select">
-        <el-option v-for="item in 15" :key="item" :label="item" :value="item"></el-option>
-      </el-select>
+      <user-select v-model.number="task.user_id" />
     </el-col>
   </el-row>
 
@@ -25,6 +23,7 @@
 <script lang="ts" setup>
 
 import TagsList from './TagsList.vue';
+import UserSelect from "@/components/UserSelect.vue";
 
 const props = defineProps<{
   task: Task

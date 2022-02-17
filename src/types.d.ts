@@ -42,6 +42,7 @@ type Task = {
   deadline: string,
   tags: Tag[],
   user: User,
+  user_id: number
   project_id: number,
   is_complete: boolean,
   created_at: string,

@@ -1,14 +1,15 @@
 <template>
   <el-select
-    v-model="value"
+    v-model="selected"
     filterable
     remote
     reserve-keyword
     placeholder="Search for a user"
     :remote-method="remoteMethod"
     :loading="loading"
+    @change="emit('input', selected)"
   >
-    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+    <el-option v-for="user in options" :key="user.id" :label="user.name" :value="user.id" />
   </el-select>
 </template>
 
@@ -16,16 +17,15 @@
 import { get, url } from '@/helpers/http';
 import { ref } from 'vue'
 
-interface ListItem {
-  value: string
-  label: string
-}
+const props = defineProps<{
+  modelValue: User
+}>()
 
-const options = ref<ListItem[]>([])
-const value = ref<string[]>([])
-const loading = ref(false)
+let options = ref<User[]>([props.modelValue])
+const loading = ref<boolean>(false)
+const selected = ref<User>(props.modelValue)
 
-type option = { value: string, label: string }
+const emit = defineEmits(['input'])
 
 const remoteMethod = (query: string) => {
   if (query) {
@@ -34,10 +34,7 @@ const remoteMethod = (query: string) => {
     get(url(`users?name=${query}`))
       .then(res => res.json())
       .then((users: User[]) => {
-        options.value = users.map((user: User): option => ({
-          value: user.id.toString(),
-          label: user.name
-        }));
+        options.value = [...users, props.modelValue]
       })
       .catch(e => console.log(e))
       .finally(() => {

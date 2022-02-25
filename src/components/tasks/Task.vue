@@ -10,7 +10,7 @@
       />
     </el-col>
     <el-col :span="12">
-      <user-select v-model.number="task.user_id" />
+      <user-select v-model="task.user" />
     </el-col>
   </el-row>
 

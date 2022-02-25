@@ -16,7 +16,7 @@
 
   <el-input class="mb-4" v-model="task.description" autosize type="textarea" placeholder="Task description" />
 
-  <tags-list :tags="task.tags" />
+  <!-- <tags-list :tags="task.tags" /> -->
 
 </template>
 

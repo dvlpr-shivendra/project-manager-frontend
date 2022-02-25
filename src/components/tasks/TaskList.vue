@@ -12,17 +12,6 @@
       </template>
     </el-table-column>
     <el-table-column label="Assignee" prop="user.name" />
-    <el-table-column label="Tags">
-      <template #default="scope">
-        <el-tag
-          v-for="tag in scope.row.tags"
-          :key="tag.pivot.id"
-          class="mx-1"
-          :type="tag.type"
-          closable
-        >{{ tag.title }}</el-tag>
-      </template>
-    </el-table-column>
   </el-table>
 
   <task-drawer :task="activeTask" @close="activeTask = null" />

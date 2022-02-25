@@ -1,23 +1,30 @@
 <template>
   <el-input v-model="task.title" class="mb-4" placeholder="Task title" clearable />
-  <el-row align="middle" class="mb-4">
-    <el-col :span="12">
+
+  <div class="grid grid-cols-2 gap-4 mb-4">
+    <div class="col-span-1">
       <el-date-picker
         style="width: 100%;"
         v-model="task.deadline"
         type="datetime"
         placeholder="Task deadline"
       />
-    </el-col>
-    <el-col :span="12">
-      <user-select v-model="task.user" />
-    </el-col>
-  </el-row>
+    </div>
 
-  <el-input class="mb-4" v-model="task.description" autosize type="textarea" placeholder="Task description" />
+    <div class="col-span-1">
+      <user-select v-model="task.user" class="w-full" />
+    </div>
+  </div>
+
+  <el-input
+    class="mb-4"
+    v-model="task.description"
+    autosize
+    type="textarea"
+    placeholder="Task description"
+  />
 
   <!-- <tags-list :tags="task.tags" /> -->
-
 </template>
 
 <script lang="ts" setup>

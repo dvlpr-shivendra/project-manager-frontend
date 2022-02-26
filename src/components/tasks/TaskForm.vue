@@ -1,14 +1,16 @@
 <template>
   <el-dialog v-model="dialogVisible" title="New task" width="40%" :before-close="handleClose">
-    <form ref="form" @submit.prevent="handleSubmit">
-      <el-input placeholder="Enter task title" v-model="formData.title" required />
-
+    <el-form v-model="formData" label-position="top" ref="form" @submit.prevent="handleSubmit">
       
-      <div class="my-4 flex justify-end">
+      <el-form-item label="Title">
+        <el-input placeholder="Enter task title" v-model="formData.title" required />
+      </el-form-item>
+      
+      <div class="flex justify-end">
         <el-button @click="dialogVisible = false">Cancel</el-button>
         <el-button type="primary" native-type="submit">Add</el-button>
       </div>
-    </form>
+    </el-form>
   </el-dialog>
 
   <div class="my-4">

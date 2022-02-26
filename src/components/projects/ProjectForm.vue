@@ -6,18 +6,20 @@
   </div>
 
   <el-dialog v-model="dialogVisible" title="New project" width="40%" :before-close="handleClose">
+    <el-form label-position="top" label-width="100px" v-model="data" @submit.prevent="handleSubmit">
+      <el-form-item label="Name">
+        <el-input v-model="data.name" required />
+      </el-form-item>
 
-    <form @submit.prevent="handleSubmit">
-      <el-input class="mb-4" v-model="data.name" placeholder="Project title" required />
+      <el-form-item label="Description">
+        <el-input v-model="data.description" :rows="2" type="textarea" required />
+      </el-form-item>
 
-      <el-input v-model="data.description" :rows="2" type="textarea" placeholder="Project description" required />
-
-      <div class="my-4 flex justify-end">
+      <div class="flex justify-end">
         <el-button @click="dialogVisible = false">Cancel</el-button>
         <el-button type="primary" native-type="submit">Add</el-button>
       </div>
-
-    </form>
+    </el-form>
   </el-dialog>
 </template>
 

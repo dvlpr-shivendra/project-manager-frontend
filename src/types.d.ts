@@ -48,3 +48,8 @@ type Task = {
   created_at: string,
   updated_at: string
 }
+
+type TaskFormData = {
+  title: string
+  project_id: number
+}

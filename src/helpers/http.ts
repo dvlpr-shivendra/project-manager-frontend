@@ -9,6 +9,20 @@ export function get(url: string, auth: boolean = true) {
   })
 }
 
+export function post(url: string, data: object, auth: boolean = true) {
+
+  const headers = commonHeaders(auth);
+
+  var raw = JSON.stringify(data);
+
+  return fetch(url, {
+    method: 'POST',
+    headers: headers,
+    body: raw,
+    redirect: 'follow'
+  })
+}
+
 export function put(url: string, data: object, auth: boolean = true) {
 
   const headers = commonHeaders(auth);

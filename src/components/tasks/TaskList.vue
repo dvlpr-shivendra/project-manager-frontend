@@ -14,6 +14,8 @@
     <el-table-column label="Assignee" prop="user.name" />
   </el-table>
 
+  <task-form @submit="tasks.add" />
+
   <task-drawer :task="activeTask" @close="activeTask = null" />
   
 </template>
@@ -21,6 +23,7 @@
 <script lang="ts" setup>
 
 import { ref, type Ref } from 'vue';
+import TaskForm from './TaskForm.vue'
 import { useTasks } from '@/stores/tasks';
 import TaskDrawer from '@/components/tasks/TaskDrawer.vue'
 

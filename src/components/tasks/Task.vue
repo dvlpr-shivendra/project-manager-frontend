@@ -8,6 +8,7 @@
         v-model="task.deadline"
         type="datetime"
         placeholder="Task deadline"
+        value-format="YYYY-MM-DD HH:mm:ss"
       />
     </div>
 

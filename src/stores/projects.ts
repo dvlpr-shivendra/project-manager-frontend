@@ -1,9 +1,9 @@
-import { get, url } from "@/helpers/http";
+import { get, post, url } from "@/helpers/http";
 import { defineStore } from "pinia";
 
 export const useProjects = defineStore('projects', {
   state: () => ({
-    list: [] as Task[],
+    list: [] as Project[],
     pagination: <Pagination>{}
   }),
 
@@ -17,5 +17,12 @@ export const useProjects = defineStore('projects', {
         })
         .catch(error => console.log('error', error));
     },
+
+    add(data: ProjectForm) {
+      post(url('projects'), data)
+        .then(res => res.json())
+        .then(task => this.list.push(task))
+        .catch(e => console.log(e))
+    }
   },
 })

@@ -18,8 +18,8 @@ export const useTasks = defineStore('tasks', {
         .catch(error => console.log('error', error));
     },
 
-    add(taskData: TaskFormData) {
-      post(url('tasks'), taskData)
+    add(data: TaskForm) {
+      post(url('tasks'), data)
         .then(res => res.json())
         .then(task => this.list.push(task))
         .catch(e => console.log(e))

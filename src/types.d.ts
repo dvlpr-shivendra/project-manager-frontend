@@ -35,6 +35,11 @@ type Project = {
   updated_at: string
 }
 
+type ProjectForm = {
+  name: string,
+  description: string,
+}
+
 type Task = {
   id: number,
   title: string,
@@ -49,7 +54,7 @@ type Task = {
   updated_at: string
 }
 
-type TaskFormData = {
+type TaskForm = {
   title: string
   project_id: number
 }

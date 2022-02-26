@@ -30,7 +30,7 @@ const intialData = {
   project_id: parseInt(route.params.id as string),
 }
 
-let formData: Ref<TaskFormData> = ref(intialData)
+let formData: Ref<TaskForm> = ref(intialData)
 
 const emit = defineEmits(['submit'])
 

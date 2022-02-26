@@ -6,7 +6,8 @@
       text-color="#ffffff"
       @open="handleOpen"
       @close="handleClose"
-      class="h-screen border-[#27272a]"
+      class="h-screen"
+      style="border: #27272a !important"
       :router="true"
     >
       <el-menu-item route="/">

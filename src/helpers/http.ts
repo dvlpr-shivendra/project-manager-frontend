@@ -9,9 +9,24 @@ export function get(url: string, auth: boolean = true) {
   })
 }
 
+export function put(url: string, data: object, auth: boolean = true) {
+
+  const headers = commonHeaders(auth);
+
+  var raw = JSON.stringify(data);
+
+  return fetch(url, {
+    method: 'PUT',
+    headers: headers,
+    body: raw,
+    redirect: 'follow'
+  })
+}
+
 function commonHeaders(auth: boolean) {
   const headers = new Headers();
   headers.append("Accept", "application/json");
+  headers.append("Content-Type", "application/json");
 
   if (auth) {
     headers.append("Authorization", bearer());

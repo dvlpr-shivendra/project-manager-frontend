@@ -12,7 +12,7 @@
     </div>
 
     <div class="col-span-1">
-      <user-select v-model="task.user" class="w-full" />
+      <user-select :user="task.user" @change="assignTo" class="w-full" />
     </div>
   </div>
 
@@ -23,16 +23,27 @@
     type="textarea"
     placeholder="Task description"
   />
-
-  <!-- <tags-list :tags="task.tags" /> -->
 </template>
 
 <script lang="ts" setup>
 
-import TagsList from './TagsList.vue';
 import UserSelect from "@/components/UserSelect.vue";
+import { put, url } from "@/helpers/http";
+import { watch } from "vue";
 
 const props = defineProps<{
   task: Task
 }>()
+
+watch(props.task, updateTask)
+
+function updateTask() {
+  put(url(`tasks/${props.task.id}`), props.task)
+    .catch(e => console.log(e))
+}
+
+function assignTo(user:User) {
+  props.task.user = user
+  props.task.user_id = user.id
+}
 </script>

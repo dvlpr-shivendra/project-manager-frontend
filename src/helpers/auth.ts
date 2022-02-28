@@ -3,18 +3,14 @@ export function setUserData(data:UserWithToken) {
   localStorage.setItem('token', data.token)
 }
 
-export function token() {
+export function getToken() {
   return localStorage.token
 }
 
-export function user() {
-  try {
-    return JSON.parse(localStorage.user)
-  } catch (error) {
-    return null
-  }
+export function getUser(): User {
+  return JSON.parse(localStorage.user)
 }
 
-export function isLoggedIn() {
+export function getLoggedIn() {
   return localStorage.token && localStorage.user
 }

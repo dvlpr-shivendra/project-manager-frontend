@@ -1,4 +1,4 @@
-import { token } from "./auth";
+import { getToken } from "./auth";
 
 export function get(url: string, auth: boolean = true) {
 
@@ -52,7 +52,7 @@ function commonHeaders(auth: boolean) {
 }
 
 function bearer() {
-  return "Bearer " + token()
+  return "Bearer " + getToken()
 }
 
 export function url(path: string) {

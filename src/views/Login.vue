@@ -47,7 +47,7 @@ function login() {
       setUserData(data)
       route.query.redirect 
         ? router.push({path: route.query.redirect as string}) 
-        : router.push('/')
+        : router.push({path: '/'})
     })
     .catch(e => console.log(e))
 }

@@ -1,18 +1,30 @@
 <template>
-  <el-menu :default-active="'1'" class="el-menu-demo" mode="horizontal" background-color="#0a0a0a" text-color="#ffffff">
-    <el-menu-item index="1">Processing Center</el-menu-item>
-    <el-sub-menu index="2">
-      <template #title>Workspace</template>
-      <el-menu-item index="2-1">item one</el-menu-item>
-      <el-menu-item index="2-2">item two</el-menu-item>
-      <el-menu-item index="2-3">item three</el-menu-item>
-      <el-sub-menu index="2-4">
-        <template #title>item four</template>
-        <el-menu-item index="2-4-1">item one</el-menu-item>
-        <el-menu-item index="2-4-2">item two</el-menu-item>
-        <el-menu-item index="2-4-3">item three</el-menu-item>
-      </el-sub-menu>
+  <el-menu
+    :default-active="'2'"
+    class="justify-end"
+    mode="horizontal"
+    background-color="#0a0a0a"
+    text-color="#ffffff"
+  >
+    <el-sub-menu index="2" v-if="isLoggedIn">
+      <template #title>{{ user.name }}</template>
+      <el-menu-item index="2-1" @click="logout">Log out</el-menu-item>  
     </el-sub-menu>
-    <el-menu-item index="4">Orders</el-menu-item>
   </el-menu>
 </template>
+
+<script lang="ts" setup>
+import { getUser, getLoggedIn } from '@/helpers/auth';
+import { ref, type Ref } from 'vue';
+import { useRouter } from "vue-router"
+
+const router = useRouter()
+
+const user: Ref<User> = ref(getUser() as User)
+const isLoggedIn: Ref<boolean> = ref(getLoggedIn())
+
+function logout() {
+  localStorage.clear()
+  router.push({path: '/login'})
+}
+</script>

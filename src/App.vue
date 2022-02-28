@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router';
 import { RouterView } from 'vue-router'
 import Navbar from './components/navigation/Navbar.vue'
 import Sidebar from './components/navigation/Sidebar.vue'
+
+const route = useRoute()
 </script>
 
 <template>
-  <div class="grid grid-cols-12">
+  <div v-if="!route.meta.auth">
+    <RouterView />
+  </div>
+  <div v-else class="grid grid-cols-12">
     <aside class="hidden lg:block lg:col-span-2">
       <Sidebar />
     </aside>

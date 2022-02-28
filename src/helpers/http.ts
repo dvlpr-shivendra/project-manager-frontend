@@ -1,3 +1,5 @@
+import { token } from "./auth";
+
 export function get(url: string, auth: boolean = true) {
 
   const headers = commonHeaders(auth);
@@ -50,7 +52,7 @@ function commonHeaders(auth: boolean) {
 }
 
 function bearer() {
-  return "Bearer " + localStorage.getItem('token')
+  return "Bearer " + token()
 }
 
 export function url(path: string) {

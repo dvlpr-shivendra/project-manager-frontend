@@ -13,6 +13,11 @@ type User = {
   updated_at: string,
 }
 
+type UserWithToken = {
+  user: User,
+  token: string
+}
+
 type Pivot = {
   taggable_id: number,
   tag_id: number,

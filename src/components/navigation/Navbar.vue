@@ -1,30 +1,43 @@
 <template>
-  <el-menu
-    :default-active="'2'"
-    class="justify-end"
-    mode="horizontal"
-    background-color="#0a0a0a"
-    text-color="#ffffff"
-  >
-    <el-sub-menu index="2" v-if="isLoggedIn">
-      <template #title>{{ user.name }}</template>
-      <el-menu-item index="2-1" @click="logout">Log out</el-menu-item>  
-    </el-sub-menu>
-  </el-menu>
+  <div class="flex justify-between items-center px-4 h-12 bg-black">
+    <div></div>
+
+    <div>
+      <el-button color="#626aef" style="color: white" v-if="!loggedIn">
+        <router-link to="/signup">Sign up</router-link>
+      </el-button>
+      <el-button color="#626aef" plain v-if="!loggedIn">
+        <router-link to="/login">Log in</router-link>
+      </el-button>
+
+      <el-dropdown v-if="loggedIn">
+        <el-button type="text">
+          {{ user.name }}
+          <el-icon class="el-icon--right">
+            <arrow-down />
+          </el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="logout">Logout</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
-import { getUser, getLoggedIn } from '@/helpers/auth';
-import { ref, type Ref } from 'vue';
-import { useRouter } from "vue-router"
 
-const router = useRouter()
+import { ref, type Ref } from 'vue';
+import { ArrowDown } from '@element-plus/icons-vue'
+import { getUser, getLoggedIn } from '@/helpers/auth';
 
 const user: Ref<User> = ref(getUser() as User)
-const isLoggedIn: Ref<boolean> = ref(getLoggedIn())
+const loggedIn: Ref<boolean> = ref(getLoggedIn())
 
 function logout() {
   localStorage.clear()
-  router.push({path: '/login'})
+  location.replace('/login')
 }
 </script>

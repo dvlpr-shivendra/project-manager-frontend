@@ -7,8 +7,12 @@ export function getToken() {
   return localStorage.token
 }
 
-export function getUser(): User {
-  return JSON.parse(localStorage.user)
+export function getUser(): User|null {
+  try {
+    return JSON.parse(localStorage.user)
+  } catch(e) {
+    return null
+  }
 }
 
 export function getLoggedIn() {

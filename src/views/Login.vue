@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen w-screen grid place-content-center">
+  <div class="h-full w-full grid place-content-center">
     <el-card class="box-card">
       <template #header>
         <div class="card-header">Login</div>
@@ -46,8 +46,8 @@ function login() {
     .then(data => {
       setUserData(data)
       route.query.redirect 
-        ? router.push({path: route.query.redirect as string}) 
-        : router.push({path: '/'})
+        ? window.location.replace(route.query.redirect as string) 
+        : window.location.replace('/')
     })
     .catch(e => console.log(e))
 }

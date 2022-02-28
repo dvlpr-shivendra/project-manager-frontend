@@ -1,21 +1,19 @@
 <script setup lang="ts">
-import { useRoute } from 'vue-router';
 import { RouterView } from 'vue-router'
 import Navbar from './components/navigation/Navbar.vue'
 import Sidebar from './components/navigation/Sidebar.vue'
+import { getLoggedIn } from './helpers/auth';
 
-const route = useRoute()
+const loggedIn = getLoggedIn()
 </script>
 
 <template>
-  <div v-if="!route.meta.auth">
-    <RouterView />
-  </div>
-  <div v-else class="grid grid-cols-12">
-    <aside class="hidden lg:block lg:col-span-2">
+  <div class="grid grid-cols-12">
+    <aside class="hidden lg:block lg:col-span-2" v-if="loggedIn">
       <Sidebar />
     </aside>
-    <main class="col-span-12 lg:col-span-10">
+    <main class="col-span-12" :class="loggedIn ? 'lg:col-span-10' : 'lg:col-span-12'">
+      
       <Navbar />
 
       <div class="content p-4">
@@ -27,7 +25,7 @@ const route = useRoute()
 
 <style scoped>
 .content {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 3rem);
   overflow-y: scroll;
 }
 </style>

@@ -27,24 +27,29 @@
 import { Plus } from '@element-plus/icons-vue'
 import { ref, type Ref } from 'vue';
 
-const initialData: ProjectForm = {
+let dialogVisible: Ref<boolean> = ref(false)
+let data: Ref<ProjectForm> = ref({
   name: "",
   description: ""
-}
-
-let dialogVisible: Ref<boolean> = ref(false)
-let data: Ref<ProjectForm> = ref(initialData)
+})
 
 const emit = defineEmits(['submit'])
 
 function handleClose() {
   dialogVisible.value = false
-  data.value = initialData
+  resetForm()
 }
 
 function handleSubmit() {
   emit('submit', data.value)
   dialogVisible.value = false
-  data.value = initialData
+  resetForm()
+}
+
+function resetForm() {
+  data.value = {
+    name: "",
+    description: ""
+  }
 }
 </script>

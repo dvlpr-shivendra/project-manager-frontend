@@ -5,7 +5,6 @@
     :border="true"
     :row-class-name="tableRowClassName"
   >
-    <el-table-column type="selection" width="55" />
     <el-table-column label="Title">
       <template #default="scope">
         <el-button @click="openTask(scope.row)" type="text">{{ scope.row.title }}</el-button>

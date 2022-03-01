@@ -1,4 +1,18 @@
 <template>
+  <div class="h-10 w-full flex justify-between">
+    <div>
+      <el-button
+        @click="markComplete"
+        type="success"
+        :loading-icon="Eleme"
+        :loading="markingComplete"
+        :plain="task.is_complete"
+      >Mark {{task.is_complete ? 'Incomplete' : 'Complete'}}</el-button>
+    </div>
+
+    <div></div>
+  </div>
+
   <el-form v-model="task">
     <input
       class="mb-4 w-full h-14 text-2xl px-2 hover:border rounded"
@@ -27,7 +41,9 @@
 
 import UserSelect from "@/components/UserSelect.vue";
 import { put, url } from "@/helpers/http";
-import { watch } from "vue";
+import { ref, watch, type Ref } from "vue";
+
+import { Eleme } from '@element-plus/icons-vue'
 
 const props = defineProps<{
   task: Task
@@ -43,5 +59,18 @@ function updateTask() {
 function assignTo(user: User) {
   props.task.assignee = user
   props.task.assignee_id = user.id
+}
+
+const markingComplete: Ref<boolean> = ref(false)
+
+function markComplete() {
+  markingComplete.value = true
+  props.task.is_complete = !props.task.is_complete
+  put(url(`tasks/${props.task.id}`), props.task)
+    .catch(e => {
+      props.task.is_complete = !props.task.is_complete
+      console.log(e)
+    })
+    .finally(() => markingComplete.value = false)
 }
 </script>

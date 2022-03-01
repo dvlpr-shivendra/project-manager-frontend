@@ -1,6 +1,8 @@
 <template>
   <div class="flex justify-between items-center px-4 h-12 bg-black">
-    <div></div>
+    <router-link to="/" style="font-family: cursive;" class="text-white">
+      Logo
+    </router-link>
 
     <div>
       <el-button color="#626aef" style="color: white" v-if="!loggedIn">

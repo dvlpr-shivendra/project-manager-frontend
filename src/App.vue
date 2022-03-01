@@ -8,14 +8,12 @@ const loggedIn = getLoggedIn()
 </script>
 
 <template>
+  <Navbar />
   <div class="grid grid-cols-12">
     <aside class="hidden lg:block lg:col-span-2" v-if="loggedIn">
       <Sidebar />
     </aside>
     <main class="col-span-12" :class="loggedIn ? 'lg:col-span-10' : 'lg:col-span-12'">
-      
-      <Navbar />
-
       <div class="content p-4">
         <RouterView />
       </div>
@@ -24,7 +22,7 @@ const loggedIn = getLoggedIn()
 </template>
 
 <style scoped>
-.content {
+aside, .content {
   height: calc(100vh - 3rem);
   overflow-y: scroll;
 }

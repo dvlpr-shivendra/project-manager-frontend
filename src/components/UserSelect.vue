@@ -1,16 +1,18 @@
 <template>
-  <el-select
-    v-model="selected"
-    filterable
-    remote
-    reserve-keyword
-    placeholder="Search for a user"
-    :remote-method="remoteMethod"
-    :loading="loading"
-    @change="emit('change', selected)"
-  >
-    <el-option v-for="user in options" :key="user.id" :label="user.name" :value="user" />
-  </el-select>
+  <el-form-item :label="label">
+    <el-select
+      v-model="selected"
+      filterable
+      remote
+      reserve-keyword
+      placeholder="Search for a user"
+      :remote-method="remoteMethod"
+      :loading="loading"
+      @change="emit('change', selected)"
+    >
+      <el-option v-for="user in options" :key="user.id" :label="user.name" :value="user" />
+    </el-select>
+  </el-form-item>
 </template>
 
 <script lang="ts" setup>
@@ -19,6 +21,7 @@ import { ref } from 'vue'
 
 const props = defineProps<{
   user: User
+  label: string
 }>()
 
 let options = ref<User[]>([props.user])

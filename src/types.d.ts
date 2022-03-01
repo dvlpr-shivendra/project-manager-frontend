@@ -8,9 +8,6 @@ type User = {
   id: number,
   name: string,
   email: string,
-  email_verified_at: string
-  created_at: string,
-  updated_at: string,
 }
 
 type UserWithToken = {
@@ -51,8 +48,8 @@ type Task = {
   description: string,
   deadline: string,
   tags: Tag[],
-  user: User,
-  user_id: number
+  assignee: User,
+  assignee_id: number
   project_id: number,
   is_complete: boolean,
   created_at: string,

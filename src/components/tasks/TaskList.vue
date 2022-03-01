@@ -11,7 +11,7 @@
         <el-button @click="openTask(scope.row)" type="text">{{ scope.row.title }}</el-button>
       </template>
     </el-table-column>
-    <el-table-column label="Assignee" prop="user.name" />
+    <el-table-column label="Assignee" prop="assignee.name" />
   </el-table>
 
   <task-form @submit="tasks.add" />

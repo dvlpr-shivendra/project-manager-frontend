@@ -1,29 +1,15 @@
 <template>
-  <el-input v-model="task.title" class="mb-4" placeholder="Task title" clearable />
+  <input class="mb-4 w-full h-14 text-2xl px-2 hover:border rounded" v-model="task.title" placeholder="Task title"/>
 
-  <div class="grid grid-cols-2 gap-4 mb-4">
-    <div class="col-span-1">
-      <el-date-picker
-        style="width: 100%;"
-        v-model="task.deadline"
-        type="datetime"
-        placeholder="Task deadline"
-        value-format="YYYY-MM-DD HH:mm:ss"
-      />
-    </div>
+  <el-form-item label="Deadline">
+    <el-date-picker placeholder="Click to set deadline" v-model="task.deadline" type="datetime" value-format="YYYY-MM-DD HH:mm:ss" />
+  </el-form-item>
 
-    <div class="col-span-1">
-      <user-select :user="task.user" @change="assignTo" class="w-full" />
-    </div>
-  </div>
+  <user-select label="Assign to" :user="task.assignee" @change="assignTo" class="w-full" />
 
-  <el-input
-    class="mb-4"
-    v-model="task.description"
-    autosize
-    type="textarea"
-    placeholder="Task description"
-  />
+  <el-form-item label="Description">
+    <el-input class="mb-4" v-model="task.description" autosize type="textarea" />
+  </el-form-item>
 </template>
 
 <script lang="ts" setup>
@@ -43,8 +29,8 @@ function updateTask() {
     .catch(e => console.log(e))
 }
 
-function assignTo(user:User) {
-  props.task.user = user
-  props.task.user_id = user.id
+function assignTo(user: User) {
+  props.task.assignee = user
+  props.task.assignee_id = user.id
 }
 </script>

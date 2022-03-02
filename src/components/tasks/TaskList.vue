@@ -1,6 +1,6 @@
 <template>
-  <div class="grid grid-cols-12 gap-4">
-    <div :class="activeTask ? 'col-span-8' : 'col-span-12'">
+  <div class="flex">
+    <div class="grow">
     <task-form @submit="tasks.add" />
       <ul>
         <li class="grid grid-cols-[2rem,auto,8rem]">
@@ -21,8 +21,8 @@
       </ul>
     </div>
 
-    <div class="col-span-4" v-if="activeTask">
-      <task :task="activeTask" @close="activeTask = null" />
+    <div class="transition-all" :class="activeTask ? 'basis-96' : 'basis-0'">
+      <task v-if="activeTask" :task="activeTask" @close="activeTask = null" />
     </div>
   </div>
 </template>

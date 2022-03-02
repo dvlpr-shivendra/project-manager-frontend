@@ -14,7 +14,7 @@ const loggedIn = getLoggedIn()
       <Sidebar />
     </aside>
     <main class="col-span-12" :class="loggedIn ? 'lg:col-span-10' : 'lg:col-span-12'">
-      <div class="content p-4">
+      <div class="content">
         <RouterView />
       </div>
     </main>

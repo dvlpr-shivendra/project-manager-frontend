@@ -1,13 +1,11 @@
 <template>
-  <el-drawer v-model="open" title="" :with-header="false" :direction="'rtl'" size="50%">
-    <task v-if="task" :task="task"/>
-  </el-drawer>
+  <el-drawer v-model="open" title="" :with-header="false" :direction="'rtl'" size="50%" />
 </template>
 
 <script lang="ts" setup>
 
 import { computed, type WritableComputedRef } from 'vue';
-import Task from './Task.vue';
+
 
 
 const props = defineProps<{

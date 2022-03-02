@@ -1,22 +1,30 @@
 <template>
-  <el-table
-    :data="tasks.list"
-    style="width: 100%"
-    :border="true"
-    :row-class-name="tableRowClassName"
-  >
-    <el-table-column label="Title">
-      <template #default="scope">
-        <el-button @click="openTask(scope.row)" type="text">{{ scope.row.title }}</el-button>
-      </template>
-    </el-table-column>
-    <el-table-column label="Assignee" prop="assignee.name" />
-  </el-table>
+  <div class="grid grid-cols-12 gap-4">
+    <div :class="activeTask ? 'col-span-8' : 'col-span-12'">
+    <task-form @submit="tasks.add" />
+      <ul>
+        <li class="grid grid-cols-[2rem,auto,8rem]">
+          <p></p>
+          <p class="font-bold">Title</p>
+          <p class="font-bold">Assignee</p>
+        </li>
+        <li
+          v-for="task in tasks.list"
+          :key="task.id"
+          class="grid grid-cols-[2rem,auto,8rem] px-1 py-2 border-b"
+          @click="activeTask = task"
+        >
+          <clock class="w-6 h-6" :class="task.id === 3 && 'animate-bounce text-green-600'" />
+          <p>{{ task.title }}</p>
+          <p>{{ task.assignee.name }}</p>
+        </li>
+      </ul>
+    </div>
 
-  <task-form @submit="tasks.add" />
-
-  <task-drawer :task="activeTask" @close="activeTask = null" />
-  
+    <div class="col-span-4" v-if="activeTask">
+      <task :task="activeTask" />
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -24,7 +32,8 @@
 import { ref, type Ref } from 'vue';
 import TaskForm from './TaskForm.vue'
 import { useTasks } from '@/stores/tasks';
-import TaskDrawer from '@/components/tasks/TaskDrawer.vue'
+import { Clock } from '@element-plus/icons-vue'
+import Task from './Task.vue';
 
 const props = defineProps<{
   projectId: number
@@ -40,14 +49,4 @@ function openTask(task: Task) {
   activeTask.value = task
 }
 
-const tableRowClassName = ({ row }: { row: Task}) => {
-  return row.is_complete ? 'success-row' : ''
-}
-
 </script>
-
-<style>
-.el-table .success-row {
-  --el-table-tr-bg-color: var(--el-color-success-lighter);
-}
-</style>

@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <el-collapse>
+  <div class="px-4">
+    <!-- <el-collapse>
       <el-collapse-item :title="project.name" name="1">
         {{ project.description }}
       </el-collapse-item>
-    </el-collapse>
+    </el-collapse> -->
 
     <task-list v-if="project.id" :projectId="project.id" />
   </div>

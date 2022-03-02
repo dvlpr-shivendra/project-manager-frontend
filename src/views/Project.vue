@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4">
+  <div class="pl-4">
     <!-- <el-collapse>
       <el-collapse-item :title="project.name" name="1">
         {{ project.description }}

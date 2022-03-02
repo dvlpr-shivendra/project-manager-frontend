@@ -1,6 +1,7 @@
 <template>
   <el-form-item :label="label">
     <el-select
+    class="w-full"
       v-model="selected"
       filterable
       remote

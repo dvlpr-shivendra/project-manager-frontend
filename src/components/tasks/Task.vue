@@ -1,28 +1,37 @@
 <template>
-  <div class="p-4 shadow h-[calc(100vh-3rem)]">
-    <div class="h-10 w-full flex justify-between">
+  <div class="shadow h-[calc(100vh-3rem)]">
+    <div class="w-full flex justify-between items-center border px-4 py-2">
       <div>
-        <el-button
-          @click="markComplete"
-          type="success"
-          :loading-icon="Eleme"
-          :loading="markingComplete"
-          :plain="task.is_complete"
-        >Mark {{ task.is_complete ? 'Incomplete' : 'Complete' }}</el-button>
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          :content="'Mark ' + (task.is_complete ? 'Incomplete' : 'Complete')"
+          placement="bottom"
+        >
+          <el-button
+            @click="markComplete"
+            :type="task.is_complete ? 'danger' : 'success'"
+            :icon="task.is_complete ? Remove : Check"
+            circle
+          ></el-button>
+        </el-tooltip> 
       </div>
 
-      <div></div>
+      <div>
+        <MoreFilled class="w-4 h-4 cursor-pointer" />
+      </div>
     </div>
 
-    <el-form v-model="task" label-position="top">
+    <el-form v-model="task" label-position="top" class="pb-4 px-4 pt-2">
       <input
-        class="mb-4 w-full h-14 text-2xl px-2 hover:border rounded"
+        class="mb-2 w-full h-14 text-2xl rounded focus:outline-0"
         v-model="task.title"
         placeholder="Task title"
       />
 
       <el-form-item label="Deadline">
         <el-date-picker
+          style="width: 100%;"
           placeholder="Click to set deadline"
           v-model="task.deadline"
           type="datetime"
@@ -45,7 +54,7 @@ import UserSelect from "@/components/UserSelect.vue";
 import { put, url } from "@/helpers/http";
 import { ref, watch, type Ref } from "vue";
 
-import { Eleme } from '@element-plus/icons-vue'
+import { Remove, Check, MoreFilled } from '@element-plus/icons-vue'
 
 const props = defineProps<{
   task: Task

@@ -22,7 +22,7 @@
     </div>
 
     <div class="col-span-4" v-if="activeTask">
-      <task :task="activeTask" />
+      <task :task="activeTask" @close="activeTask = null" />
     </div>
   </div>
 </template>

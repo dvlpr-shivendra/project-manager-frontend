@@ -14,12 +14,33 @@
             :icon="task.is_complete ? Remove : Check"
             circle
           ></el-button>
-        </el-tooltip> 
+        </el-tooltip>
       </div>
 
-      <div>
-        <MoreFilled class="w-4 h-4 cursor-pointer" />
+      <div class="flex items-center">
+        <el-dropdown class="mr-2">
+          <el-button type="text">
+            <MoreFilled class="text-black w-4 h-4" />
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item>Delete</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          content="Close subtask"
+          placement="bottom"
+        >
+          <el-button type="text" @click="emit('close')">
+            <Close class="w-4 h-4 text-black" />
+          </el-button>
+        </el-tooltip>
       </div>
+
     </div>
 
     <el-form v-model="task" label-position="top" class="pb-4 px-4 pt-2">
@@ -54,11 +75,13 @@ import UserSelect from "@/components/UserSelect.vue";
 import { put, url } from "@/helpers/http";
 import { ref, watch, type Ref } from "vue";
 
-import { Remove, Check, MoreFilled } from '@element-plus/icons-vue'
+import { Remove, Check, MoreFilled, Close } from '@element-plus/icons-vue'
 
 const props = defineProps<{
   task: Task
 }>()
+
+const emit = defineEmits(['close'])
 
 watch(props.task, updateTask)
 

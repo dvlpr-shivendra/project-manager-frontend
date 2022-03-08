@@ -22,26 +22,27 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: () => import('@/views/Login.vue'),
+      meta: { onlyGuest: true }
     },
     {
       path: '/signup',
       name: 'Signup',
       component: () => import('@/views/Signup.vue'),
+      meta: { onlyGuest: true }
     },
   ]
 })
 
 router.beforeEach((to, from) => {
-  // instead of having to check every route record with
-  // to.matched.some(record => record.meta.requiresAuth)
   if (to.meta.auth && !getLoggedIn()) {
-    // this route requires auth, check if logged in
-    // if not, redirect to login page.
     return {
       path: '/login',
-      // save the location we were at to come back later
       query: { redirect: to.fullPath },
     }
+  }
+
+  if (to.meta.onlyGuest && getLoggedIn()) {
+    return { path: '/' }
   }
 })
 

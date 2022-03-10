@@ -16,6 +16,7 @@
 
 <script lang="ts" setup>
 import { ref, type Ref } from 'vue'
+import { ElMessage } from 'element-plus'
 import { Clock } from '@element-plus/icons-vue'
 import { postMultipart, url } from '@/helpers/http';
 
@@ -42,6 +43,11 @@ const height = 720;
 function stopCapture() {
   let mediaProvider: MediaStream | null = videoElement.srcObject as MediaStream;
 
+  if (!mediaProvider) {
+    clearInterval(screenshotTimer);
+    return;
+  }
+
   mediaProvider.getTracks().forEach(track => track.stop());
 
   videoElement.pause();
@@ -51,17 +57,22 @@ function stopCapture() {
 }
 
 async function startCapture() {
-  try {
-    navigator.mediaDevices.getDisplayMedia({
-      video: true,
-      audio: false
-    }).then(function (stream) {
-      videoElement.srcObject = stream;
-    });
-    videoElement.play();
-  } catch (err) {
-    console.error("Error: " + err);
-  }
+  navigator.mediaDevices.getDisplayMedia({
+    video: true,
+    audio: false
+  }).then(function (stream) {
+    videoElement.srcObject = stream
+  }).catch(function (err) {
+    
+    toggleTimer()
+
+    ElMessage({
+      message: 'You must share your screen to start the timer',
+      type: 'error',
+    })
+  });
+
+  videoElement.play();
 }
 
 function savePictureFromVideoElement() {
@@ -69,9 +80,7 @@ function savePictureFromVideoElement() {
   canvas.width = width;
   canvas.height = height;
   context?.drawImage(videoElement, 0, 0, width, height);
-  canvas.toBlob(function (blob) {
-    uploadScreenshot(blob as Blob);
-  });
+  canvas.toBlob(blob => uploadScreenshot(blob as Blob));
 }
 
 function uploadScreenshot(screenshotBlob: Blob) {

@@ -14,7 +14,7 @@
           class="grid grid-cols-[2rem,auto,8rem] px-1 py-2 border-b"
           @click="activeTask = task"
         >
-          <clock class="w-6 h-6" :class="task.id === 3 && 'animate-bounce text-green-600'" />
+          <clock class="w-6 h-6" />
           <p>{{ task.title }}</p>
           <p>{{ task.assignee.name }}</p>
         </li>

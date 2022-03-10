@@ -15,6 +15,9 @@
             circle
           ></el-button>
         </el-tooltip>
+
+        <timer v-if="!task.is_complete" :task="task" />
+
       </div>
 
       <div class="flex items-center">
@@ -76,6 +79,8 @@ import { put, url } from "@/helpers/http";
 import { ref, watch, type Ref } from "vue";
 
 import { Remove, Check, MoreFilled, Close } from '@element-plus/icons-vue'
+
+import Timer from './Timer.vue'
 
 const props = defineProps<{
   task: Task

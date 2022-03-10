@@ -39,6 +39,21 @@ export function put(url: string, data: object, auth: boolean = true) {
   })
 }
 
+export function postMultipart(url: string, data: FormData, auth: boolean = true) {
+
+  const headers = new Headers();
+  
+  headers.append("authorization", bearer());
+  headers.append("Accept", "application/json");
+
+  return fetch(url, {
+    method: 'POST',
+    headers: headers,
+    body: data,
+    redirect: 'follow'
+  })
+}
+
 function commonHeaders(auth: boolean) {
   const headers = new Headers();
   headers.append("Accept", "application/json");

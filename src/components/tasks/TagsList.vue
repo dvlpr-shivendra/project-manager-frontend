@@ -1,59 +1,22 @@
 <template>
-  <el-tag
+  <tag
     v-for="tag in tags"
-    :key="tag.id"
-    class="mx-1"
-    :type="tag.type"
-    closable
-    :disable-transitions="false"
-    @close="handleClose(tag)"
-  >
-    {{ tag.title }}
-  </el-tag>
-  <el-input
-    v-if="inputVisible"
-    ref="InputRef"
-    v-model="inputValue"
-    class="ml-1 w-20"
-    size="small"
-    @keyup.enter="handleInputConfirm"
-    @blur="handleInputConfirm"
-  >
-  </el-input>
-  <el-button v-else class="button-new-tag ml-1" size="small" @click="showInput">
-    + New Tag
-  </el-button>
+    :background-color="tag.background_color"
+    :color="tag.color"
+    :text="tag.name"
+    :closable="true"
+    @close="emit('remove', tag.id)"
+  />
 </template>
 
 <script lang="ts" setup>
-import { ref, nextTick } from 'vue'
-import type { ElInput } from 'element-plus'
 
-const props = defineProps<{
+import Tag from '../ui/Tag.vue'
+
+defineProps<{
   tags: Tag[]
 }>()
 
-const inputValue = ref('')
-const dynamicTags = ref(['Tag 1', 'Tag 2', 'Tag 3'])
-const inputVisible = ref(false)
-const InputRef = ref<InstanceType<typeof ElInput>>()
+const emit = defineEmits(['remove'])
 
-const handleClose = (tag: Tag) => {
-  console.log(tag);
-}
-
-const showInput = () => {
-  inputVisible.value = true
-  nextTick(() => {
-    InputRef.value!.input!.focus()
-  })
-}
-
-const handleInputConfirm = () => {
-  if (inputValue.value) {
-    dynamicTags.value.push(inputValue.value)
-  }
-  inputVisible.value = false
-  inputValue.value = ''
-}
 </script>

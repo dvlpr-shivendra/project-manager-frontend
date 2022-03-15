@@ -25,6 +25,17 @@ export function post(url: string, data: object, auth: boolean = true) {
   })
 }
 
+export function destroy(url: string, auth: boolean = true) {
+  
+    const headers = commonHeaders(auth);
+  
+    return fetch(url, {
+      method: 'DELETE',
+      headers: headers,
+      redirect: 'follow'
+    })
+}
+
 export function put(url: string, data: object, auth: boolean = true) {
 
   const headers = commonHeaders(auth);

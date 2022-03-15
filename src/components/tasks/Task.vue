@@ -65,6 +65,8 @@
 
       <user-select label="Assign to" :user="task.assignee" @change="assignTo" class="w-full" />
 
+      <TagsList :tags="task.tags" @remove="removeTag" />
+
       <el-form-item label="Description">
         <el-input class="mb-4" v-model="task.description" :rows="2" type="textarea" />
       </el-form-item>
@@ -74,13 +76,14 @@
 
 <script lang="ts" setup>
 
-import UserSelect from "@/components/UserSelect.vue";
-import { put, url } from "@/helpers/http";
+import UserSelect from "@/components/ui/UserSelect.vue";
+import { destroy, put, url } from "@/helpers/http";
 import { ref, watch, type Ref } from "vue";
 
 import { Remove, Check, MoreFilled, Close } from '@element-plus/icons-vue'
 
 import Timer from './Timer.vue'
+import TagsList from './TagsList.vue'
 
 const props = defineProps<{
   task: Task
@@ -111,5 +114,13 @@ function markComplete() {
       console.log(e)
     })
     .finally(() => markingComplete.value = false)
+}
+
+function removeTag(tagId: number) {
+  destroy(url(`tasks/${props.task.id}/tags/${tagId}`))
+    .then(() => {
+      const index = props.task.tags.findIndex(tag => tag.id !== tagId)
+      props.task.tags.splice(index, 1)
+    })
 }
 </script>

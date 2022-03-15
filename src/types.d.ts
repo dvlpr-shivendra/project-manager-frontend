@@ -23,9 +23,9 @@ type Pivot = {
 
 type Tag = {
   id: number,
-  title: string,
-  type: 'success' | 'info' | 'warning' | 'danger',
-  pivot: Pivot
+  name: string,
+  color: string,
+  background_color: string,
 }
 
 type Project = {

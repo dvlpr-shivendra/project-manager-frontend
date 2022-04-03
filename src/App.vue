@@ -1,10 +1,16 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import { RouterView } from 'vue-router'
 import Navbar from './components/navigation/Navbar.vue'
 import Sidebar from './components/navigation/Sidebar.vue'
 import { getLoggedIn } from './helpers/auth';
+import { useTags } from './stores/tags';
 
 const loggedIn = getLoggedIn()
+
+onMounted(() => {
+  useTags().getAll()
+})
 </script>
 
 <template>

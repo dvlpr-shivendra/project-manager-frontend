@@ -65,7 +65,7 @@
 
       <user-select label="Assign to" :user="task.assignee" @change="assignTo" class="w-full" />
 
-      <TagsList :tags="task.tags" @remove="removeTag" />
+      <TagsList :tags="task.tags" @remove="removeTag" @add="addTag" />
 
       <el-form-item label="Description">
         <el-input class="mb-4" v-model="task.description" :rows="2" type="textarea" />
@@ -114,6 +114,14 @@ function markComplete() {
       console.log(e)
     })
     .finally(() => markingComplete.value = false)
+}   
+
+function addTag(tag: string) {
+  props.task.tags.push({
+    name: tag,
+    color: '#000',
+    background_color: '#ccc'
+  } as Tag)
 }
 
 function removeTag(tagId: number) {

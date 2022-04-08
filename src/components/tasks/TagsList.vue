@@ -15,19 +15,18 @@
     @click="showInput = true"
   />
 
-  <el-input v-else v-model="newTag"
-    placeholder="Please input"
-    @blur="addTag"
-    @keyup.enter="addTag"
-    @keyup.esc="showInput = false"
-  />
+  <tag-form :available-tags="tagList" />
 
 </template>
 
 <script lang="ts" setup>
 
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import Tag from '@/components/ui/Tag.vue';
+import TagForm from '@/components/ui/TagForm.vue';
+import { useTags } from '@/stores/tags';
+
+const { list: tagList } = useTags()
 
 defineProps<{
   tags: Tag[]

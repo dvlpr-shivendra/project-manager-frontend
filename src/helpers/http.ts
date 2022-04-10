@@ -11,7 +11,7 @@ export function get(url: string, auth: boolean = true) {
   })
 }
 
-export function post(url: string, data: object, auth: boolean = true) {
+export function post(url: string, data: object = {}, auth: boolean = true) {
 
   const headers = commonHeaders(auth);
 

@@ -11,13 +11,14 @@
       <el-option v-for="item in availableTags" :key="item.id" :label="item.name" :value="item.id" />
     </el-select>
 
-    <el-drawer v-model="isNewTag" title="I am the title" :with-header="false">
+    <el-drawer v-model="isNewTag" title="" :with-header="false">
+      <p class="mb-6 text-xl">Please provide additional info for new tag:</p>
       <div class="flex items-center mb-4">
-        <span class="mr-4">Tag text color</span>
+        <span class="mr-4">Text color</span>
         <el-color-picker v-model="color" size="large" />
-      </div>
+      </div>G
       <div class="flex items-center mb-4">
-        <span class="mr-4">Tag background color</span>
+        <span class="mr-4">Background color</span>
         <el-color-picker v-model="backgroundColor" size="large" />
       </div>
 
@@ -56,8 +57,8 @@ function handleChange(input: number | string) {
 function addNewTag() {
   emit('addNewTag', {
     name: newTagName.value,
-    color,
-    backgroundColor
+    color: color.value,
+    background_color: backgroundColor.value
   })
 
   newTagName.value = ''

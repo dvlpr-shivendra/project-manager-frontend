@@ -1,4 +1,4 @@
-import { get, url } from "@/helpers/http";
+import { get, post, url } from "@/helpers/http";
 import { defineStore } from "pinia";
 
 export const useTags = defineStore('tags', {

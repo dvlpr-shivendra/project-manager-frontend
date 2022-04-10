@@ -21,6 +21,12 @@ type Pivot = {
   taggable_type: string
 }
 
+type NewTag = {
+  name: string
+  color: string
+  background_color: string
+}
+
 type Tag = {
   id: number,
   name: string,

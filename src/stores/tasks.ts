@@ -8,14 +8,20 @@ export const useTasks = defineStore('tasks', {
   }),
 
   actions: {
-    getAll(projectId: string) {
-      get(this.pagination.next_page_url || url(`tasks?project_id=${projectId}`))
-        .then(response => response.json())
-        .then(({ data, next_page_url, current_page, last_page }) => {
-          this.list = data
-          this.pagination = { next_page_url, current_page, last_page }
-        })
-        .catch(error => console.log('error', error));
+    getAll(projectId: string): Promise<void> {
+      return new Promise((resolve, reject) => {
+        get(this.pagination.next_page_url || url(`tasks?project_id=${projectId}`))
+          .then(response => response.json())
+          .then(({ data, next_page_url, current_page, last_page }) => {
+            this.list = data
+            this.pagination = { next_page_url, current_page, last_page }
+            resolve()
+          })
+          .catch(error => {
+            console.log('error', error)
+            reject()
+          });
+      })
     },
 
     add(data: TaskForm) {

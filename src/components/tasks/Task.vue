@@ -60,6 +60,8 @@ import { ref, watch, type Ref } from "vue";
 
 import { Remove, Check, MoreFilled, Close } from '@element-plus/icons-vue'
 
+import { debounce } from "lodash";
+
 import Timer from './Timer.vue'
 import TagsList from './TagsList.vue'
 import Editor from '../ui//Editor/Editor.vue'
@@ -70,7 +72,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['close'])
 
-watch(props.task, updateTask)
+watch(props.task, debounce(updateTask, 750))
 
 function updateTask() {
   put(url(`tasks/${props.task.id}`), props.task)

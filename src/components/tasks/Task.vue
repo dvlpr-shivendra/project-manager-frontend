@@ -46,7 +46,7 @@
       <TagsList :tags="task.tags" @remove="removeTag" @add="addTag" />
 
       <el-form-item label="Description">
-        <el-input class="mb-4" v-model="task.description" :rows="2" type="textarea" />
+        <Editor v-model="task.description" />
       </el-form-item>
     </el-form>
   </div>
@@ -62,6 +62,7 @@ import { Remove, Check, MoreFilled, Close } from '@element-plus/icons-vue'
 
 import Timer from './Timer.vue'
 import TagsList from './TagsList.vue'
+import Editor from '../ui//Editor/Editor.vue'
 
 const props = defineProps<{
   task: Task

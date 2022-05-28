@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/Home.vue'
+import Dashboard from '@/views/Dashboard.vue'
 import { getLoggedIn } from '@/helpers/auth'
 
 const router = createRouter({
@@ -7,15 +7,22 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      name: 'Dashboard',
+      component: Dashboard,
+      meta: { auth: true }
+    },
+    {
+      path: '/projects',
+      name: 'All projects',
+      props: true,
+      component: () => import('@/views/ProjectIndex.vue'),
       meta: { auth: true }
     },
     {
       path: '/:id',
       name: 'project',
       props: true,
-      component: () => import('@/views/Project.vue'),
+      component: () => import('@/views/ProjectView.vue'),
       meta: { auth: true }
     },
     {

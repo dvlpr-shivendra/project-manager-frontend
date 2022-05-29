@@ -3,16 +3,14 @@
     <div class="grow">
       <task-form @submit="tasks.add" />
       <ul>
-        <li class="grid grid-cols-[2rem,auto,8rem]">
-          <p></p>
+        <li class="grid grid-cols-[auto,8rem]">
           <p class="font-bold">Title</p>
           <p class="font-bold">Assignee</p>
         </li>
-        <li v-for="task in tasks.list" :key="task.id" class="grid grid-cols-[2rem,auto,8rem] px-1 py-2 border-b"
+        <li v-for="task in tasks.list" :key="task.id" class="grid grid-cols-[auto,8rem] px-1 py-2 border-b"
           @click="openTask(task)">
-          <clock class="w-6 h-6" />
           <p>{{ task.title }}</p>
-          <p>{{ task.assignee.name }}</p>
+          <avatar :name="task.assignee.name" />
         </li>
       </ul>
     </div>
@@ -28,9 +26,9 @@
 import { onMounted, ref, type Ref } from 'vue';
 import TaskForm from './TaskForm.vue'
 import { useTasks } from '@/stores/tasks';
-import { Clock } from '@element-plus/icons-vue'
 import Task from './Task.vue';
 import { useRouter } from 'vue-router';
+import Avatar from '../ui/Avatar.vue';
 
 const props = defineProps<{
   projectId: number

@@ -1,7 +1,7 @@
 <template>
   <el-scrollbar>
     <el-menu
-      default-active="2"
+      default-active="1"
       background-color="#27272a"
       text-color="#ffffff"
       @open="handleOpen"
@@ -10,7 +10,14 @@
       style="border: #27272a !important"
       :router="true"
     >
-      <el-menu-item route="/">
+      <el-menu-item index="1" route="/">
+        <el-icon>
+          <setting />
+        </el-icon>
+        <span>Dashboard</span>
+      </el-menu-item>
+      
+      <el-menu-item index="2" route="/projects">
         <el-icon>
           <setting />
         </el-icon>

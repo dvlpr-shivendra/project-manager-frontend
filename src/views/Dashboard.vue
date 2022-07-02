@@ -1,6 +1,8 @@
 <template>
-  <div class="p-4 grid grid-cols-12 gap-4">
-    <h1>Welcome, {{ user.name }}</h1>
+  <div class="p-4">
+    <h1 class="font-bold mb-4">Welcome, {{ user.name }} 😊</h1>
+
+    <el-button type="success" :icon="ArrowRight">Start my day</el-button>
   </div>
 </template>
 
@@ -8,6 +10,7 @@
 
 import { ref, type Ref } from 'vue'
 import { getUser } from '@/helpers/auth';
+import { ArrowRight } from '@element-plus/icons-vue'
 
 const user: Ref<User> = ref(getUser() as User)
 

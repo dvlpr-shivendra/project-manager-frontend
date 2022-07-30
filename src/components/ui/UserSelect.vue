@@ -36,7 +36,6 @@ const remoteMethod = (query: string) => {
     loading.value = true
 
     get(url(`users?name=${query}`))
-      .then(res => res.json())
       .then((users: User[]) => {
         options.value = [...users, props.user]
       })

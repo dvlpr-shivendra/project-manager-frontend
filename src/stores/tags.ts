@@ -1,4 +1,4 @@
-import { get, post, url } from "@/helpers/http";
+import { get, url } from "@/helpers/http";
 import { defineStore } from "pinia";
 
 export const useTags = defineStore('tags', {
@@ -9,7 +9,6 @@ export const useTags = defineStore('tags', {
   actions: {
     getAll() {
       get(url('tags'))
-        .then(response => response.json())
         .then(tags => this.list = tags)
         .catch(error => console.log('error', error));
     },

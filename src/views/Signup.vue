@@ -54,7 +54,6 @@ const credentials: Ref<Credentials> = ref({
 
 function signUp() {
   post(url('signup'), credentials.value)
-    .then(res => res.json())
     .then(data => {
       setUserData(data)
       route.query.redirect 

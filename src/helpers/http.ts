@@ -1,68 +1,98 @@
 import { getToken } from "./auth";
 
-export function get(url: string, auth: boolean = true) {
+export async function get(url: string, auth: boolean = true) {
 
   const headers = commonHeaders(auth);
 
-  return fetch(url, {
+  const response = await fetch(url, {
     method: 'GET',
     headers: headers,
     redirect: 'follow'
   })
+
+  if (!response.ok) {
+    throw await response.json()
+  }
+
+  return await response.json()
 }
 
-export function post(url: string, data: object = {}, auth: boolean = true) {
+export async function post(url: string, data: object = {}, auth: boolean = true) {
 
   const headers = commonHeaders(auth);
 
   var raw = JSON.stringify(data);
 
-  return fetch(url, {
+  const response = await fetch(url, {
     method: 'POST',
     headers: headers,
     body: raw,
     redirect: 'follow'
   })
+
+  if (!response.ok) {
+    throw await response.json()
+  }
+
+  return await response.json()
 }
 
-export function destroy(url: string, auth: boolean = true) {
+export async function destroy(url: string, auth: boolean = true) {
   
     const headers = commonHeaders(auth);
   
-    return fetch(url, {
+    const response = await fetch(url, {
       method: 'DELETE',
       headers: headers,
       redirect: 'follow'
     })
+
+    if (!response.ok) {
+      throw await response.json()
+    }
+  
+    return await response.json()
 }
 
-export function put(url: string, data: object, auth: boolean = true) {
+export async function put(url: string, data: object, auth: boolean = true) {
 
   const headers = commonHeaders(auth);
 
   var raw = JSON.stringify(data);
 
-  return fetch(url, {
+  const response = await fetch(url, {
     method: 'PUT',
     headers: headers,
     body: raw,
     redirect: 'follow'
   })
+
+  if (!response.ok) {
+    throw await response.json()
+  }
+
+  return await response.json()
 }
 
-export function postMultipart(url: string, data: FormData, auth: boolean = true) {
+export async function postMultipart(url: string, data: FormData, auth: boolean = true) {
 
   const headers = new Headers();
   
   headers.append("authorization", bearer());
   headers.append("Accept", "application/json");
 
-  return fetch(url, {
+  const response = await fetch(url, {
     method: 'POST',
     headers: headers,
     body: data,
     redirect: 'follow'
   })
+
+  if (!response.ok) {
+    throw await response.json()
+  }
+
+  return await response.json()
 }
 
 function commonHeaders(auth: boolean) {

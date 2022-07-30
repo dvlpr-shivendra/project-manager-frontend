@@ -11,7 +11,6 @@ export const useTasks = defineStore('tasks', {
     getAll(projectId: string): Promise<void> {
       return new Promise((resolve, reject) => {
         get(this.pagination.next_page_url || url(`tasks?project_id=${projectId}`))
-          .then(response => response.json())
           .then(({ data, next_page_url, current_page, last_page }) => {
             this.list = data
             this.pagination = { next_page_url, current_page, last_page }
@@ -26,7 +25,6 @@ export const useTasks = defineStore('tasks', {
 
     add(data: TaskForm) {
       post(url('tasks'), data)
-        .then(res => res.json())
         .then(task => this.list.push(task))
         .catch(e => console.log(e))
     }

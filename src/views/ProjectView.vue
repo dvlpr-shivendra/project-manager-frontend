@@ -24,7 +24,6 @@ let project: Ref<Project> = ref(<Project>{})
 
 onMounted(() => {
   get(url(`projects/${props.id}`))
-    .then(res => res.json())
     .then(data => project.value = data)
     .catch(e => console.log(e))
 })

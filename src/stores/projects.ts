@@ -10,7 +10,6 @@ export const useProjects = defineStore('projects', {
   actions: {
     getAll() {
       get(this.pagination.next_page_url || url('projects'))
-        .then(response => response.json())
         .then(({ data, next_page_url, current_page, last_page }) => {
           this.list = data
           this.pagination = { next_page_url, current_page, last_page }
@@ -20,7 +19,6 @@ export const useProjects = defineStore('projects', {
 
     add(data: ProjectForm) {
       post(url('projects'), data)
-        .then(res => res.json())
         .then(task => this.list.push(task))
         .catch(e => console.log(e))
     }

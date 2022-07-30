@@ -24,7 +24,7 @@
           </template>
         </el-dropdown>
 
-        <el-tooltip class="box-item" effect="dark" content="Close subtask" placement="bottom">
+        <el-tooltip class="box-item" effect="dark" content="Close" placement="bottom">
           <el-button type="text" @click="emit('close')">
             <Close class="w-4 h-4 text-black" />
           </el-button>

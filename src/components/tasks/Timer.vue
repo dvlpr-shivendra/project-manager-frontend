@@ -62,7 +62,12 @@ async function startCapture() {
     audio: false
   }).then(function (stream) {
     videoElement.srcObject = stream
-  }).catch(function (err) {
+    videoElement.play();
+
+    stream.getVideoTracks()[0].onended = function () {
+      toggleTimer();
+    };
+  }).catch(function () {
     
     toggleTimer()
 
@@ -71,8 +76,6 @@ async function startCapture() {
       type: 'error',
     })
   });
-
-  videoElement.play();
 }
 
 function savePictureFromVideoElement() {

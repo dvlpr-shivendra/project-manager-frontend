@@ -4,7 +4,7 @@
     <h1 class="font-bold mb-5">All projects</h1>
 
     <div class="grid grid-cols-12 gap-4">
-      <project-card-skeleton v-for="i in 5" v-if="projects.loading" />
+      <project-card-skeleton v-for="i in 5" v-if="projects.loading && projects.list.length === 0" />
       <project-card :project="project" v-for="project in projects.list" v-else />
     </div>
 

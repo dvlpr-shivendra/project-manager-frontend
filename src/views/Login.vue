@@ -14,7 +14,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" native-type="submit">Login</el-button>
+          <el-button type="primary" native-type="submit" :loading="loading">Login</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -41,8 +41,11 @@ const credentials: Ref<Credentials> = ref({
 })
 
 const errors: Ref<{[key: string]: string}> = ref({})
+const loading: Ref<boolean> = ref(false)
 
 function login() {
+  loading.value = true
+
   post(url('login'), credentials.value)
     .then(data => {
       setUserData(data)
@@ -51,6 +54,7 @@ function login() {
         : window.location.replace('/')
     })
     .catch(e => handleAPIException(e, errors))
+    .finally(() => loading.value = false)
 }
 
 function handleKeyUp(e: any) {

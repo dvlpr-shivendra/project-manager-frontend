@@ -1,4 +1,4 @@
-import { get, post, url } from "@/helpers/http";
+import { destroy, get, post, url } from "@/helpers/http";
 import { defineStore } from "pinia";
 
 export const useProjects = defineStore('projects', {
@@ -21,6 +21,13 @@ export const useProjects = defineStore('projects', {
       post(url('projects'), data)
         .then(task => this.list.push(task))
         .catch(e => console.log(e))
+    },
+
+    remove(id: number) {
+      destroy(url(`projects/${id}`))
+        .then(() => {
+          this.list = this.list.filter(project => project.id !== id)
+        })
     }
   },
 })

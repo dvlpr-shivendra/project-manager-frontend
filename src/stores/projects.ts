@@ -3,18 +3,21 @@ import { defineStore } from "pinia";
 
 export const useProjects = defineStore('projects', {
   state: () => ({
+    loading: false,
     list: [] as Project[],
     pagination: <Pagination>{}
   }),
 
   actions: {
     getAll() {
+      this.loading = true
       get(this.pagination.next_page_url || url('projects'))
         .then(({ data, next_page_url, current_page, last_page }) => {
           this.list = data
           this.pagination = { next_page_url, current_page, last_page }
         })
-        .catch(error => console.log('error', error));
+        .catch(error => console.log('error', error))
+        .finally(() => this.loading = false)
     },
 
     add(data: ProjectForm) {

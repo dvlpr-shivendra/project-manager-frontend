@@ -4,7 +4,7 @@
     <template #header>
       <div class="flex justify-end">
         <el-dropdown class="mr-2">
-          <el-button type="text">
+          <el-button :text="true">
             <MoreFilled class="text-black w-4 h-4" />
           </el-button>
           <template #dropdown>

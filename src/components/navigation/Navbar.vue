@@ -13,7 +13,7 @@
       </el-button>
 
       <el-dropdown v-if="loggedIn">
-        <el-button type="text">
+        <el-button :text="true">
           {{ user.name }}
           <el-icon class="el-icon--right">
             <arrow-down />

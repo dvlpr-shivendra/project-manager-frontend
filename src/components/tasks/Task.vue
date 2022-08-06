@@ -14,7 +14,7 @@
 
       <div class="flex items-center">
         <el-dropdown class="mr-2">
-          <el-button type="text">
+          <el-button :text="true">
             <MoreFilled class="text-black w-4 h-4" />
           </el-button>
           <template #dropdown>
@@ -25,7 +25,7 @@
         </el-dropdown>
 
         <el-tooltip class="box-item" effect="dark" content="Close" placement="bottom">
-          <el-button type="text" @click="emit('close')">
+          <el-button :text="true" @click="emit('close')">
             <Close class="w-4 h-4 text-black" />
           </el-button>
         </el-tooltip>

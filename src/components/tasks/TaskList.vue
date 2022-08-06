@@ -4,13 +4,14 @@
       <task-form @submit="tasks.add" />
       <el-skeleton :rows="5" animated v-if="tasks.list.length === 0" />
       <ul v-else>
-        <li class="grid grid-cols-[auto,8rem]">
+        <li class="grid grid-cols-[auto,8rem] m-3">
           <p class="font-bold">Title</p>
           <p class="font-bold">Assignee</p>
         </li>
-        <li v-for="task in tasks.list" :key="task.id" class="grid grid-cols-[auto,8rem] px-1 py-2 border-b"
+        <li v-for="task in tasks.list" :key="task.id" class="grid grid-cols-[auto,8rem] px-1 py-2 border-b cursor-pointer items-center"
+          :class="{'bg-green-100': activeTask && task.id === activeTask.id}"
           @click="openTask(task)">
-          <p>{{ task.title }}</p>
+          <p class=" ml-3">{{ task.title }}</p>
           <avatar :name="task.assignee.name" />
         </li>
       </ul>

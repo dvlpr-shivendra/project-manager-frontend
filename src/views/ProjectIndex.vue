@@ -5,7 +5,7 @@
 
     <div class="grid grid-cols-12 gap-4">
       <project-card-skeleton v-for="i in 5" v-if="projects.loading" />
-      <project-card :project="project" v-for="project in projects.list" />
+      <project-card :project="project" v-for="project in projects.list" v-else />
     </div>
 
     <project-form @submit="projects.add" />

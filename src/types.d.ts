@@ -66,3 +66,10 @@ type TaskForm = {
   title: string
   project_id: number
 }
+
+type ApiExceptionPayload = {
+  message: string,
+  errors: {
+      [key: string]: string | [string]
+  },
+}

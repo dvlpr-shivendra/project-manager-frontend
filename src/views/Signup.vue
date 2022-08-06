@@ -4,21 +4,21 @@
       <template #header>
         <div class="card-header">Sign Up</div>
       </template>
-      <el-form label-position="top" @submit.prevent="signUp">
-        <el-form-item label="Name">
-          <el-input v-model="credentials.name" required />
+      <el-form label-position="top" @submit.prevent="signUp" @keyup="handleKeyUp">
+        <el-form-item label="Name" :error="errors.name">
+          <el-input v-model="credentials.name" required name="name" />
         </el-form-item>
         
-        <el-form-item label="Email">
-          <el-input v-model="credentials.email" required type="email" />
+        <el-form-item label="Email" :error="errors.email">
+          <el-input v-model="credentials.email" required type="email" name="email" />
         </el-form-item>
 
-        <el-form-item label="Password">
-          <el-input v-model="credentials.password" type="password" required />
+        <el-form-item label="Password" :error="errors.password">
+          <el-input v-model="credentials.password" type="password" required name="password" />
         </el-form-item>
         
-        <el-form-item label="Confirm Password">
-          <el-input v-model="credentials.password_confirmation" type="password" required />
+        <el-form-item label="Confirm Password" :error="errors.password_confirmation">
+          <el-input v-model="credentials.password_confirmation" type="password" required name="password_confirmation" />
         </el-form-item>
 
         <el-form-item>
@@ -30,10 +30,11 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, type Ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { post, url } from '@/helpers/http';
 import { setUserData } from '@/helpers/auth';
-import { ref, type Ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
+import { handleAPIException } from '@/helpers/apiExceptionHandler';
 
 type Credentials = {
   name: string
@@ -42,7 +43,6 @@ type Credentials = {
   password_confirmation: string
 }
 
-const router = useRouter()
 const route = useRoute()
 
 const credentials: Ref<Credentials> = ref({
@@ -52,6 +52,8 @@ const credentials: Ref<Credentials> = ref({
   password_confirmation: ""
 })
 
+const errors: Ref<{[key: string]: string}> = ref({})
+
 function signUp() {
   post(url('signup'), credentials.value)
     .then(data => {
@@ -60,7 +62,11 @@ function signUp() {
         ? window.location.replace(route.query.redirect as string) 
         : window.location.replace('/')
     })
-    .catch(e => console.log(e))
+    .catch(e => handleAPIException(e, errors))
+}
+
+function handleKeyUp(e: any) {
+  errors.value[e.target.getAttribute('name')] = ""
 }
 </script>
 

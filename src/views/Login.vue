@@ -4,13 +4,13 @@
       <template #header>
         <div class="card-header">Login</div>
       </template>
-      <el-form label-position="top" @submit.prevent="login">
-        <el-form-item label="Email">
-          <el-input v-model="credentials.email" required />
+      <el-form label-position="top" @submit.prevent="login" @keyup="handleKeyUp">
+        <el-form-item label="Email" :error="errors.email">
+          <el-input type="email" v-model="credentials.email" required name="email" />
         </el-form-item>
 
-        <el-form-item label="Password">
-          <el-input v-model="credentials.password" type="password" required />
+        <el-form-item label="Password" :error="errors.password">
+          <el-input v-model="credentials.password" type="password" required name="password" />
         </el-form-item>
 
         <el-form-item>
@@ -22,23 +22,25 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, type Ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { post, url } from '@/helpers/http';
 import { setUserData } from '@/helpers/auth';
-import { ref, type Ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { handleAPIException } from '@/helpers/apiExceptionHandler';
 
 type Credentials = {
   email: string,
   password: string,
 }
 
-const router = useRouter()
 const route = useRoute()
 
 const credentials: Ref<Credentials> = ref({
   email: "",
   password: "",
 })
+
+const errors: Ref<{[key: string]: string}> = ref({})
 
 function login() {
   post(url('login'), credentials.value)
@@ -48,7 +50,11 @@ function login() {
         ? window.location.replace(route.query.redirect as string) 
         : window.location.replace('/')
     })
-    .catch(e => console.log(e))
+    .catch(e => handleAPIException(e, errors))
+}
+
+function handleKeyUp(e: any) {
+  errors.value[e.target.getAttribute('name')] = ""
 }
 </script>
 

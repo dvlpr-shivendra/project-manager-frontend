@@ -16,7 +16,7 @@
       <div class="flex items-center mb-4">
         <span class="mr-4">Text color</span>
         <el-color-picker v-model="color" size="large" />
-      </div>G
+      </div>
       <div class="flex items-center mb-4">
         <span class="mr-4">Background color</span>
         <el-color-picker v-model="backgroundColor" size="large" />

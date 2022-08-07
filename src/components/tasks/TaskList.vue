@@ -27,7 +27,7 @@
 
 <script lang="ts" setup>
 
-import { onMounted, ref, type Ref } from 'vue';
+import { computed, onMounted } from 'vue';
 import TaskForm from './TaskForm.vue'
 import { useTasks } from '@/stores/tasks';
 import Task from './Task.vue';
@@ -42,23 +42,20 @@ const router = useRouter()
 
 const tasks = useTasks()
 
-let activeTask: Ref<Task | null> = ref(<Task | null>null)
+onMounted(() => {
+  tasks.getAll(props.projectId.toString())
+})
 
-onMounted(async () => {
-  await tasks.getAll(props.projectId.toString())
+const activeTask = computed(() => {
+  if (!router.currentRoute.value.query.task) return
 
-  if (router.currentRoute.value.query.task) {
-    activeTask.value = tasks.list.find(
+  return tasks.list.find(
       task => task.id.toString() === router.currentRoute.value.query.task
     ) as Task
-  }
 })
 
 function openTask(task: Task) {
-  activeTask.value = task
-
   router.push({ ...router.currentRoute.value, query: { task: task.id } })
-
 }
 
 </script>

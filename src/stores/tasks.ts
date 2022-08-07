@@ -3,24 +3,23 @@ import { defineStore } from "pinia";
 
 export const useTasks = defineStore('tasks', {
   state: () => ({
+    loading: false,
     list: [] as Task[],
     pagination: <Pagination>{}
   }),
 
   actions: {
-    getAll(projectId: string): Promise<void> {
-      return new Promise((resolve, reject) => {
-        get(this.pagination.next_page_url || url(`tasks?project_id=${projectId}`))
-          .then(({ data, next_page_url, current_page, last_page }) => {
-            this.list = data
-            this.pagination = { next_page_url, current_page, last_page }
-            resolve()
-          })
-          .catch(error => {
-            console.log('error', error)
-            reject()
-          });
-      })
+    getAll(projectId: string) {
+      this.loading = true;
+      get(this.pagination.next_page_url || url(`tasks?project_id=${projectId}`))
+        .then(({ data, next_page_url, current_page, last_page }) => {
+          this.list = data
+          this.pagination = { next_page_url, current_page, last_page }
+        })
+        .catch(error => {
+          console.log('error', error)
+        })
+        .finally(() => this.loading = false)
     },
 
     add(data: TaskForm) {

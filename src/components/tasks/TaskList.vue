@@ -2,7 +2,9 @@
   <div class="flex">
     <div class="grow">
       <task-form @submit="tasks.add" />
-      <el-skeleton :rows="5" animated v-if="tasks.list.length === 0" />
+      <div v-if="tasks.list.length === 0 && tasks.loading" class="w-9/12">
+        <el-skeleton :rows="5" animated />
+      </div>
       <ul v-else>
         <li class="grid grid-cols-[auto,8rem] m-3">
           <p class="font-bold">Title</p>

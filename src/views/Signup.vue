@@ -22,7 +22,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" native-type="submit" loading="loading">Sign Up</el-button>
+          <el-button type="primary" native-type="submit" :loading="loading">Sign Up</el-button>
         </el-form-item>
       </el-form>
     </el-card>

@@ -20,19 +20,19 @@
     </div>
 
     <div class="transition-all" :class="activeTask ? 'basis-96' : 'basis-0'">
-      <task v-if="activeTask" :task="activeTask" @close="activeTask = null" />
+      <task v-if="activeTask" :task="activeTask" @close="closeTask" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 
-import { computed, onMounted } from 'vue';
-import TaskForm from './TaskForm.vue'
-import { useTasks } from '@/stores/tasks';
 import Task from './Task.vue';
-import { useRouter } from 'vue-router';
+import TaskForm from './TaskForm.vue'
 import Avatar from '../ui/Avatar.vue';
+import { useRouter } from 'vue-router';
+import { computed, onMounted } from 'vue';
+import { useTasks } from '@/stores/tasks';
 
 const props = defineProps<{
   projectId: number
@@ -56,6 +56,10 @@ const activeTask = computed(() => {
 
 function openTask(task: Task) {
   router.push({ ...router.currentRoute.value, query: { task: task.id } })
+}
+
+function closeTask() {
+  router.push({ ...router.currentRoute.value, query: {} })
 }
 
 </script>

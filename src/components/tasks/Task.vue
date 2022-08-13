@@ -34,7 +34,7 @@
     </div>
 
     <el-form v-model="task" label-position="top" class="pb-4 px-4 pt-2">
-      <input class="mb-2 w-full h-14 text-2xl rounded focus:outline-0" v-model="task.title" placeholder="Task title" />
+      <textarea class="mb-2 w-full min-h-min max-h-max text-2xl rounded focus:outline-0 resize-none" v-model="task.title" placeholder="Task title" />
 
       <el-form-item label="Deadline">
         <el-date-picker style="width: 100%;" placeholder="Click to set deadline" v-model="task.deadline" type="datetime"

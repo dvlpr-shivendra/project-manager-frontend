@@ -11,9 +11,11 @@
           <p class="font-bold">Assignee</p>
         </li>
         <li v-for="task in tasks.list" :key="task.id" class="grid grid-cols-[auto,8rem] px-1 py-2 border-b cursor-pointer items-center"
-          :class="{'bg-green-100': activeTask && task.id === activeTask.id}"
+          :class="{'bg-lime-50': activeTask && task.id === activeTask.id}"
           @click="openTask(task)">
-          <p class=" ml-3">{{ task.title }}</p>
+          <div class="mx-3">
+            <input type="text" v-model="task.title" class="w-full bg-inherit focus:outline-0">
+          </div>
           <avatar :name="task.assignee.name" />
         </li>
       </ul>

@@ -34,7 +34,8 @@
     </div>
 
     <el-form v-model="task" label-position="top" class="pb-4 px-4 pt-2">
-      <textarea class="mb-2 w-full min-h-min max-h-max text-2xl rounded focus:outline-0 resize-none" v-model="task.title" placeholder="Task title" />
+      <textarea class="mb-2 w-full min-h-min max-h-max text-2xl rounded focus:outline-0 resize-none"
+        v-model="task.title" placeholder="Task title" />
 
       <el-form-item label="Deadline">
         <el-date-picker style="width: 100%;" placeholder="Click to set deadline" v-model="task.deadline" type="datetime"
@@ -65,6 +66,7 @@ import { debounce } from "lodash";
 import Timer from './Timer.vue'
 import TagsList from './TagsList.vue'
 import Editor from '../ui//Editor/Editor.vue'
+import { ElMessage } from "element-plus";
 
 const props = defineProps<{
   task: Task
@@ -75,7 +77,7 @@ const emit = defineEmits(['close'])
 /**
  * This is a workaround for the task update and should be fixed when better solution is known. Task update was not triggering once the props.task was changing
  */
-let unwatch = () => {}
+let unwatch = () => { }
 
 onMounted(() => {
   unwatch()
@@ -89,7 +91,26 @@ onUpdated(() => {
 
 function updateTask() {
   put(url(`tasks/${props.task.id}`), props.task)
-    .catch(e => console.log(e))
+    .then(() => {
+      ElMessage({
+        message: 'Task updated successfully.',
+        type: 'success',
+        grouping: true,
+      })
+    })
+    .catch(e => {
+      if (e.message) {
+        ElMessage({
+          message: e.message,
+          type: 'error'
+        })
+      } else {
+        ElMessage({
+        message: 'Task could not be updated.',
+        type: 'error',
+      })
+      }
+    })
 }
 
 function assignTo(user: User) {

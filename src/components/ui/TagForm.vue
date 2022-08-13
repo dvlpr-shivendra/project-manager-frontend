@@ -5,6 +5,7 @@
       allow-create
       default-first-option
       :reserve-keyword="false"
+      no-data-text="Enter the tag name and press enter"
       placeholder="Choose tags"
       @change="handleChange"
     >

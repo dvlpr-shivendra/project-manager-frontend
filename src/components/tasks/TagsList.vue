@@ -30,7 +30,6 @@ const emit = defineEmits(['remove', 'add'])
 
 async function saveTagAndAdd(newTag: NewTag) {
   post(url('tags'), newTag)
-    .then((res) => res.json())
     .then((tag: Tag) => addTag(tag))
     .catch(e => console.log(e))
 }

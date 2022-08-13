@@ -56,7 +56,7 @@
 
 import UserSelect from "@/components/ui/UserSelect.vue";
 import { destroy, post, put, url } from "@/helpers/http";
-import { ref, watch, type Ref } from "vue";
+import { onMounted, onUpdated, ref, watch, type Ref } from "vue";
 
 import { Remove, Check, MoreFilled, Close } from '@element-plus/icons-vue'
 
@@ -72,7 +72,20 @@ const props = defineProps<{
 
 const emit = defineEmits(['close'])
 
-watch(props.task, debounce(updateTask, 750))
+/**
+ * This is a workaround for the task update and should be fixed when better solution is known. Task update was not triggering once the props.task was changing
+ */
+let unwatch = () => {}
+
+onMounted(() => {
+  unwatch()
+  unwatch = watch(props.task, debounce(updateTask, 750))
+})
+
+onUpdated(() => {
+  unwatch()
+  unwatch = watch(props.task, debounce(updateTask, 750))
+})
 
 function updateTask() {
   put(url(`tasks/${props.task.id}`), props.task)

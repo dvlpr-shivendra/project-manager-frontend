@@ -35,7 +35,9 @@ const editor: Editor = new Editor({
 })
 
 watch(() => props.modelValue, (value) => {
-  editor.commands.setContent(value)
+  if (editor.getHTML() !== value) {
+    editor.commands.setContent(value)
+  }
 })
 </script>
 

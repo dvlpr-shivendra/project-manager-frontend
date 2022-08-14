@@ -55,6 +55,7 @@ type Task = {
   deadline: string,
   tags: Tag[],
   assignee: User,
+  project?: Project,
   assignee_id: number
   project_id: number,
   is_complete: boolean,

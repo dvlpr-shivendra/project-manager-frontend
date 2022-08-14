@@ -13,3 +13,8 @@ export default function truncate (
 
   return text.substring(0, length) + suffix
 }
+
+export function pluralize(word: string, count: number, suffix = 's') {
+  if (count === 1) return word
+  return `${word}${suffix}`
+}

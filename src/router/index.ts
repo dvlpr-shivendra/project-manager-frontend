@@ -20,7 +20,7 @@ const router = createRouter({
     },
     {
       path: '/:id',
-      name: 'project',
+      name: 'Project',
       props: true,
       component: () => import('@/views/ProjectView.vue'),
       meta: { auth: true }

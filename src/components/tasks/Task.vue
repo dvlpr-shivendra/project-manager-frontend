@@ -19,7 +19,7 @@
           </el-button>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>Delete</el-dropdown-item>
+              <el-dropdown-item @click="remove">Delete</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -66,11 +66,16 @@ import { debounce } from "lodash";
 import Timer from './Timer.vue'
 import TagsList from './TagsList.vue'
 import Editor from '../ui//Editor/Editor.vue'
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { useTasks } from "@/stores/tasks";
+import { useRouter } from "vue-router";
 
 const props = defineProps<{
   task: Task
 }>()
+
+const tasks = useTasks()
+const router = useRouter()
 
 const emit = defineEmits(['close'])
 
@@ -106,9 +111,9 @@ function updateTask() {
         })
       } else {
         ElMessage({
-        message: 'Task could not be updated.',
-        type: 'error',
-      })
+          message: 'Task could not be updated.',
+          type: 'error',
+        })
       }
     })
 }
@@ -129,6 +134,24 @@ function markComplete() {
       console.log(e)
     })
     .finally(() => markingComplete.value = false)
+}
+
+function remove() {
+
+  ElMessageBox.confirm('Are you sure to delete this task?')
+    .then(() => {
+      tasks.remove(props.task.id)
+
+      router.replace({
+        query: {
+          ...router.currentRoute.value.query,
+          task: null,
+        }
+      })
+    })
+    .catch(() => {
+      // catch error
+    })
 }
 
 function addTag(tag: Tag) {

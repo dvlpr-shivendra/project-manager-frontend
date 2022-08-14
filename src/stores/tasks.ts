@@ -1,4 +1,4 @@
-import { get, post, url } from "@/helpers/http";
+import { destroy, get, post, url } from "@/helpers/http";
 import { defineStore } from "pinia";
 
 export const useTasks = defineStore('tasks', {
@@ -25,6 +25,12 @@ export const useTasks = defineStore('tasks', {
     add(data: TaskForm) {
       post(url('tasks'), data)
         .then(task => this.list.push(task))
+        .catch(e => console.log(e))
+    },
+
+    remove(id: number) {
+      destroy(url(`tasks/${id}`))
+        .then(() => this.list = this.list.filter(task => task.id !== id))
         .catch(e => console.log(e))
     }
   },

@@ -99,6 +99,8 @@ function openTask(task: Task) {
     tasks: [],
   }
 
+  query.value = ""
+
   router.push({
     name: 'Project',
     params: { id: task.project_id },
@@ -113,6 +115,8 @@ function openProject(project: Project) {
     projects: [],
     tasks: [],
   }
+
+  query.value = ""
 
   router.push({
     name: 'Project',

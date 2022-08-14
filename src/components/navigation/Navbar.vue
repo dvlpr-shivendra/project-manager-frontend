@@ -5,7 +5,7 @@
     </router-link>
 
     <div>
-      <search-drawer />
+      <search-drawer  v-if="loggedIn" />
       <el-button color="#626aef" style="color: white" v-if="!loggedIn">
         <router-link to="/signup">Sign up</router-link>
       </el-button>

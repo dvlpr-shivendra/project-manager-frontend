@@ -5,6 +5,7 @@
     </router-link>
 
     <div>
+      <search-drawer  v-if="loggedIn" />
       <el-button color="#626aef" style="color: white" v-if="!loggedIn">
         <router-link to="/signup">Sign up</router-link>
       </el-button>
@@ -34,6 +35,7 @@
 import { ref, type Ref } from 'vue';
 import { ArrowDown } from '@element-plus/icons-vue'
 import { getUser, getLoggedIn } from '@/helpers/auth';
+import SearchDrawer from '../ui/SearchDrawer.vue';
 
 const user: Ref<User> = ref(getUser() as User)
 const loggedIn: Ref<boolean> = ref(getLoggedIn())

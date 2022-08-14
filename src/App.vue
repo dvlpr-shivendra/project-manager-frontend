@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import { RouterView } from "vue-router";
+import { RouterView, useRoute } from "vue-router";
 import Navbar from "./components/navigation/Navbar.vue";
 import Sidebar from "./components/navigation/Sidebar.vue";
 import { getLoggedIn } from "./helpers/auth";
 import { useTags } from "./stores/tags";
 
-const loggedIn = getLoggedIn();
+const loggedIn = getLoggedIn()
+
+const route = useRoute()
 
 onMounted(() => {
   if (loggedIn) {
-    useTags().getAll();
+    useTags().getAll()
   }
 });
 </script>
@@ -26,7 +28,7 @@ onMounted(() => {
       :class="loggedIn ? 'lg:col-span-10' : 'lg:col-span-12'"
     >
       <div class="content">
-        <RouterView />
+        <RouterView :key="route.path" />
       </div>
     </main>
   </div>

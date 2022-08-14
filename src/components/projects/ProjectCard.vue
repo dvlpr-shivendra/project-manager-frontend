@@ -43,7 +43,7 @@ const description = computed(() => {
 })
 
 function handleDelete() {
-  ElMessageBox.confirm('Are you sure to close this dialog?')
+  ElMessageBox.confirm('Do you really want to delete this project?')
     .then(() => {
       projects.remove(props.project.id)
     })

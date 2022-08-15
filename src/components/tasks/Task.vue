@@ -49,6 +49,9 @@
       <el-form-item label="Description">
         <Editor v-model="task.description" />
       </el-form-item>
+
+      <attachments :action="url(`tasks/${task.id}/attachments`)" :attachments="task.attachments" @add="addAttachment"
+        @remove="removeAttachment" />
     </el-form>
   </div>
 </template>
@@ -69,6 +72,7 @@ import Editor from '../ui//Editor/Editor.vue'
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useTasks } from "@/stores/tasks";
 import { useRouter } from "vue-router";
+import Attachments from "@/components/ui/Attachments.vue";
 
 const props = defineProps<{
   task: Task
@@ -165,6 +169,18 @@ function removeTag(tagId: number) {
     .then(() => {
       const index = props.task.tags.findIndex(tag => tag.id === tagId)
       props.task.tags.splice(index, 1)
+    })
+}
+
+function addAttachment(attachment: Attachment) {
+  props.task.attachments.push(attachment)
+}
+
+function removeAttachment(attachmentId: number) {
+  destroy(url(`tasks/${props.task.id}/attachments/${attachmentId}`))
+    .then(() => {
+      const index = props.task.attachments.findIndex(attachment => attachment.id === attachmentId)
+      props.task.attachments.splice(index, 1)
     })
 }
 </script>

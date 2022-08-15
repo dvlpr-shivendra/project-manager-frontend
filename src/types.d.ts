@@ -48,12 +48,23 @@ type ProjectForm = {
   description: string,
 }
 
+type Attachment = {
+  id: number,
+  task_id?: number,
+  name: string,
+  path: string,
+  size: number,
+  created_at: string,
+  updated_at: string,
+}
+
 type Task = {
   id: number,
   title: string,
   description: string,
   deadline: string,
   tags: Tag[],
+  attachments: TaskAttachment[],
   assignee: User,
   project?: Project,
   assignee_id: number

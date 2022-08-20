@@ -52,6 +52,9 @@
 
       <attachments :action="url(`tasks/${task.id}/attachments`)" :attachments="task.attachments" @add="addAttachment"
         @remove="removeAttachment" />
+
+      <followers :followers="task.followers" @add="addFollower" @remove="removeFollower" />
+
     </el-form>
   </div>
 </template>
@@ -68,10 +71,11 @@ import { debounce } from "lodash";
 
 import Timer from './Timer.vue'
 import TagsList from './TagsList.vue'
-import Editor from '../ui//Editor/Editor.vue'
-import { ElMessage, ElMessageBox } from "element-plus";
-import { useTasks } from "@/stores/tasks";
 import { useRouter } from "vue-router";
+import { useTasks } from "@/stores/tasks";
+import Editor from '@/components/ui/Editor/Editor.vue'
+import { ElMessage, ElMessageBox } from "element-plus";
+import Followers from "@/components/ui/Followers.vue";
 import Attachments from "@/components/ui/Attachments.vue";
 
 const props = defineProps<{
@@ -181,6 +185,20 @@ function removeAttachment(attachmentId: number) {
     .then(() => {
       const index = props.task.attachments.findIndex(attachment => attachment.id === attachmentId)
       props.task.attachments.splice(index, 1)
+    })
+}
+
+function addFollower(user: User) {
+  post(url(`tasks/${props.task.id}/followers/${user.id}`))
+    .then(() => props.task.followers.push(user))
+    .catch(e => console.log(e)) 
+}
+
+function removeFollower(followerId: number) {
+  destroy(url(`tasks/${props.task.id}/followers/${followerId}`))
+    .then(() => {
+      const index = props.task.followers.findIndex(follower => follower.id === followerId)
+      props.task.followers.splice(index, 1)
     })
 }
 </script>

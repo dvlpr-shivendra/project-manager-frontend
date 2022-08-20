@@ -1,14 +1,15 @@
 <template>
 
-  
-  <el-button type="text" link @click="openDrawer = true">
-    <span v-if="attachments.length === 0">Upload attachments</span>
-    <span v-else>{{ attachments.length }} {{ pluralize('attachment', attachments.length) }}</span>
-  </el-button>
+  <div>
+    <el-button type="text" link @click="openDrawer = true">
+      <span v-if="attachments.length === 0">Upload attachments</span>
+      <span v-else>{{ attachments.length }} {{ pluralize('attachment', attachments.length) }}</span>
+    </el-button>
+  </div>
 
   <el-drawer v-model="openDrawer" direction="rtl" :with-header="false" size="40%">
-    <el-upload name="file" :headers="headers" drag :action="action" :show-file-list="false"
-      :on-success="handleSuccess" v-on:progress="handleProgress" :before-upload="handleBeforeUpload">
+    <el-upload name="file" :headers="headers" drag :action="action" :show-file-list="false" :on-success="handleSuccess"
+      v-on:progress="handleProgress" :before-upload="handleBeforeUpload">
       <el-icon class="el-icon--upload">
         <upload-filled />
       </el-icon>
@@ -18,14 +19,15 @@
     </el-upload>
 
     <el-progress v-if="uploading" :percentage="uploadedPercent" />
-    
+
     <div class="my-4">
       <TransitionGroup name="list">
-      <div v-for="attachment in attachments" class=" bg-slate-200 p-2 mb-1 flex justify-between rounded" :key="attachment.id">
-        <a class="inline-block mr-2" href="#" target="_blank">{{ attachment.name }}</a>
-        <el-button type="danger" :icon="Delete" circle size="small" @click="handleDelete(attachment)"
-          :loading="!!deletingWithIds[attachment.id]" />
-      </div>
+        <div v-for="attachment in attachments" class=" bg-slate-200 p-2 mb-1 flex justify-between rounded"
+          :key="attachment.id">
+          <a class="inline-block mr-2" href="#" target="_blank">{{ attachment.name }}</a>
+          <el-button type="danger" :icon="Delete" circle size="small" @click="handleDelete(attachment)"
+            :loading="!!deletingWithIds[attachment.id]" />
+        </div>
       </TransitionGroup>
     </div>
   </el-drawer>

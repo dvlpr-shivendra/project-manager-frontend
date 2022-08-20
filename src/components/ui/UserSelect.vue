@@ -18,16 +18,16 @@
 
 <script lang="ts" setup>
 import { get, url } from '@/helpers/http';
-import { ref } from 'vue'
+import { onUpdated, ref } from 'vue'
 
 const props = defineProps<{
-  user: User
+  user?: User
   label: string
 }>()
 
-let options = ref<User[]>([props.user])
+let options = ref<User[]>(props.user ? [props.user] : [])
 const loading = ref<boolean>(false)
-const selected = ref<User>(props.user)
+const selected = ref<User|undefined>(props.user)
 
 const emit = defineEmits(['change'])
 
@@ -37,7 +37,11 @@ const remoteMethod = (query: string) => {
 
     get(url(`users?name=${query}`))
       .then((users: User[]) => {
-        options.value = [...users, props.user]
+        if (props.user && !options.value.find(option => option.id === props.user?.id)) {
+          options.value = [...users, props.user]
+        } else {
+          options.value = users
+        }
       })
       .catch(e => console.log(e))
       .finally(() => {
@@ -47,4 +51,4 @@ const remoteMethod = (query: string) => {
     options.value = []
   }
 }
-</script>
+</script> -->

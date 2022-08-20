@@ -65,6 +65,7 @@ type Task = {
   deadline: string,
   tags: Tag[],
   attachments: TaskAttachment[],
+  followers: User[],
   assignee: User,
   project?: Project,
   assignee_id: number

@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import { get, url } from '@/helpers/http';
-import { onUpdated, ref } from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps<{
   user?: User
@@ -51,4 +51,4 @@ const remoteMethod = (query: string) => {
     options.value = []
   }
 }
-</script> -->
+</script>

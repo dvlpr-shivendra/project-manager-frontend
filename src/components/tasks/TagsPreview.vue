@@ -2,11 +2,11 @@
     <div>
         <tag class="leading-6" v-if="leadingTag" :background-color="leadingTag.background_color"
             :color="leadingTag.color" :text="leadingTag.name" :closable="true" />&nbsp;
-        <el-tooltip placement="top">
+        <el-tooltip placement="top" v-if="tags.length > 1">
             <template #content>
                 {{ tooltipContent }}
             </template>
-            <span class="cursor-pointer underline" v-if="tags.length > 1">+ {{ tags.length - 1 }}
+            <span class="cursor-pointer underline">+ {{ tags.length - 1 }}
                 more</span>
         </el-tooltip>
     </div>

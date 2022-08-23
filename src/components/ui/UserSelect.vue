@@ -9,7 +9,8 @@
       placeholder="Search for a user"
       :remote-method="remoteMethod"
       :loading="loading"
-      @change="emit('change', selected)"
+      @change="handleChange"
+      value-key="id"
     >
       <el-option v-for="user in options" :key="user.id" :label="user.name" :value="user" />
     </el-select>
@@ -17,8 +18,8 @@
 </template>
 
 <script lang="ts" setup>
-import { get, url } from '@/helpers/http';
-import { ref } from 'vue'
+import { get, url } from '@/helpers/http'
+import { ref, watch } from 'vue'
 
 const props = defineProps<{
   user?: User
@@ -28,6 +29,14 @@ const props = defineProps<{
 let options = ref<User[]>(props.user ? [props.user] : [])
 const loading = ref<boolean>(false)
 const selected = ref<User|undefined>(props.user)
+
+watch(() => props.user, (user) => {
+  if (user && !options.value.find(option => option.id === user.id)) {
+    options.value.push(user)
+  }
+  
+  selected.value = user
+})
 
 const emit = defineEmits(['change'])
 
@@ -45,10 +54,16 @@ const remoteMethod = (query: string) => {
       })
       .catch(e => console.log(e))
       .finally(() => {
-        loading.value = false;
+        loading.value = false
       })
   } else {
     options.value = []
+  }
+}
+
+function handleChange(user: User) {
+  if (user.id !== props.user?.id) {
+    emit('change', user)
   }
 }
 </script>

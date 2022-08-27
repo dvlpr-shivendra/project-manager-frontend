@@ -1,7 +1,6 @@
 <template>
     <div>
-        <tag class="leading-6" v-if="leadingTag" :background-color="leadingTag.background_color"
-            :color="leadingTag.color" :text="leadingTag.name" :closable="true" />&nbsp;
+        <strong class="leading-6" v-if="leadingTag" v-text="leadingTag.name" :closable="true" />&nbsp;
         <el-tooltip placement="top" v-if="tags.length > 1">
             <template #content>
                 {{ tooltipContent }}

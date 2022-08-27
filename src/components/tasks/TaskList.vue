@@ -1,11 +1,11 @@
 <template>
-  <div class="grid grid-cols-12">
-    <div :class="activeTask ? 'col-span-8' : 'col-span-12'">
+  <div class="flex">
+    <div :class="activeTask ? 'w-1/2 xl:w-9/12' : 'w-full'">
       <task-form @submit="tasks.add" />
-      <div v-if="tasks.list.length === 0 && tasks.loading" class="w-9/12">
+      <div v-if="tasks.list.length === 0 && tasks.loading" class="w-full xl:w-9/12">
         <el-skeleton :rows="5" animated />
       </div>
-      <el-table v-else :data="tasks.list" style="width: 100%" @cell-click="handleCellClick" border>
+      <el-table v-else :data="tasks.list" style="width: 100%" @cell-click="handleCellClick" highlight-current-row border>
         <el-table-column type="selection" width="55" />
         <el-table-column prop="title" label="Title" width="360" />
         <el-table-column prop="tags" label="Tags" width="240">
@@ -14,12 +14,19 @@
           </template>
         </el-table-column>
         <el-table-column prop="assignee.name" label="Assignee" />
-      </el-table>
+        <el-table-column prop="timeSpent" label="Hours spent">
+          <template #default="scope">
+            {{ scope.row.timeSpent > 0 ? dayjs.duration({ seconds: scope.row.timeSpent }).asHours().toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }) : '-' }}
+          </template>
+        </el-table-column>
+      </el-table> 
     </div>
 
-    <div class="transition-all" :class="{'col-span-4' : activeTask}">
-      <task v-if="activeTask" :task="activeTask" @close="closeTask" />
+    <Transition name="slide-fade">
+    <div v-if="activeTask" class="absolute w-screen h-screen bg-white z-10 left-0 top-0 md:static md:w-full md:h-full" :class="{'md:w-1/2 xl:w-3/12' : activeTask}">   
+      <task :task="activeTask" @close="closeTask" />
     </div>
+    </Transition>
   </div>
 </template>
 
@@ -31,6 +38,7 @@ import { useRouter } from 'vue-router';
 import { computed, onMounted } from 'vue';
 import { useTasks } from '@/stores/tasks';
 import TagsPreview from './TagsPreview.vue';
+import dayjs from 'dayjs';
 
 const props = defineProps<{
   projectId: number

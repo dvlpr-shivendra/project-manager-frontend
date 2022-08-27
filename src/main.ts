@@ -10,6 +10,11 @@ import App from './App.vue'
 import './App.css'
 import router from './router'
 
+import duration from 'dayjs/plugin/duration'
+import dayjs from 'dayjs'
+
+dayjs.extend(duration)
+
 
 const app = createApp(App)
 

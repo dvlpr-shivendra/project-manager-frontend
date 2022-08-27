@@ -40,7 +40,7 @@
     </div>
 
     <Transition name="slide-fade">
-      <div v-if="activeTask" class="absolute w-screen h-screen bg-white z-10 left-0 top-0 md:static md:w-full md:h-full"
+      <div v-if="activeTask" class="absolute w-screen h-screen bg-white z-10 left-0 top-0 md:sticky md:w-full md:h-full"
         :class="{ 'md:w-1/2 xl:w-3/12': activeTask }">
         <task :task="activeTask" @close="closeTask" />
       </div>

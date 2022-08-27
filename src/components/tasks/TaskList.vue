@@ -59,6 +59,7 @@ import TagsPreview from './TagsPreview.vue';
 import dayjs from 'dayjs';
 import { useTags } from '@/stores/tags';
 import { ArrowDown } from '@element-plus/icons-vue'
+import { url } from '@/helpers/http';
 
 const props = defineProps<{
   projectId: number
@@ -71,7 +72,7 @@ const tasks = useTasks()
 const tags = useTags()
 
 onMounted(() => {
-  tasks.getAll(props.projectId.toString())
+  tasks.getAll(url(`tasks?project_id=${props.projectId}`))
 })
 
 const activeTask = computed(() => {
@@ -94,8 +95,8 @@ function closeTask() {
   router.push({ ...router.currentRoute.value, query: {} })
 }
 
-function handleTagFilterDropdownCommand(command: number) {
-  console.log(command);
+function handleTagFilterDropdownCommand(tagId: number) {
+  tasks.getAll(url(`tasks?project_id=${props.projectId}&tag_id=${tagId}`)) 
 }
 
 </script>

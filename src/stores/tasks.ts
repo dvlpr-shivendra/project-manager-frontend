@@ -11,7 +11,7 @@ export const useTasks = defineStore('tasks', {
   actions: {
     getAll(url: string) {
       this.loading = true;
-      get(this.pagination.next_page_url || url)
+      get(url)
         .then(({ data, next_page_url, current_page, last_page }) => {
           this.list = data
           this.pagination = { next_page_url, current_page, last_page }

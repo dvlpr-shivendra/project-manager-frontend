@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 
 export const useTags = defineStore('tags', {
   state: () => ({
-    list: []
+    list: [] as Tag[]
   }),
 
   actions: {

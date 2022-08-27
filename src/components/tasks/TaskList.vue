@@ -5,10 +5,24 @@
       <div v-if="tasks.list.length === 0 && tasks.loading" class="w-full xl:w-9/12">
         <el-skeleton :rows="5" animated />
       </div>
-      <el-table v-else :data="tasks.list" style="width: 100%" @cell-click="handleCellClick" highlight-current-row border>
+      <el-table v-else :data="tasks.list" style="width: 100%" @cell-click="handleCellClick" highlight-current-row
+        :border="true">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="title" label="Title" width="360" />
         <el-table-column prop="tags" label="Tags" width="240">
+          <template #header>
+            <el-dropdown @command="handleTagFilterDropdownCommand">
+              <span class="el-dropdown-link">
+                Tags
+                <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item v-for="tag in tags.list" :command="tag.id">{{ tag.name }}</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </template>
           <template #default="scope">
             <tags-preview :tags="scope.row.tags" />
           </template>
@@ -16,16 +30,20 @@
         <el-table-column prop="assignee.name" label="Assignee" />
         <el-table-column prop="timeSpent" label="Hours spent">
           <template #default="scope">
-            {{ scope.row.timeSpent > 0 ? dayjs.duration({ seconds: scope.row.timeSpent }).asHours().toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }) : '-' }}
+            {{ scope.row.timeSpent > 0 ? dayjs.duration({
+                seconds: scope.row.timeSpent
+              }).asHours().toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }) : '-'
+            }}
           </template>
         </el-table-column>
-      </el-table> 
+      </el-table>
     </div>
 
     <Transition name="slide-fade">
-    <div v-if="activeTask" class="absolute w-screen h-screen bg-white z-10 left-0 top-0 md:static md:w-full md:h-full" :class="{'md:w-1/2 xl:w-3/12' : activeTask}">   
-      <task :task="activeTask" @close="closeTask" />
-    </div>
+      <div v-if="activeTask" class="absolute w-screen h-screen bg-white z-10 left-0 top-0 md:static md:w-full md:h-full"
+        :class="{ 'md:w-1/2 xl:w-3/12': activeTask }">
+        <task :task="activeTask" @close="closeTask" />
+      </div>
     </Transition>
   </div>
 </template>
@@ -39,6 +57,8 @@ import { computed, onMounted } from 'vue';
 import { useTasks } from '@/stores/tasks';
 import TagsPreview from './TagsPreview.vue';
 import dayjs from 'dayjs';
+import { useTags } from '@/stores/tags';
+import { ArrowDown } from '@element-plus/icons-vue'
 
 const props = defineProps<{
   projectId: number
@@ -47,6 +67,8 @@ const props = defineProps<{
 const router = useRouter()
 
 const tasks = useTasks()
+
+const tags = useTags()
 
 onMounted(() => {
   tasks.getAll(props.projectId.toString())
@@ -70,6 +92,10 @@ function openTask(task: Task) {
 
 function closeTask() {
   router.push({ ...router.currentRoute.value, query: {} })
+}
+
+function handleTagFilterDropdownCommand(command: number) {
+  console.log(command);
 }
 
 </script>

@@ -6,13 +6,13 @@
       </el-collapse-item>
     </el-collapse> -->
 
-    <task-list :projectId="parseInt(props.id)" :key="route.fullPath" />
+    <task-list :projectId="parseInt(props.id)" :key="updateTriggerKey" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { get, url } from '@/helpers/http';
-import { onMounted, ref, type Ref } from 'vue';
+import { onMounted, ref, watch, type Ref } from 'vue';
 import TaskList from '@/components/tasks/TaskList.vue';
 import { useRoute } from 'vue-router';
 
@@ -21,6 +21,15 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
+
+const updateTriggerKey = ref(0)
+
+watch(
+  () => route.query.page,
+  (value) => {
+    if (value) updateTriggerKey.value++
+  }
+)
 
 
 // let project: Ref<Project> = ref(<Project>{})

@@ -67,7 +67,7 @@
 import Task from './Task.vue';
 import TaskForm from './TaskForm.vue'
 import { useRoute, useRouter } from 'vue-router';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useTasks } from '@/stores/tasks';
 import TagsPreview from './TagsPreview.vue';
 import dayjs from 'dayjs';
@@ -91,9 +91,7 @@ onMounted(() => {
   /** @ts-ignore */
   const query = new URLSearchParams(route.query).toString()
   
-  if (tasks.pagination.current_page?.toString() !== route.query.page) {
-    tasks.getAll(url(`tasks?project_id=${props.projectId}&${query}`))
-  }
+  tasks.getAll(url(`tasks?project_id=${props.projectId}&${query}`))
 })
 
 const activeTask = computed(() => {
@@ -117,7 +115,13 @@ function closeTask() {
 }
 
 function handleTagFilterDropdownCommand(tagId: number) {
-  tasks.getAll(url(`tasks?project_id=${props.projectId}&tag_id=${tagId}`))
+  router.replace({ ...router.currentRoute.value, query: { ...route.query, page: undefined, tag_id: tagId} })
+  
+ setTimeout(() => {
+   /** @ts-ignore */
+    const query = new URLSearchParams(route.query).toString()
+    tasks.getAll(url(`tasks?project_id=${props.projectId}&${query}`))
+ }, 0);
 }
 
 function updateCurrentPage(pageNumber: number) {

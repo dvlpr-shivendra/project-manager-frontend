@@ -20,7 +20,7 @@
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item v-for="tag in tags.list" :command="tag.id">{{ tag.name }}</el-dropdown-item>
+                  <el-dropdown-item v-for="tag in tags.list" :command="tag.id" :key="tag.id">{{ tag.name }}</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -40,9 +40,13 @@
         </el-table-column>
         <template #append>
           <div class="p-4">
-            <el-pagination v-model:currentPage="tasks.pagination.current_page"
-              :disabled="tasks.loading" layout="prev, pager, next, jumper" :total="tasks.pagination.total"
-              @current-change="handleCurrentChange" />
+            <el-pagination
+              :default-current-page="tasks.pagination.current_page"
+              :disabled="tasks.loading"
+              layout="prev, pager, next, jumper"
+              :total="tasks.pagination.total"
+              @update:current-page="updateCurrentPage"
+            />
 
           </div>
         </template>
@@ -86,7 +90,10 @@ const tags = useTags()
 onMounted(() => {
   /** @ts-ignore */
   const query = new URLSearchParams(route.query).toString()
-  tasks.getAll(url(`tasks?project_id=${props.projectId}&${query}`))
+  
+  if (tasks.pagination.current_page?.toString() !== route.query.page) {
+    tasks.getAll(url(`tasks?project_id=${props.projectId}&${query}`))
+  }
 })
 
 const activeTask = computed(() => {
@@ -102,21 +109,18 @@ function handleCellClick(task: Task) {
 }
 
 function openTask(task: Task) {
-  router.push({ ...router.currentRoute.value, query: { task: task.id } })
+  router.replace({ ...router.currentRoute.value, query: { ...route.query, task: task.id } })
 }
 
 function closeTask() {
-  router.push({ ...router.currentRoute.value, query: {} })
+  router.replace({ ...router.currentRoute.value, query: {} })
 }
 
 function handleTagFilterDropdownCommand(tagId: number) {
   tasks.getAll(url(`tasks?project_id=${props.projectId}&tag_id=${tagId}`))
 }
 
-function handleCurrentChange(pageNumber: number) {
-  let query: any = route.query
-
-  query.page = pageNumber.toString()
+function updateCurrentPage(pageNumber: number) {
 
   router.push({ ...router.currentRoute.value, query: { page: pageNumber } })
 }

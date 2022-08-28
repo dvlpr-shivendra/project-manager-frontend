@@ -114,14 +114,11 @@ function closeTask() {
   router.replace({ ...router.currentRoute.value, query: {} })
 }
 
-function handleTagFilterDropdownCommand(tagId: number) {
-  router.replace({ ...router.currentRoute.value, query: { ...route.query, page: undefined, tag_id: tagId} })
+async function handleTagFilterDropdownCommand(tagId: number) {
+  await router.replace({ ...router.currentRoute.value, query: { ...route.query, page: undefined, tag_id: tagId} })
   
- setTimeout(() => {
-   /** @ts-ignore */
-    const query = new URLSearchParams(route.query).toString()
-    tasks.getAll(url(`tasks?project_id=${props.projectId}&${query}`))
- }, 0);
+  const query = new URLSearchParams(route.query as Record<string, string>).toString()
+  tasks.getAll(url(`tasks?project_id=${props.projectId}&${query}`))
 }
 
 function updateCurrentPage(pageNumber: number) {

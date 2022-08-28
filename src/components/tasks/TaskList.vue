@@ -14,7 +14,9 @@
             <el-dropdown @command="handleTagFilterDropdownCommand">
               <span class="el-dropdown-link">
                 Tags
-                <el-icon class="el-icon--right"><ArrowDown /></el-icon>
+                <el-icon class="el-icon--right">
+                  <ArrowDown />
+                </el-icon>
               </span>
               <template #dropdown>
                 <el-dropdown-menu>
@@ -36,6 +38,14 @@
             }}
           </template>
         </el-table-column>
+        <template #append>
+          <div class="p-4">
+            <el-pagination v-model:currentPage="tasks.pagination.current_page"
+              :disabled="tasks.loading" layout="prev, pager, next, jumper" :total="tasks.pagination.total"
+              @current-change="handleCurrentChange" />
+
+          </div>
+        </template>
       </el-table>
     </div>
 
@@ -52,7 +62,7 @@
 
 import Task from './Task.vue';
 import TaskForm from './TaskForm.vue'
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { computed, onMounted } from 'vue';
 import { useTasks } from '@/stores/tasks';
 import TagsPreview from './TagsPreview.vue';
@@ -67,12 +77,16 @@ const props = defineProps<{
 
 const router = useRouter()
 
+const route = useRoute()
+
 const tasks = useTasks()
 
 const tags = useTags()
 
 onMounted(() => {
-  tasks.getAll(url(`tasks?project_id=${props.projectId}`))
+  /** @ts-ignore */
+  const query = new URLSearchParams(route.query).toString()
+  tasks.getAll(url(`tasks?project_id=${props.projectId}&${query}`))
 })
 
 const activeTask = computed(() => {
@@ -96,7 +110,15 @@ function closeTask() {
 }
 
 function handleTagFilterDropdownCommand(tagId: number) {
-  tasks.getAll(url(`tasks?project_id=${props.projectId}&tag_id=${tagId}`)) 
+  tasks.getAll(url(`tasks?project_id=${props.projectId}&tag_id=${tagId}`))
+}
+
+function handleCurrentChange(pageNumber: number) {
+  let query: any = route.query
+
+  query.page = pageNumber.toString()
+
+  router.push({ ...router.currentRoute.value, query: { page: pageNumber } })
 }
 
 </script>

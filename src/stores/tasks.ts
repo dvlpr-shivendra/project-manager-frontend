@@ -12,9 +12,9 @@ export const useTasks = defineStore('tasks', {
     getAll(url: string) {
       this.loading = true;
       get(url)
-        .then(({ data, next_page_url, current_page, last_page }) => {
+        .then(({ data, next_page_url, current_page, last_page, total }) => {
           this.list = data
-          this.pagination = { next_page_url, current_page, last_page }
+          this.pagination = { next_page_url, current_page, last_page, total }
         })
         .catch(error => {
           console.log('error', error)

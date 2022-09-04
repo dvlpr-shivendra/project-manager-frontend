@@ -11,19 +11,7 @@
         <el-table-column prop="title" label="Title" width="360" />
         <el-table-column prop="tags" label="Tags" width="240">
           <template #header>
-            <el-dropdown @command="handleTagFilterDropdownCommand">
-              <span class="el-dropdown-link">
-                Tags
-                <el-icon class="el-icon--right">
-                  <ArrowDown />
-                </el-icon>
-              </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item v-for="tag in tags.list" :command="tag.id" :key="tag.id">{{ tag.name }}</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
+            <Filter label="Tags" :options="tags.list" @change="handleTagFilterChange" @clear="handleTagFilterChange" />
           </template>
           <template #default="scope">
             <tags-preview :tags="scope.row.tags" />
@@ -72,8 +60,8 @@ import { useTasks } from '@/stores/tasks';
 import TagsPreview from './TagsPreview.vue';
 import dayjs from 'dayjs';
 import { useTags } from '@/stores/tags';
-import { ArrowDown } from '@element-plus/icons-vue'
 import { url } from '@/helpers/http';
+import Filter from '@/components/ui/table/Filter.vue';
 
 const props = defineProps<{
   projectId: number
@@ -114,7 +102,7 @@ function closeTask() {
   router.replace({ ...router.currentRoute.value, query: {} })
 }
 
-async function handleTagFilterDropdownCommand(tagId: number) {
+async function handleTagFilterChange(tagId: number) {
   await router.replace({ ...router.currentRoute.value, query: { ...route.query, page: undefined, tag_id: tagId} })
   
   const query = new URLSearchParams(route.query as Record<string, string>).toString()

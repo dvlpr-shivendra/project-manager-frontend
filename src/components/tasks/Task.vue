@@ -73,7 +73,7 @@ import Timer from './Timer.vue'
 import TagsList from './TagsList.vue'
 import { useRouter } from "vue-router";
 import { useTasks } from "@/stores/tasks";
-import Editor from '@/components/ui/Editor/Editor.vue'
+import Editor from '@/components/ui/editor/Editor.vue'
 import { ElMessage, ElMessageBox } from "element-plus";
 import Followers from "@/components/ui/Followers.vue";
 import Attachments from "@/components/ui/Attachments.vue";

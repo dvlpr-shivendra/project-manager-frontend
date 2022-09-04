@@ -30,14 +30,14 @@
           </template>
         </el-table-column>
         <el-table-column prop="assignee.name" label="Assignee" />
-        <el-table-column prop="timeSpent" label="Hours spent">
+        <!-- <el-table-column prop="timeSpent" label="Hours spent">
           <template #default="scope">
             {{ scope.row.timeSpent > 0 ? dayjs.duration({
                 seconds: scope.row.timeSpent
               }).asHours().toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }) : '-'
             }}
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <template #append>
           <div class="p-4">
             <el-pagination

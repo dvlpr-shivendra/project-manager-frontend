@@ -11,30 +11,24 @@
         <el-table-column prop="title" label="Title" width="360" />
         <el-table-column prop="tags" label="Tags" width="240">
           <template #header>
-            <Filter label="Tags" :options="tags.list" @change="handleTagFilterChange" @clear="handleTagFilterChange" />
+            <Filter routeKey="tag" placeholder="Filter by tags"
+              @change="(keyword: string) => handleFilterChange('tag', keyword)" />
           </template>
           <template #default="scope">
             <tags-preview :tags="scope.row.tags" />
           </template>
         </el-table-column>
-        <el-table-column prop="assignee.name" label="Assignee" />
-        <!-- <el-table-column prop="timeSpent" label="Hours spent">
-          <template #default="scope">
-            {{ scope.row.timeSpent > 0 ? dayjs.duration({
-                seconds: scope.row.timeSpent
-              }).asHours().toLocaleString('en-IN', { maximumFractionDigits: 2, minimumFractionDigits: 2 }) : '-'
-            }}
+        <el-table-column prop="assignee.name" label="Assignee">
+          <template #header>
+            <Filter routeKey="assignee" placeholder="Filter by assignee"
+              @change="(keyword: string) => handleFilterChange('assignee', keyword)" />
           </template>
-        </el-table-column> -->
+        </el-table-column>
         <template #append>
           <div class="p-4">
-            <el-pagination
-              :default-current-page="tasks.pagination.current_page"
-              :disabled="tasks.loading"
-              layout="prev, pager, next, jumper"
-              :total="tasks.pagination.total"
-              @update:current-page="updateCurrentPage"
-            />
+            <el-pagination :default-current-page="tasks.pagination.current_page" :disabled="tasks.loading"
+              layout="prev, pager, next, jumper" :total="tasks.pagination.total"
+              @update:current-page="updateCurrentPage" />
 
           </div>
         </template>
@@ -58,8 +52,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { computed, onMounted, watch } from 'vue';
 import { useTasks } from '@/stores/tasks';
 import TagsPreview from './TagsPreview.vue';
-import dayjs from 'dayjs';
-import { useTags } from '@/stores/tags';
 import { url } from '@/helpers/http';
 import Filter from '@/components/ui/table/Filter.vue';
 
@@ -73,12 +65,10 @@ const route = useRoute()
 
 const tasks = useTasks()
 
-const tags = useTags()
-
 onMounted(() => {
   /** @ts-ignore */
   const query = new URLSearchParams(route.query).toString()
-  
+
   tasks.getAll(url(`tasks?project_id=${props.projectId}&${query}`))
 })
 
@@ -102,9 +92,9 @@ function closeTask() {
   router.replace({ ...router.currentRoute.value, query: {} })
 }
 
-async function handleTagFilterChange(tagId: number) {
-  await router.replace({ ...router.currentRoute.value, query: { ...route.query, page: undefined, tag_id: tagId} })
-  
+async function handleFilterChange(type: 'tag' | 'assignee', keyword: string) {
+  await router.replace({ ...router.currentRoute.value, query: { ...route.query, page: undefined, [type]: keyword === "" ? undefined : keyword } })
+
   const query = new URLSearchParams(route.query as Record<string, string>).toString()
   tasks.getAll(url(`tasks?project_id=${props.projectId}&${query}`))
 }

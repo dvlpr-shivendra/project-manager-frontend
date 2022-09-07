@@ -1,46 +1,28 @@
 <template>
-    <el-dropdown @command="handleCommand">
-        <span class="el-dropdown-link">
-            {{ label }}
-            <el-icon class="el-icon--right">
-                <ArrowDown />
-            </el-icon>
-        </span>
-        <template #dropdown>
-            <el-dropdown-menu>
-                <el-dropdown-item :command="-1">
-                    Clear
-                </el-dropdown-item>
-                <el-dropdown-item v-for="option of options" :command="option.id" :key="option.id">
-                    {{ option.name }}
-                </el-dropdown-item>
-            </el-dropdown-menu>
-        </template>
-    </el-dropdown>
+    <el-input :placeholder="placeholder" class="filter" v-model="model" @keypress.enter="emit('change', model)" />
 </template>
 
 
 <script lang="ts" setup>
-import { ArrowDown } from '@element-plus/icons-vue'
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 
-type Option = {
-    id: number,
-    name: string,
-}
 
-defineProps<{
-    label: string,
-    options: Option[]
+const props = defineProps<{
+    placeholder: string,
+    routeKey: string,
 }>()
 
-const emit = defineEmits(['change', 'clear'])
+const emit = defineEmits(['change'])
 
-function handleCommand(id: number) {
-    if (id === -1) {
-        emit('clear')
-    } else {
-        emit('change', id)
-    }
-}
+const route = useRoute()
+
+const model = ref(route.query[props.routeKey] as string || "" )
 
 </script>
+
+<style>
+.filter .el-input__inner {
+    --el-input-border: none;
+}
+</style>

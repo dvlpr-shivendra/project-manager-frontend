@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button class="w-full" text bg :icon="User" @click="openDrawer = true">
+    <el-button class="w-full mb-2 !justify-start" text bg :icon="User" @click="openDrawer = true">
       <span v-if="followers.length === 0">Add followers</span>
       <span v-else>{{ followers.length }} {{ pluralize('follower', followers.length) }}</span>
     </el-button>

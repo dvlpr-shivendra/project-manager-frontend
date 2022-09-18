@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.0",
+    "@tailwindcss/typography": "^0.5.7",
     "@types/jsdom": "^16.2.14",
     "@types/lodash.debounce": "^4.0.7",
     "@types/node": "^16.11.22",

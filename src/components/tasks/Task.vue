@@ -55,6 +55,8 @@
 
       <followers :followers="task.followers" @add="addFollower" @remove="removeFollower" />
 
+      <comments :endPoint="`tasks/${task.id}/comments`" />
+
     </el-form>
   </div>
 </template>
@@ -77,6 +79,7 @@ import Editor from '@/components/ui/editor/Editor.vue'
 import { ElMessage, ElMessageBox } from "element-plus";
 import Followers from "@/components/ui/Followers.vue";
 import Attachments from "@/components/ui/Attachments.vue";
+import Comments from "@/components/ui/Comments.vue";
 
 const props = defineProps<{
   task: Task

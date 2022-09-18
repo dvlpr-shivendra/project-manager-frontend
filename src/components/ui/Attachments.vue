@@ -1,6 +1,6 @@
 <template>
 
-  <el-button class="w-full mb-2" text bg :icon="UploadFilled" @click="openDrawer = true">
+  <el-button class="w-full mb-2 !justify-start" text bg :icon="UploadFilled" @click="openDrawer = true">
     <span v-if="attachments.length === 0">Upload attachments</span>
     <span v-else>{{ attachments.length }} {{ pluralize('attachment', attachments.length) }}</span>
   </el-button>

@@ -1,5 +1,5 @@
 <template>
-  <div class="shadow h-[calc(100vh-3rem)]">
+  <div class="shadow h-screen">
     <div class="w-full flex justify-between items-center border px-4 py-2">
       <div>
         <el-tooltip class="box-item" effect="dark" :content="'Mark ' + (task.is_complete ? 'Incomplete' : 'Complete')"
@@ -34,8 +34,8 @@
     </div>
 
     <el-form v-model="task" label-position="top" class="pb-4 px-4 pt-2">
-      <textarea class="mb-2 w-full min-h-min max-h-max text-2xl rounded focus:outline-0 resize-none"
-        v-model="task.title" placeholder="Task title" />
+      <input type="text" class="mb-4 w-full min-h-min max-h-max text-2xl rounded focus:outline-0"
+        v-model="task.title" placeholder="Task title" :title="task.title" />
 
       <el-form-item label="Deadline">
         <el-date-picker style="width: 100%;" placeholder="Click to set deadline" v-model="task.deadline" type="datetime"

@@ -1,11 +1,11 @@
 <template>
-  <div class="flex">
-    <div :class="activeTask ? 'w-1/2 xl:w-9/12' : 'w-full'">
+  <div>
+    <div>
       <task-form @submit="tasks.add" />
-      <div v-if="tasks.list.length === 0 && tasks.loading" class="w-full xl:w-9/12">
+      <div v-if="tasks.list.length === 0 && tasks.loading">
         <el-skeleton :rows="5" animated />
       </div>
-      <el-table v-else :data="tasks.list" style="width: 100%" @cell-click="handleCellClick" highlight-current-row
+      <el-table v-else :data="tasks.list" :style="{width: '100%'}" @cell-click="handleCellClick" highlight-current-row
         :border="true">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="title" label="Title" width="360" />
@@ -35,9 +35,10 @@
       </el-table>
     </div>
 
-    <Transition name="slide-fade">
-      <div v-if="activeTask" class="absolute w-screen h-screen bg-white z-10 left-0 top-0 md:sticky md:w-full md:h-full"
-        :class="{ 'md:w-1/2 xl:w-3/12': activeTask }">
+    <Transition name="fade">
+      <div v-if="activeTask"
+        class="absolute w-screen h-screen bg-white z-10 left-0 top-0 md:w-full md:h-full md:right-0 md:left-auto"
+        :class="{ 'md:w-1/2 lg:w-4/12 2xl:w-3/12': activeTask }">
         <task :task="activeTask" @close="closeTask" />
       </div>
     </Transition>

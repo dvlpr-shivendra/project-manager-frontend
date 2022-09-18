@@ -52,5 +52,7 @@ watch(() => props.modelValue, (value) => {
   border-radius: 3px;
   padding: 10px;
   box-sizing: border-box;
+  max-height: 85px;
+  overflow-y: scroll;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-button link @click="openDrawer = true">
+    <el-button class="w-full" text bg :icon="User" @click="openDrawer = true">
       <span v-if="followers.length === 0">Add followers</span>
       <span v-else>{{ followers.length }} {{ pluralize('follower', followers.length) }}</span>
     </el-button>
@@ -28,11 +28,10 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { ElMessageBox } from 'element-plus';
-import { Close } from '@element-plus/icons-vue'
-import { pluralize } from '@/helpers/string';
-import UserSelect from './UserSelect.vue';
 import Avatar from './Avatar.vue'
+import UserSelect from './UserSelect.vue';
+import { pluralize } from '@/helpers/string';
+import { Close, User } from '@element-plus/icons-vue'
 
 defineProps<{
   followers: User[]

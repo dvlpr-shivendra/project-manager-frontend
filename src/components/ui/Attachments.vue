@@ -1,11 +1,9 @@
 <template>
 
-  <div>
-    <el-button link @click="openDrawer = true">
-      <span v-if="attachments.length === 0">Upload attachments</span>
-      <span v-else>{{ attachments.length }} {{ pluralize('attachment', attachments.length) }}</span>
-    </el-button>
-  </div>
+  <el-button class="w-full mb-2" text bg :icon="UploadFilled" @click="openDrawer = true">
+    <span v-if="attachments.length === 0">Upload attachments</span>
+    <span v-else>{{ attachments.length }} {{ pluralize('attachment', attachments.length) }}</span>
+  </el-button>
 
   <el-drawer v-model="openDrawer" direction="rtl" :with-header="false" size="40%">
     <el-upload name="file" :headers="headers" drag :action="action" :show-file-list="false" :on-success="handleSuccess"

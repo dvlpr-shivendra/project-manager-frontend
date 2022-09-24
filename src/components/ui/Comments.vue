@@ -18,9 +18,9 @@
             <div>
                 <div class="prose mb-3" v-html="comment.body"></div>
 
-                <div class="flex justify-between">
-                    <p>{{ comment.user.name }}</p>
+                <div class="flex justify-between items-center">
                     <el-button type="danger" :icon="Delete" circle size="small" :loading="false" />
+                    <p class=" text-xs">{{ comment.user.name }} &middot; 2 days ago</p>
                 </div>
             </div>
         </div>
@@ -65,6 +65,7 @@ function addComment() {
     post(url(props.endPoint), newComment.value)
         .then(comment => {
             comments.value.push(comment)
+            newComment.value.body = ''
         })
 }
 

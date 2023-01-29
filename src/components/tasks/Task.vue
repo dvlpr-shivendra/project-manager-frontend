@@ -33,7 +33,7 @@
 
     </div>
 
-    <el-form v-model="task" label-position="top" class="pb-4 px-4 pt-2">
+    <el-form label-position="top" class="pb-4 px-4 pt-2">
       <input type="text" class="mb-4 w-full min-h-min max-h-max text-2xl rounded focus:outline-0"
         v-model="task.title" placeholder="Task title" :title="task.title" />
 

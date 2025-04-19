@@ -10,7 +10,7 @@
     <user-select label="Add follower" @change="addFollower" />
 
     <div class="grid grid-cols-2 col-span-2 lg:col-span-1 gap-2">
-      <div class="flex items-center p-2 bg-slate-200 justify-between rounded hover:bg-slate-300"
+      <div class="flex items-center p-2 justify-between rounded"
         v-for="follower in followers" :key="follower.id">
         <div class="flex items-center rounded cursor-pointer">
           <div class="mr-3">

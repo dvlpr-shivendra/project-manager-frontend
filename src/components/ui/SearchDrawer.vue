@@ -12,7 +12,7 @@
 
       <p class="font-bold text-lg mb-2" v-if="result.projects.length > 0">Projects</p>
       <TransitionGroup name="list">
-        <p class="cursor-pointer bg-slate-100 text-blue-800 rounded p-2 mb-1" v-for="project in result.projects"
+        <p class="cursor-pointer text-blue-800 rounded p-2 mb-1" v-for="project in result.projects"
           :key="project.id" @click="openProject(project)">
           {{ project.name }}
         </p>
@@ -22,7 +22,7 @@
     <div class="my-8">
       <p class="font-bold text-lg mb-2" v-if="result.tasks.length > 0">Tasks</p>
       <TransitionGroup name="list">
-        <p class="cursor-pointer bg-slate-100 rounded p-2 mb-1" v-for="task in result.tasks" @click="openTask(task)"
+        <p class="cursor-pointer rounded p-2 mb-1" v-for="task in result.tasks" @click="openTask(task)"
           :key="task.id">
           {{ task.project?.name }} <span class=" text-blue-800 ">{{ task.title }}</span>
         </p>

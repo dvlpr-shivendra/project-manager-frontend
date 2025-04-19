@@ -14,7 +14,7 @@
 
         <p class="mt-5 mb-3 font-bold capitalize">{{ comments.length }} {{ pluralize('comment', comments.length) }}</p>
 
-        <div v-for="comment in comments" class="bg-slate-100 mb-3 p-3 rounded">
+        <div v-for="comment in comments" class="mb-3 p-3 rounded">
             <div>
                 <div class="prose mb-3" v-html="comment.body"></div>
 

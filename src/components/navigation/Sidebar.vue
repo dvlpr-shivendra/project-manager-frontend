@@ -2,12 +2,9 @@
   <el-scrollbar>
     <el-menu
       default-active="1"
-      background-color="#27272a"
-      text-color="#ffffff"
       @open="handleOpen"
       @close="handleClose"
-      class="h-screen"
-      style="border: #27272a !important"
+      class="h-[calc(100vh-48px)]"
       :router="true"
     >
       <el-menu-item index="1" route="/">

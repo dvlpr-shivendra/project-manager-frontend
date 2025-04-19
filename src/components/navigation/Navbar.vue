@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-between items-center px-4 h-12 bg-black">
+  <div class="flex justify-between items-center px-4 h-12">
     <router-link to="/" style="font-family: cursive;" class="text-white">
       Logo
     </router-link>

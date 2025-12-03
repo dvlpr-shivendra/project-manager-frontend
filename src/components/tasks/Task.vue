@@ -1,6 +1,6 @@
 <template>
   <div class="shadow h-screen">
-    <div class="w-full flex justify-between items-center border px-4 py-2">
+    <div class="w-full flex justify-between items-center border border-gray-200 px-4 py-2">
       <div>
         <el-tooltip class="box-item" effect="dark" :content="'Mark ' + (task.is_complete ? 'Incomplete' : 'Complete')"
           placement="bottom">

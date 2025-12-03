@@ -8,6 +8,7 @@
       <el-table v-else :data="tasks.list" :style="{width: '100%'}" @cell-click="handleCellClick" highlight-current-row
         :border="true">
         <el-table-column type="selection" width="55" />
+        <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="title" label="Title" width="360" />
         <el-table-column prop="tags" label="Tags" width="240">
           <template #header>

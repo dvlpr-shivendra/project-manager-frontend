@@ -79,6 +79,8 @@ type Task = {
 type TaskForm = {
   title: string
   project_id: number
+  tags: string[],
+  assignee_id: number | null,
 }
 
 type ApiExceptionPayload = {

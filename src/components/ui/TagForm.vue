@@ -46,8 +46,7 @@ const newTagName = ref<string>('')
 
 function handleChange(input: number | string) {
   if (typeof input === 'number') {
-    const tag = props.availableTags[input - 1]
-
+    const tag = props.availableTags.find(t => t.id === input)
     emit('addTag', tag)
   } else {
     isNewTag.value = true

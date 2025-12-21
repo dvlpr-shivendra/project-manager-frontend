@@ -13,9 +13,14 @@
                 <span class="flex items-center gap-2"><Upload />Import</span>
               </el-dropdown-item>
               <el-dropdown-item command="export">
-                <span class="flex items-center gap-2"><Download />Export</span>
+                <span class="flex items-center gap-2"><Download />Export All tasks</span>
               </el-dropdown-item>
-              <el-dropdown-item v-if="selectedTaskIds.length" @click="deleteSelectedTasks">
+              <el-dropdown-item v-if="selectedTaskIds.length" command="importSelectedTasks">
+                <span class="flex items-center gap-2">
+                  <Delete />Export {{ selectedTaskIds.length }} {{ pluralize('task', selectedTaskIds.length) }}
+                </span>
+              </el-dropdown-item>
+              <el-dropdown-item v-if="selectedTaskIds.length" command="deleteSelectedTasks">
                 <span class="flex items-center gap-2 text-red-500">
                   <Delete />Delete {{ selectedTaskIds.length }} {{ pluralize('task', selectedTaskIds.length) }}
                 </span>
@@ -72,6 +77,7 @@
 
 <script lang="ts" setup>
 
+import { ElMessage, ElMessageBox } from "element-plus";
 import Task from './Task.vue';
 import TaskForm from './TaskForm.vue'
 import { useRoute, useRouter } from 'vue-router';
@@ -81,7 +87,6 @@ import TagsPreview from './TagsPreview.vue';
 import { url } from '@/helpers/http';
 import Filter from '@/components/ui/table/Filter.vue';
 import { Download, Upload, MoreFilled, Delete } from '@element-plus/icons-vue';
-import { ElMessage } from 'element-plus';
 import { pluralize } from '@/helpers/string';
 
 const props = defineProps<{
@@ -139,84 +144,23 @@ function handleMenuCommand(command: string) {
     importTasks()
   } else if (command === 'export') {
     exportTasks()
+  } else if (command === 'exportSelectedTasks') {
+    exportSelectedTasks()
+  } else if (command === 'deleteSelectedTasks') {
+    deleteSelectedTasks()
   }
-}
-
-function importTasks() {
-  const input = document.createElement('input')
-  input.type = 'file'
-  input.accept = '.csv'
-  input.onchange = (e: any) => {
-    const file = e.target.files[0]
-    if (!file) return
-
-    const reader = new FileReader()
-    reader.onload = (event: any) => {
-      try {
-        const csv = event.target.result
-        const lines = csv.split('\n').filter((line: string) => line.trim())
-        
-        if (lines.length < 2) {
-          ElMessage.warning('CSV file must contain headers and at least one task')
-          return
-        }
-
-        // Skip header row and process task rows
-        for (let i = 1; i < lines.length; i++) {
-          const line = lines[i]
-          const [id, title, tags, assignee] = parseCSVLine(line)
-
-          if (!title || !title.trim()) continue
-
-          const taskData: TaskForm = {
-            title: title.trim(),
-            project_id: props.projectId,
-            tags: tags ? tags.split(',').map(t => t.trim()).filter(t => t) : [],
-            assignee_id: assignee ? parseInt(assignee) : null
-          }
-
-          tasks.add(taskData)
-        }
-
-        ElMessage.success(`Successfully imported ${lines.length - 1} tasks`)
-      } catch (error) {
-        console.error('Error importing tasks:', error)
-        ElMessage.error('Failed to import tasks. Please check the CSV format.')
-      }
-    }
-    reader.readAsText(file)
-  }
-  input.click()
-}
-
-function parseCSVLine(line: string): string[] {
-  const result = []
-  let current = ''
-  let inQuotes = false
-
-  for (let i = 0; i < line.length; i++) {
-    const char = line[i]
-
-    if (char === '"') {
-      if (inQuotes && line[i + 1] === '"') {
-        current += '"'
-        i++
-      } else {
-        inQuotes = !inQuotes
-      }
-    } else if (char === ',' && !inQuotes) {
-      result.push(current)
-      current = ''
-    } else {
-      current += char
-    }
-  }
-
-  result.push(current)
-  return result
 }
 
 function exportTasks() {
+
+}
+
+function importTasks() {
+
+}
+
+
+function exportSelectedTasks() {
   if (tasks.list.length === 0) {
     console.warn('No tasks to export')
     return
@@ -255,11 +199,14 @@ function handleSelectionChange(selection: any[]) {
 }
 
 async function deleteSelectedTasks() {
-  for (const id of selectedTaskIds.value) {
-    await tasks.remove(id);
-  }
-  selectedTaskIds.value = [];
-  ElMessage.success('Selected tasks deleted');
+    ElMessageBox.confirm('Are you sure to delete these tasks?')
+    .then(() => {
+        for (const id of selectedTaskIds.value) {
+          tasks.remove(id);
+        }
+        selectedTaskIds.value = [];
+        ElMessage.success('Selected tasks deleted');
+    })
 }
 
 </script>

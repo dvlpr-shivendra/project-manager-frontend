@@ -8,7 +8,7 @@
             :icon="task.is_complete ? Remove : Check" circle></el-button>
         </el-tooltip>
 
-        <timer v-if="!task.is_complete" :task="task" />
+        <timer v-if="false" :task="task" />
 
       </div>
 

@@ -4,26 +4,33 @@
       <div class="flex items-center gap-2">
         <task-form @submit="tasks.add" />
       </div>
-      <el-dropdown @command="handleMenuCommand">
-        <el-button :icon="MoreFilled" text />
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="import">
-              <span class="flex items-center gap-2"><Upload />Import</span>
-            </el-dropdown-item>
-            <el-dropdown-item command="export">
-              <span class="flex items-center gap-2"><Download />Export</span>
-            </el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
+      <div class="flex flex-col items-end gap-2">
+        <el-dropdown @command="handleMenuCommand">
+          <el-button :icon="MoreFilled" text />
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="import">
+                <span class="flex items-center gap-2"><Upload />Import</span>
+              </el-dropdown-item>
+              <el-dropdown-item command="export">
+                <span class="flex items-center gap-2"><Download />Export</span>
+              </el-dropdown-item>
+              <el-dropdown-item v-if="selectedTaskIds.length" @click="deleteSelectedTasks">
+                <span class="flex items-center gap-2 text-red-500">
+                  <Delete />Delete {{ selectedTaskIds.length }} {{ pluralize('task', selectedTaskIds.length) }}
+                </span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
     </div>
     <div>
       <div v-if="tasks.list.length === 0 && tasks.loading">
         <el-skeleton :rows="5" animated />
       </div>
       <el-table v-else :data="tasks.list" :style="{width: '100%'}" @cell-click="handleCellClick" highlight-current-row
-        :border="true">
+        :border="true" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" width="80" />
         <el-table-column prop="title" label="Title" width="360" />
@@ -68,13 +75,14 @@
 import Task from './Task.vue';
 import TaskForm from './TaskForm.vue'
 import { useRoute, useRouter } from 'vue-router';
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useTasks } from '@/stores/tasks';
 import TagsPreview from './TagsPreview.vue';
 import { url } from '@/helpers/http';
 import Filter from '@/components/ui/table/Filter.vue';
-import { Download, Upload, MoreFilled } from '@element-plus/icons-vue';
+import { Download, Upload, MoreFilled, Delete } from '@element-plus/icons-vue';
 import { ElMessage } from 'element-plus';
+import { pluralize } from '@/helpers/string';
 
 const props = defineProps<{
   projectId: number
@@ -85,6 +93,7 @@ const router = useRouter()
 const route = useRoute()
 
 const tasks = useTasks()
+const selectedTaskIds = ref<number[]>([]);
 
 onMounted(() => {
   /** @ts-ignore */
@@ -239,6 +248,18 @@ function exportTasks() {
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
+}
+
+function handleSelectionChange(selection: any[]) {
+  selectedTaskIds.value = selection.map(task => task.id);
+}
+
+async function deleteSelectedTasks() {
+  for (const id of selectedTaskIds.value) {
+    await tasks.remove(id);
+  }
+  selectedTaskIds.value = [];
+  ElMessage.success('Selected tasks deleted');
 }
 
 </script>

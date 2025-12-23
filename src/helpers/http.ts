@@ -75,10 +75,10 @@ export async function put(url: string, data: object, auth: boolean = true) {
 }
 
 export async function postMultipart(url: string, data: FormData, auth: boolean = true) {
-
   const headers = new Headers();
-  
-  headers.append("authorization", bearer());
+  if (auth) {
+    headers.append("authorization", bearer());
+  }
   headers.append("Accept", "application/json");
 
   const response = await fetch(url, {
@@ -93,6 +93,16 @@ export async function postMultipart(url: string, data: FormData, auth: boolean =
   }
 
   return await response.json()
+}
+
+export async function getBlob(url: string, auth: boolean = true) {
+  const headers = commonHeaders(auth)
+
+  const res = await fetch(url, { method: 'GET', headers })
+
+  if (!res.ok) throw await res.json()
+
+  return await res.blob()
 }
 
 function commonHeaders(auth: boolean) {

@@ -113,7 +113,7 @@ import { useRoute, useRouter } from "vue-router";
 import { computed, onMounted, ref } from "vue";
 import { useTasks } from "@/stores/tasks";
 import TagsPreview from "./TagsPreview.vue";
-import { destroy, getBlob, postMultipart, url } from "@/helpers/http";
+import { getBlob, postMultipart, url } from "@/helpers/http";
 import Filter from "@/components/ui/table/Filter.vue";
 import { Download, Upload, MoreFilled, Delete } from "@element-plus/icons-vue";
 import { pluralize } from "@/helpers/string";

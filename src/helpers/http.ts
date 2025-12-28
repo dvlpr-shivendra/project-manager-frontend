@@ -1,124 +1,96 @@
 import { getToken } from "./auth";
 
-export async function get(url: string, auth: boolean = true) {
+async function request(
+  url: string,
+  options: RequestInit,
+  expectBlob = false,
+) {
+  const res = await fetch(url, options);
 
-  const headers = commonHeaders(auth);
+  if (res.status === 204) return;
 
-  const response = await fetch(url, {
-    method: 'GET',
-    headers: headers,
-    redirect: 'follow'
-  })
-
-  if (!response.ok) {
-    throw await response.json()
+  if (!res.ok) {
+    const text = await res.text();
+    throw text ? JSON.parse(text) : res.statusText;
   }
 
-  return await response.json()
+  return expectBlob ? res.blob() : res.json();
 }
 
-export async function post(url: string, data: object = {}, auth: boolean = true) {
-
-  const headers = commonHeaders(auth);
-
-  var raw = JSON.stringify(data);
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: headers,
-    body: raw,
-    redirect: 'follow'
-  })
-
-  if (!response.ok) {
-    throw await response.json()
-  }
-
-  return await response.json()
-}
-
-export async function destroy(url: string, auth: boolean = true) {
-  
-    const headers = commonHeaders(auth);
-  
-    const response = await fetch(url, {
-      method: 'DELETE',
-      headers: headers,
-      redirect: 'follow'
-    })
-
-    if (!response.ok) {
-      throw await response.json()
-    }
-  
-    return await response.json()
-}
-
-export async function put(url: string, data: object, auth: boolean = true) {
-
-  const headers = commonHeaders(auth);
-
-  var raw = JSON.stringify(data);
-
-  const response = await fetch(url, {
-    method: 'PUT',
-    headers: headers,
-    body: raw,
-    redirect: 'follow'
-  })
-
-  if (!response.ok) {
-    throw await response.json()
-  }
-
-  return await response.json()
-}
-
-export async function postMultipart(url: string, data: FormData, auth: boolean = true) {
-  const headers = new Headers();
-  if (auth) {
-    headers.append("authorization", bearer());
-  }
-  headers.append("Accept", "application/json");
-
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: headers,
-    body: data,
-    redirect: 'follow'
-  })
-
-  if (!response.ok) {
-    throw await response.json()
-  }
-
-  return await response.json()
-}
-
-export async function getBlob(url: string, auth: boolean = true) {
-  const headers = commonHeaders(auth)
-
-  const res = await fetch(url, { method: 'GET', headers })
-
-  if (!res.ok) throw await res.json()
-
-  return await res.blob()
-}
-
-function commonHeaders(auth: boolean) {
+function commonHeaders(auth: boolean, json = true) {
   const headers = new Headers();
   headers.append("Accept", "application/json");
-  headers.append("Content-Type", "application/json");
 
-  if (auth) {
-    headers.append("Authorization", bearer());
-  }
+  if (json) headers.append("Content-Type", "application/json");
+  if (auth) headers.append("Authorization", bearer());
 
-  return headers
+  return headers;
 }
 
 function bearer() {
-  return "Bearer " + getToken()
+  return "Bearer " + getToken();
+}
+
+/* ===== Public API ===== */
+
+export async function get(url: string, auth = true) {
+  return request(url, {
+    method: "GET",
+    headers: commonHeaders(auth),
+    redirect: "follow",
+  });
+}
+
+export async function post(url: string, data: object = {}, auth = true) {
+  return request(url, {
+    method: "POST",
+    headers: commonHeaders(auth),
+    body: JSON.stringify(data),
+    redirect: "follow",
+  });
+}
+
+export async function put(url: string, data: object, auth = true) {
+  return request(url, {
+    method: "PUT",
+    headers: commonHeaders(auth),
+    body: JSON.stringify(data),
+    redirect: "follow",
+  });
+}
+
+export async function destroy(
+  url: string,
+  data: object | undefined = undefined,
+  auth = true,
+) {
+  return request(url, {
+    method: "DELETE",
+    headers: commonHeaders(auth),
+    body: data ? JSON.stringify(data) : undefined,
+    redirect: "follow",
+  });
+}
+
+export async function postMultipart(
+  url: string,
+  data: FormData,
+  auth = true,
+) {
+  return request(url, {
+    method: "POST",
+    headers: commonHeaders(auth, false),
+    body: data,
+    redirect: "follow",
+  });
+}
+
+export async function getBlob(url: string, auth = true) {
+  return request(
+    url,
+    { method: "GET", headers: commonHeaders(auth) },
+    true,
+  );
 }
 
 export function url(path: string) {

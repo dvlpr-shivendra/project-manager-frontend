@@ -32,6 +32,11 @@ export const useTasks = defineStore('tasks', {
       destroy(url(`tasks/${id}`))
         .then(() => this.list = this.list.filter(task => task.id !== id))
         .catch(e => console.log(e))
-    }
+    },
+
+    async removeMany(ids: number[]) {
+      await destroy(url("tasks/bulk"), { ids });
+      this.list = this.list.filter(task => !ids.includes(task.id));
+    },
   },
 })

@@ -37,10 +37,16 @@ const router = createRouter({
       component: () => import('@/views/Signup.vue'),
       meta: { onlyGuest: true }
     },
+    {
+      path: '/users',
+      name: 'Users',
+      component:() => import('@/views/UserIndex.vue'),
+      meta: { auth: true }
+    }
   ]
 })
 
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   if (to.meta.auth && !getLoggedIn()) {
     return {
       path: '/login',

@@ -16,9 +16,16 @@
       
       <el-menu-item index="2" route="/projects">
         <el-icon>
-          <setting />
+          <menu-icon />
         </el-icon>
         <span>Projects</span>
+      </el-menu-item>
+
+      <el-menu-item index="3" route="/users">
+        <el-icon>
+          <user-filled />
+        </el-icon>
+        <span>Users</span>
       </el-menu-item>
     </el-menu>
   </el-scrollbar>
@@ -26,9 +33,9 @@
 
 <script lang="ts" setup>
 import {
-  Location,
-  Menu as IconMenu,
+  Menu as MenuIcon,
   Setting,
+  UserFilled,
 } from '@element-plus/icons-vue'
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)

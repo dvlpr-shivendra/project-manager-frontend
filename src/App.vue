@@ -5,6 +5,7 @@ import Navbar from "./components/navigation/Navbar.vue";
 import Sidebar from "./components/navigation/Sidebar.vue";
 import { getLoggedIn } from "./helpers/auth";
 import { useTags } from "./stores/tags";
+import { get, url } from "@/helpers/http";
 
 const loggedIn = getLoggedIn()
 
@@ -13,6 +14,7 @@ const route = useRoute()
 onMounted(() => {
   if (loggedIn) {
     useTags().getAll()
+    get(url("me")).then(data => console.log(data))
   }
 });
 </script>

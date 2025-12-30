@@ -1,3 +1,15 @@
+type Permission = {
+  id: number
+  name: string
+}
+
+type Role = {
+  id: number
+  name: string
+  permissions: Permission[]
+  permissionNames: string[]
+}
+
 type Pagination = {
   next_page_url: string,
   current_page: number,
@@ -9,6 +21,7 @@ type User = {
   id: number,
   name: string,
   email: string,
+  roles: Role[]
 }
 
 type UserWithToken = {

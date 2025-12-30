@@ -56,10 +56,6 @@ onMounted(load)
     <h3>Create Role</h3>
     <el-input v-model="newRole" placeholder="Role name" />
     <el-button class="mt-2" @click="createRole">Add Role</el-button>
-
-    <h3 class="mt-4">Create Permission</h3>
-    <el-input v-model="newPermission" placeholder="Permission name" />
-    <el-button class="mt-2" @click="createPermission">Add Permission</el-button>
   </el-card>
 
   <el-card

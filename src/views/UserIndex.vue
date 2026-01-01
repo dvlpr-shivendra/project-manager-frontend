@@ -8,7 +8,6 @@ const roles = ref<Role[]>([])
 const permissions = ref<Permission[]>([])
 
 const newRole = ref("")
-const newPermission = ref("")
 
 const load = async () => {
   users.value = await get(url("users"))
@@ -24,13 +23,6 @@ const createRole = async () => {
   if (!newRole.value.trim()) return
   await post(url("roles"), { name: newRole.value })
   newRole.value = ""
-  load()
-}
-
-const createPermission = async () => {
-  if (!newPermission.value.trim()) return
-  await post(url("permissions"), { name: newPermission.value })
-  newPermission.value = ""
   load()
 }
 
@@ -72,7 +64,7 @@ onMounted(load)
       <el-checkbox
         v-for="p in permissions"
         :key="p.id"
-        :label="p.name"
+        :value="p.name"
       >
         {{ p.name }}
       </el-checkbox>

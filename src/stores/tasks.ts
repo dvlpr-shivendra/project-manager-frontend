@@ -1,4 +1,4 @@
-import { destroy, get, post, url } from "@/helpers/http";
+import { destroy, get, post, put, url } from "@/helpers/http";
 import { defineStore } from "pinia";
 
 export const useTasks = defineStore('tasks', {
@@ -37,6 +37,12 @@ export const useTasks = defineStore('tasks', {
     async removeMany(ids: number[]) {
       await destroy(url("tasks/bulk"), { ids });
       this.list = this.list.filter(task => !ids.includes(task.id));
+    },
+
+     async update(task: Task) {
+      await put(url(`tasks/${task.id}`), task);
+      const i = this.list.findIndex(t => t.id === task.id);
+      if (i !== -1) this.list[i] = { ...task };
     },
   },
 })

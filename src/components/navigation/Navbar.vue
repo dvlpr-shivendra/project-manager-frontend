@@ -1,31 +1,56 @@
 <template>
-  <div class="flex justify-between items-center px-4 h-12">
-    <router-link to="/" style="font-family: cursive;" class="text-white">
-      Logo
+  <div class="flex justify-between items-center px-6 h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-colors duration-200">
+    <!-- Logo -->
+    <router-link 
+      to="/" 
+      class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
+      style="font-family: cursive;"
+    >
+      {{ companyName() }}
     </router-link>
 
-    <div>
-      <search-drawer  v-if="loggedIn" />
-      <el-button type="text" class="ml-4" round>
+    <!-- Right Side Actions -->
+    <div class="flex items-center gap-3">
+      <!-- Search Drawer (when logged in) -->
+      <search-drawer v-if="loggedIn" class="mr-1" />
+      
+      <!-- Dark Mode Toggle -->
+      <div class="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
         <dark-mode-toggle />
-      </el-button>
-      <el-button color="#626aef" style="color: white" v-if="!loggedIn">
-        <router-link to="/signup">Sign up</router-link>
-      </el-button>
-      <el-button color="#626aef" plain v-if="!loggedIn">
-        <router-link to="/login">Log in</router-link>
-      </el-button>
+      </div>
 
-      <el-dropdown v-if="loggedIn">
-        <el-button :text="true">
-          {{ user.name }}
+      <!-- Auth Buttons (when not logged in) -->
+      <template v-if="!loggedIn">
+        <router-link to="/signup">
+          <el-button 
+            color="#626aef" 
+          >
+            Sign up
+          </el-button>
+        </router-link>
+        
+        <router-link to="/login">
+          <el-button plain>
+            Log in
+          </el-button>
+        </router-link>
+      </template>
+
+      <!-- User Dropdown (when logged in) -->
+      <el-dropdown v-if="loggedIn" trigger="click">
+        <el-button text>
+          <span>{{ user.name }}</span>
           <el-icon class="el-icon--right">
             <arrow-down />
           </el-icon>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="logout">Logout</el-dropdown-item>
+            <el-dropdown-item 
+              @click="logout"
+            >
+              Logout
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -47,5 +72,9 @@ const loggedIn: Ref<boolean> = ref(getLoggedIn())
 function logout() {
   localStorage.clear()
   location.replace('/login')
+}
+
+function companyName() {
+  return import.meta.env.VITE_APP_TITLE
 }
 </script>

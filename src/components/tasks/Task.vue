@@ -1,7 +1,7 @@
 <template>
   <div class="shadow h-screen">
     <div
-      class="w-full flex justify-between items-center border border-gray-200 px-4 py-2"
+      class="w-full flex justify-between items-center border border-gray-200 dark:border-gray-900 px-4 py-2"
     >
       <div>
         <el-tooltip

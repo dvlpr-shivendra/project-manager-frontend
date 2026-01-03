@@ -80,7 +80,7 @@ type Task = {
   tags: Tag[],
   attachments: TaskAttachment[],
   followers: User[],
-  assignee: User,
+  assignee?: User,
   project?: Project,
   assignee_id: number
   project_id: number,
@@ -92,8 +92,8 @@ type Task = {
 type TaskForm = {
   title: string
   project_id: number
-  tags: string[],
-  assignee_id: number | null,
+  tags?: string[],
+  assignee_id?: number | null,
 }
 
 type ApiExceptionPayload = {

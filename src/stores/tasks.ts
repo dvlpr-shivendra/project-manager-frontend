@@ -22,10 +22,14 @@ export const useTasks = defineStore('tasks', {
         .finally(() => this.loading = false)
     },
 
-    add(data: TaskForm) {
-      post(url('tasks'), data)
-        .then(task => this.list.push(task))
-        .catch(e => console.log(e))
+    async add(data: TaskForm) {
+      try {
+        const task = await post(url('tasks'), data)
+        this.list.unshift(task)
+        return task;
+      } catch (error) {
+        throw error;
+      }
     },
 
     remove(id: number) {

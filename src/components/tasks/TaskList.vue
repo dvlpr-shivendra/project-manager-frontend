@@ -2,7 +2,9 @@
   <div>
     <div class="flex justify-between items-center mb-4">
       <div class="flex items-center gap-2">
-        <task-form @submit="tasks.add" />
+        <el-button type="success" :icon="Plus" @click="addNewTask"
+          >Add task</el-button
+        >
       </div>
       <div class="flex flex-col items-end gap-2">
         <el-dropdown @command="handleMenuCommand">
@@ -55,7 +57,18 @@
       >
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" width="80" />
-        <el-table-column prop="title" label="Title" width="360" />
+        <el-table-column prop="title" label="Title" width="360">
+          <template #default="scope">
+            <input
+              :id="`taskTitleInput${scope.row.id}`"
+              v-model="scope.row.title"
+              type="text"
+              class="block w-full outline-none focus:outline-none border-0 focus:border-0 focus:ring-0"
+              placeholder="Task title"
+              @keypress.enter="addNewTask"
+            />
+          </template>
+        </el-table-column>
         <el-table-column prop="tags" label="Tags" width="240">
           <template #header>
             <Filter
@@ -108,14 +121,19 @@
 <script lang="ts" setup>
 import { ElMessage, ElMessageBox } from "element-plus";
 import Task from "./Task.vue";
-import TaskForm from "./TaskForm.vue";
 import { useRoute, useRouter } from "vue-router";
-import { computed, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, ref } from "vue";
 import { useTasks } from "@/stores/tasks";
 import TagsPreview from "./TagsPreview.vue";
 import { getBlob, postMultipart, url } from "@/helpers/http";
 import Filter from "@/components/ui/table/Filter.vue";
-import { Download, Upload, MoreFilled, Delete } from "@element-plus/icons-vue";
+import {
+  Download,
+  Upload,
+  MoreFilled,
+  Delete,
+  Plus,
+} from "@element-plus/icons-vue";
 import { pluralize } from "@/helpers/string";
 
 const props = defineProps<{
@@ -278,5 +296,21 @@ async function deleteSelectedTasks() {
   ElMessage.success("Selected tasks deleted");
 }
 
+async function addNewTask() {
+  const task: Task = await tasks.add({
+    title: "",
+    project_id: props.projectId,
+    tags: [],
+  });
 
+  await nextTick();
+
+  openTask(task);
+
+  const titleInput: HTMLInputElement | null = document.querySelector(
+    `input#taskTitleInput${task.id}`,
+  );
+
+  titleInput?.focus();
+}
 </script>

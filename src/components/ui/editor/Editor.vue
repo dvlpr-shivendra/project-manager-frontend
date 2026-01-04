@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-full dark:bg-[#303030]">
     <div v-if="editor">
       <el-tooltip class="box-item" effect="dark" :content="button.title" placement="top-start"
         v-for="button in buttons">
@@ -52,7 +52,7 @@ watch(() => props.modelValue, (value) => {
   border-radius: 3px;
   padding: 10px;
   box-sizing: border-box;
-  max-height: 85px;
-  overflow-y: scroll;
+  height: 150px;
+  overflow-y: auto;
 }
 </style>

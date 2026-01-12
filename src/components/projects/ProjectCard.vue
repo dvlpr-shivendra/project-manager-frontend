@@ -1,23 +1,23 @@
 <template>
-  <el-card class="col-span-12 md:col-span-6 lg:col-span-4 relative">
-    <div class="absolute top-0 -right-3">
-      <el-dropdown class="mr-2">
-        <el-button :text="true">
-          <MoreFilled class="text-black w-4 h-4" />
-        </el-button>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item @click="handleDelete">Delete</el-dropdown-item>
-            <el-dropdown-item>Update</el-dropdown-item>
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-    </div>
-    <p class="font-bold text-xl mb-5">
-      <router-link :to="`/${project.id}`">{{ project.name }}</router-link>
-    </p>
-    <div class="mb-5">{{ description }}</div>
-  </el-card>
+  <router-link class="col-span-12 md:col-span-6 lg:col-span-4 w-full" :to="`/${project.id}`">
+    <card class="relative">
+      <div class="absolute top-0 -right-3">
+        <el-dropdown class="mr-2">
+          <el-button :text="true">
+            <MoreFilled class="text-black w-4 h-4" />
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item @click.prevent="handleDelete">Delete</el-dropdown-item>
+              <el-dropdown-item>Update</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
+      </div>
+      <template #title>{{ project.name }}</template>
+      <div class="mb-5">{{ description }}</div>
+    </card>
+  </router-link>
 </template>
 
 <script lang="ts" setup>
@@ -26,6 +26,7 @@ import truncate from "@/helpers/string";
 import { ElMessageBox } from "element-plus";
 import { useProjects } from "@/stores/projects";
 import { MoreFilled } from "@element-plus/icons-vue";
+import Card from "@/components/ui/Card.vue";
 
 const props = defineProps<{
   project: Project;

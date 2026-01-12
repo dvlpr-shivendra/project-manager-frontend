@@ -8,7 +8,7 @@
       class="col-span-12"
       :class="loggedIn ? 'lg:col-span-10' : 'lg:col-span-12'"
     >
-      <div class="content p-4">
+      <div class="content p-8">
         <RouterView :key="route.path" />
       </div>
     </main>

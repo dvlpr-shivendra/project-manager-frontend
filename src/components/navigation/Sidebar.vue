@@ -21,7 +21,14 @@
         <span>Projects</span>
       </el-menu-item>
 
-      <el-menu-item index="3" route="/users">
+      <el-menu-item index="3" route="/tags">
+        <el-icon>
+          <price-tag />
+        </el-icon>
+        <span>Tags</span>
+      </el-menu-item>
+
+      <el-menu-item index="4" route="/users">
         <el-icon>
           <user-filled />
         </el-icon>
@@ -36,6 +43,7 @@ import {
   Menu as MenuIcon,
   Setting,
   UserFilled,
+  PriceTag
 } from '@element-plus/icons-vue'
 const handleOpen = (key: string, keyPath: string[]) => {
   console.log(key, keyPath)

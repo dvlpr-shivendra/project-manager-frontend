@@ -42,6 +42,12 @@ const router = createRouter({
       name: 'Users',
       component:() => import('@/views/UserIndex.vue'),
       meta: { auth: true }
+    },
+    {
+      path: '/tags',
+      name: 'Tags',
+      component:() => import('@/views/Tags.vue'),
+      meta: { auth: true }
     }
   ]
 })

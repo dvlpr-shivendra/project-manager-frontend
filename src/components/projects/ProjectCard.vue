@@ -26,7 +26,7 @@ import truncate from "@/helpers/string";
 import { ElMessageBox } from "element-plus";
 import { useProjects } from "@/stores/projects";
 import { MoreFilled } from "@element-plus/icons-vue";
-import Card from "@/components/ui/Card.vue";
+import Card from "@/components/ui/PimpedCard.vue";
 
 const props = defineProps<{
   project: Project;

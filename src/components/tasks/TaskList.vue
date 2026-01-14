@@ -54,17 +54,20 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="id" label="ID" width="80" />
+        <!-- <el-table-column prop="id" label="ID" width="80" /> -->
         <el-table-column prop="title" label="Title" width="360">
           <template #default="scope">
-            <input
-              :id="`taskTitleInput${scope.row.id}`"
-              v-model="scope.row.title"
-              type="text"
-              class="block w-full outline-none focus:outline-none border-0 focus:border-0 focus:ring-0"
-              placeholder="Task title"
-              @keypress.enter="addNewTask"
-            />
+            <div class="flex items-center gap-2">
+              <pimped-checkbox v-model="scope.row.is_complete" theme="green" />
+              <input
+                :id="`taskTitleInput${scope.row.id}`"
+                v-model="scope.row.title"
+                type="text"
+                class="block w-full outline-none focus:outline-none border-0 focus:border-0 focus:ring-0"
+                placeholder="Task title"
+                @keypress.enter="addNewTask"
+              />
+            </div>
           </template>
         </el-table-column>
         <el-table-column prop="tags" label="Tags" width="240">
@@ -125,14 +128,10 @@ import { useTasks } from "@/stores/tasks";
 import TagsPreview from "./TagsPreview.vue";
 import { getBlob, postMultipart, url } from "@/helpers/http";
 import Filter from "@/components/ui/table/Filter.vue";
-import {
-  Download,
-  Upload,
-  MoreFilled,
-  Delete,
-} from "@element-plus/icons-vue";
+import { Download, Upload, MoreFilled, Delete } from "@element-plus/icons-vue";
 import { pluralize } from "@/helpers/string";
 import PimpedButton from "../ui/PimpedButton.vue";
+import PimpedCheckbox from "../ui/PimpedCheckbox.vue";
 
 const props = defineProps<{
   projectId: number;

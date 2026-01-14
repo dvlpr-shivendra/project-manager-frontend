@@ -1,7 +1,9 @@
 <template>
   <div>
     <pimped-heading>All projects</pimped-heading>
-
+    
+    <project-form @submit="projects.add" />
+    
     <div class="grid grid-cols-12 gap-4">
       <project-card-skeleton
         v-for="_ in 5"
@@ -13,8 +15,6 @@
         v-else
       />
     </div>
-
-    <project-form @submit="projects.add" />
   </div>
 </template>
 

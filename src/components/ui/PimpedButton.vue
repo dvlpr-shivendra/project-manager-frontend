@@ -1,6 +1,6 @@
 <template>
   <button
-    class="group relative px-6 py-3 font-semibold text-white bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-size-200 bg-pos-0 hover:bg-pos-100 rounded-lg shadow-lg hover:shadow-xl hover:shadow-purple-500/50 transition-all duration-300 ease-out hover:scale-105 active:scale-95 overflow-hidden"
+    class="cursor-pointer group relative px-5 py-2.5 font-semibold text-white bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-size-200 bg-pos-0 hover:bg-pos-100 rounded-lg shadow-lg hover:shadow-xl hover:shadow-purple-500/50 transition-all duration-300 ease-out hover:scale-105 active:scale-95 overflow-hidden"
   >
     <div
       class="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"

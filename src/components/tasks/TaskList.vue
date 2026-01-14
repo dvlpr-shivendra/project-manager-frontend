@@ -2,9 +2,7 @@
   <div>
     <div class="flex justify-between items-center mb-4">
       <div class="flex items-center gap-2">
-        <el-button type="success" :icon="Plus" @click="addNewTask"
-          >Add task</el-button
-        >
+        <pimped-button class="mb-2" label="Add Task" @click="addNewTask" />
       </div>
       <div class="flex flex-col items-end gap-2">
         <el-dropdown @command="handleMenuCommand">
@@ -132,9 +130,9 @@ import {
   Upload,
   MoreFilled,
   Delete,
-  Plus,
 } from "@element-plus/icons-vue";
 import { pluralize } from "@/helpers/string";
+import PimpedButton from "../ui/PimpedButton.vue";
 
 const props = defineProps<{
   projectId: number;

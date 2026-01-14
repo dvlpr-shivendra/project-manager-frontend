@@ -1,9 +1,5 @@
 <template>
-  <div class="fixed right-8 bottom-8">
-    <el-tooltip class="box-item" effect="dark" content="New Project" placement="top-start">
-      <el-button type="primary" :icon="Plus" size="large" @click="dialogVisible = true" circle />
-    </el-tooltip>
-  </div>
+  <pimped-button class="mb-6" label="Add" @click="dialogVisible = true" />
 
   <el-dialog v-model="dialogVisible" title="New project" width="40%" :before-close="handleClose">
     <el-form label-position="top" label-width="100px" v-model="data" @submit.prevent="handleSubmit">
@@ -24,8 +20,8 @@
 </template>
 
 <script lang="ts" setup>
-import { Plus } from '@element-plus/icons-vue'
 import { ref, type Ref } from 'vue';
+import PimpedButton from '../ui/PimpedButton.vue';
 
 let dialogVisible: Ref<boolean> = ref(false)
 let data: Ref<ProjectForm> = ref({

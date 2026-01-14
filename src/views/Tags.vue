@@ -12,7 +12,7 @@
         style="width: 100%"
         stripe
       >
-        <el-table-column prop="id" label="ID" width="80" />
+        <!-- <el-table-column prop="id" label="ID" width="80" /> -->
         
         <el-table-column prop="name" label="Name" min-width="200">
           <template #default="{ row }">

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="group relative h-full overflow-hidden rounded-2xl bg-white text-gray-900 shadow-xl dark:bg-gray-900 dark:text-white"
+    class="group relative h-full overflow-hidden rounded-2xl bg-white text-gray-900 shadow-xl dark:bg-gray-900 dark:text-white transition-all duration-500 transform hover:-translate-y-1"
   >
     <!-- Animated overlay -->
     <div

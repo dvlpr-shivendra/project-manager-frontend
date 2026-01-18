@@ -1,12 +1,5 @@
 import { get, post, put, destroy, url } from '@/helpers/http';
 
-export interface Tag {
-  id: number;
-  name: string;
-  color: string;
-  background_color: string;
-}
-
 export interface TagInput {
   name: string;
   color: string;

@@ -1,6 +1,7 @@
 <template>
   <span>
     <el-select
+    :key="`tag-${availableTags.length}`"
       filterable
       allow-create
       default-first-option
@@ -9,60 +10,52 @@
       placeholder="Choose tags"
       @change="handleChange"
     >
-      <el-option v-for="item in availableTags" :key="item.id" :label="item.name" :value="item.id" />
+      <el-option
+        v-for="item in availableTags"
+        :key="item.id"
+        :label="item.name"
+        :value="item.id"
+      />
     </el-select>
 
-    <el-drawer v-model="isNewTag" title="" :with-header="false">
-      <p class="mb-6 text-xl">Please provide additional info for new tag:</p>
-      <div class="flex items-center mb-4">
-        <span class="mr-4">Text color</span>
-        <el-color-picker v-model="color" size="large" />
-      </div>
-      <div class="flex items-center mb-4">
-        <span class="mr-4">Background color</span>
-        <el-color-picker v-model="backgroundColor" size="large" />
-      </div>
-
-      <el-button type="primary" @click="addNewTag">Add tag</el-button>
-    </el-drawer>
+    <TagFormDialog
+      v-model="dialogVisible"
+      :tag="prefillTag"
+      @saved="onSaved"
+    />
   </span>
 </template>
 
-
-<script lang="ts" setup>
-
-import { ref } from "vue";
+<script setup lang="ts">
+import { ref } from 'vue';
+import TagFormDialog from '@/components/TagFormDialog.vue';
 
 const props = defineProps<{
-  availableTags: Tag[]
-}>()
+  availableTags: Tag[];
+}>();
 
-const emit = defineEmits(['addNewTag', 'addTag'])
+const emit = defineEmits(['addTag']);
 
-const isNewTag = ref<boolean>(false)
-const backgroundColor = ref<string>('#ccc')
-const color = ref<string>('#000')
-const newTagName = ref<string>('')
+const dialogVisible = ref(false);
+const prefillTag = ref<Tag | null>(null);
 
 function handleChange(input: number | string) {
   if (typeof input === 'number') {
-    const tag = props.availableTags.find(t => t.id === input)
-    emit('addTag', tag)
+    const tag = props.availableTags.find(t => t.id === input);
+    if (tag) emit('addTag', tag);
   } else {
-    isNewTag.value = true
-    newTagName.value = input
+    prefillTag.value = {
+      name: input,
+      color: '#000000',
+      background_color: '#FFFFFF',
+    } as Tag;
+
+    dialogVisible.value = true;
   }
 }
 
-function addNewTag() {
-  emit('addNewTag', {
-    name: newTagName.value,
-    color: color.value,
-    background_color: backgroundColor.value
-  })
-
-  newTagName.value = ''
-  isNewTag.value = false
-}
-
+const onSaved = (tag: Tag) => {
+  emit('addTag', tag);
+  dialogVisible.value = false;
+};
 </script>

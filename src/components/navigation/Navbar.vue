@@ -12,7 +12,7 @@
     <!-- Right Side Actions -->
     <div class="flex items-center gap-3">
       <!-- Search Drawer (when logged in) -->
-      <search-drawer v-if="loggedIn" class="mr-1" />
+      <search-drawer v-if="loggedIn" />
       
       <!-- Dark Mode Toggle -->
       <div class="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">

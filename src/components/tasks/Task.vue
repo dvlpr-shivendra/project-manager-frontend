@@ -80,6 +80,7 @@
 
       <attachments
         :action="url(`tasks/${task.id}/attachments`)"
+        :taskId="task.id"
         :attachments="task.attachments"
         @add="addAttachment"
         @remove="removeAttachment"

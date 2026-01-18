@@ -46,7 +46,7 @@
           class="p-2 mb-1 flex justify-between rounded"
           :key="attachment.id"
         >
-          <a class="inline-block mr-2" href="#" target="_blank">{{
+          <a class="inline-block mr-2" :href="url(`tasks/${taskId}/attachments/${attachment.id}/download`)" target="_blank">{{
             attachment.name
           }}</a>
           <el-button
@@ -69,9 +69,11 @@ import { getToken } from "@/helpers/auth";
 import { ElMessageBox } from "element-plus";
 import { Delete, UploadFilled } from "@element-plus/icons-vue";
 import { pluralize } from "@/helpers/string";
+import { url } from "@/helpers/http";
 
 defineProps<{
   action: string;
+  taskId: number;
   attachments: Attachment[];
 }>();
 

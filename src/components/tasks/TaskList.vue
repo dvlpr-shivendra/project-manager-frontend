@@ -55,7 +55,7 @@
       >
         <el-table-column type="selection" width="55" />
         <!-- <el-table-column prop="id" label="ID" width="80" /> -->
-        <el-table-column prop="title" label="Title" width="360">
+        <el-table-column prop="title" label="Title" min-width="360">
           <template #default="scope">
             <div class="flex items-center gap-2">
               <pimped-checkbox v-model="scope.row.is_complete" theme="green" />
@@ -91,6 +91,18 @@
                 (keyword: string) => handleFilterChange('assignee', keyword)
               "
             />
+          </template>
+        </el-table-column>
+        <el-table-column prop="created_at" label="Created" width="160">
+          <template #default="scope">
+            <el-tooltip
+              :content="formatExact(scope.row.created_at)"
+              placement="top"
+            >
+              <span class="cursor-default">
+                {{ formatRelative(scope.row.created_at) }}
+              </span>
+            </el-tooltip>
           </template>
         </el-table-column>
         <template #append>
@@ -130,6 +142,7 @@ import { getBlob, postMultipart, url } from "@/helpers/http";
 import Filter from "@/components/ui/table/Filter.vue";
 import { Download, Upload, MoreFilled, Delete } from "@element-plus/icons-vue";
 import { pluralize } from "@/helpers/string";
+import { formatRelative, formatExact } from "@/helpers/date";
 import PimpedButton from "../ui/PimpedButton.vue";
 import PimpedCheckbox from "../ui/PimpedCheckbox.vue";
 

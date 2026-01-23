@@ -5,6 +5,7 @@
     align-center
     :show-close="false"
     destroy-on-close
+    z-index="9010"
     @close="handleClose"
   >
     <div class="lightbox-container relative">

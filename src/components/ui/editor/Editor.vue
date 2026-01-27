@@ -99,17 +99,47 @@ const isFullscreen = ref(false);
 const lightboxVisible = ref(false);
 const lightboxImage = ref("");
 
-// Custom Image extension with overlay icons
+// Custom Image extension with overlay icons and resize
 const CustomImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      height: {
+        default: 100,
+        renderHTML: (attributes) => {
+          return {
+            height: attributes.height,
+          };
+        },
+      },
+      width: {
+        default: null,
+        renderHTML: (attributes) => {
+          if (!attributes.width) return {};
+          return {
+            width: attributes.width,
+          };
+        },
+      },
+    };
+  },
+
   addNodeView() {
-    return ({ node }) => {
+    return ({ node, editor, getPos }) => {
       const container = document.createElement("div");
       container.className = "image-container relative inline-block group";
+      container.setAttribute("data-drag-handle", "");
       
       const img = document.createElement("img");
       img.src = node.attrs.src;
       img.alt = node.attrs.alt || "";
-      img.className = "max-w-full h-auto";
+      img.style.height = `${node.attrs.height}px`;
+      if (node.attrs.width) {
+        img.style.width = `${node.attrs.width}px`;
+      } else {
+        img.style.width = "auto";
+      }
+      img.className = "block";
       
       const overlay = document.createElement("div");
       overlay.className = "image-overlay absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2";
@@ -142,8 +172,70 @@ const CustomImage = Image.extend({
       overlay.appendChild(viewBtn);
       overlay.appendChild(downloadBtn);
       
+      // Resize handle
+      const resizeHandle = document.createElement("div");
+      resizeHandle.className = "resize-handle absolute bottom-0 right-0 w-4 h-4 bg-blue-500 cursor-nwse-resize opacity-0 group-hover:opacity-100 transition-opacity";
+      
+      let isResizing = false;
+      let startX = 0;
+      let startY = 0;
+      let startHeight = 0;
+      let aspectRatio = 1;
+      
+      resizeHandle.addEventListener("mousedown", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        isResizing = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        startHeight = node.attrs.height || 100;
+        
+        // Calculate aspect ratio
+        const imgElement = img as HTMLImageElement;
+        if (imgElement.naturalWidth && imgElement.naturalHeight) {
+          aspectRatio = imgElement.naturalWidth / imgElement.naturalHeight;
+        }
+        
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
+      });
+      
+      const handleMouseMove = (e: MouseEvent) => {
+        if (!isResizing) return;
+        
+        const deltaY = e.clientY - startY;
+        const newHeight = Math.max(100, startHeight + deltaY);
+        const newWidth = newHeight * aspectRatio;
+        
+        img.style.height = `${newHeight}px`;
+        img.style.width = `${newWidth}px`;
+      };
+      
+      const handleMouseUp = () => {
+        if (!isResizing) return;
+        isResizing = false;
+        
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+        
+        // Update the node attributes
+        const height = parseInt(img.style.height);
+        const width = parseInt(img.style.width);
+        
+        if (typeof getPos === "function") {
+          editor.view.dispatch(
+            editor.view.state.tr.setNodeMarkup(getPos() || 0, undefined, {
+              ...node.attrs,
+              height,
+              width,
+            })
+          );
+        }
+      };
+      
       container.appendChild(img);
       container.appendChild(overlay);
+      container.appendChild(resizeHandle);
       
       return {
         dom: container,
@@ -158,7 +250,7 @@ editor.value = new Editor({
     CustomImage.configure({ inline: false, allowBase64: true }),
   ],
   editorProps: {
-    handlePaste(view, event) {
+    handlePaste(_view, event) {
       const items = event.clipboardData?.items;
       if (!items) return false;
 
@@ -197,6 +289,7 @@ editor.value = new Editor({
                       ...node.attrs,
                       src: uploaded.url,
                       alt: file.name,
+                      height: 150,
                     });
                   }
                 });
@@ -318,5 +411,13 @@ onBeforeUnmount(() => {
 
 .image-overlay {
   cursor: pointer;
+}
+
+.resize-handle {
+  z-index: 10;
+}
+
+.resize-handle:hover {
+  opacity: 1 !important;
 }
 </style>

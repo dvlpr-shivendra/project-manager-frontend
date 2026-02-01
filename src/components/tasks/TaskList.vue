@@ -40,7 +40,7 @@
         </el-dropdown>
       </div>
     </div>
-    <div>
+    <div class="tasks-list">
       <div v-if="tasks.list.length === 0 && tasks.loading">
         <el-skeleton :rows="5" animated />
       </div>
@@ -48,16 +48,14 @@
         v-else
         :data="tasks.list"
         :style="{ width: '100%' }"
-        @cell-click="handleCellClick"
         highlight-current-row
         :border="true"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <!-- <el-table-column prop="id" label="ID" width="80" /> -->
         <el-table-column prop="title" label="Title" min-width="360">
-          <template #default="scope">
-            <div class="flex items-center gap-2">
+          <template #default="scope: { row: Task }">
+            <div class="flex items-center gap-2 group">
               <pimped-checkbox v-model="scope.row.is_complete" theme="green" />
               <input
                 :id="`taskTitleInput${scope.row.id}`"
@@ -67,10 +65,36 @@
                 placeholder="Task title"
                 @keypress.enter="addNewTask"
               />
+              <el-dropdown>
+                <span
+                  class="cursor-pointer transition-opacity ease-in-out duration-100 opacity-0 group-hover:opacity-100"
+                >
+                  <el-icon :size="20"><MagicStick /></el-icon>
+                </span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="rephrase(scope.row)"
+                      >Rephrase</el-dropdown-item
+                    >
+                    <el-dropdown-item @click="generateTitle(scope.row)"
+                      >Generate title</el-dropdown-item
+                    >
+                    <el-dropdown-item @click="generateDescription(scope.row)"
+                      >Generate description</el-dropdown-item
+                    >
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+              <span
+                class="cursor-pointer transition-opacity ease-in-out duration-100 opacity-0 group-hover:opacity-100 pt-1"
+                @click="openTask(scope.row)"
+              >
+                <el-icon :size="20"><Right /></el-icon>
+              </span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="tags" label="Tags" width="240">
+        <el-table-column prop="tags" label="Tags" width="320">
           <template #header>
             <Filter
               routeKey="tag"
@@ -78,8 +102,13 @@
               @change="(keyword: string) => handleFilterChange('tag', keyword)"
             />
           </template>
-          <template #default="scope">
-            <tags-preview :tags="scope.row.tags" />
+          <template #default="scope: { row: Task }">
+            <TagForm
+              v-if="allTags.length > 0"
+              :task-id="scope.row.id"
+              :tags="allTags"
+              v-model="scope.row.tags"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="assignee.name" label="Assignee">
@@ -92,17 +121,18 @@
               "
             />
           </template>
-        </el-table-column>
-        <el-table-column prop="created_at" label="Created" width="160">
-          <template #default="scope">
-            <el-tooltip
-              :content="formatExact(scope.row.created_at)"
-              placement="top"
-            >
-              <span class="cursor-default">
-                {{ formatRelative(scope.row.created_at) }}
-              </span>
-            </el-tooltip>
+          <template #default="scope: { row: Task }">
+            <user-select
+              class="w-full mb-0!"
+              :user="scope.row.assignee"
+              @change="
+                (user: User) => {
+                  scope.row.assignee = user;
+                  scope.row.assignee_id = user.id;
+                  updateTask(scope.row);
+                }
+              "
+            />
           </template>
         </el-table-column>
         <template #append>
@@ -137,14 +167,21 @@ import Task from "./Task.vue";
 import { useRoute, useRouter } from "vue-router";
 import { computed, nextTick, onMounted, ref } from "vue";
 import { useTasks } from "@/stores/tasks";
-import TagsPreview from "./TagsPreview.vue";
-import { getBlob, postMultipart, url } from "@/helpers/http";
+import { get, getBlob, post, postMultipart, url } from "@/helpers/http";
 import Filter from "@/components/ui/table/Filter.vue";
-import { Download, Upload, MoreFilled, Delete } from "@element-plus/icons-vue";
+import UserSelect from "@/components/ui/UserSelect.vue";
+import {
+  Download,
+  Upload,
+  MoreFilled,
+  Delete,
+  Right,
+  MagicStick,
+} from "@element-plus/icons-vue";
 import { pluralize } from "@/helpers/string";
-import { formatRelative, formatExact } from "@/helpers/date";
-import PimpedButton from "../ui/PimpedButton.vue";
-import PimpedCheckbox from "../ui/PimpedCheckbox.vue";
+import PimpedButton from "@/components/ui/PimpedButton.vue";
+import PimpedCheckbox from "@/components/ui/PimpedCheckbox.vue";
+import TagForm from "@/components/ui/TagForm.vue";
 
 const props = defineProps<{
   projectId: number;
@@ -159,7 +196,16 @@ const selectedTaskIds = ref<number[]>([]);
 
 onMounted(() => {
   fetchTasks();
+  fetchTags();
 });
+
+const allTags = ref<Tag[]>([]);
+
+function fetchTags() {
+  get(url("tags"))
+    .then((tags) => (allTags.value = tags))
+    .catch(console.log);
+}
 
 const fetchTasks = () => {
   const query = new URLSearchParams(
@@ -176,10 +222,6 @@ const activeTask = computed(() => {
     (task) => task.id.toString() === router.currentRoute.value.query.task,
   ) as Task;
 });
-
-function handleCellClick(task: Task) {
-  openTask(task);
-}
 
 function openTask(task: Task) {
   router.replace({
@@ -323,4 +365,74 @@ async function addNewTask() {
 
   titleInput?.focus();
 }
+
+async function rephrase(task: Task) {
+  try {
+    const { result }: { result: string } = await post(url("llm/rephrase"), {
+      text: task.title,
+    });
+    task.title = result;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function generateDescription(task: Task) {
+  try {
+    const { result }: { result: string } = await post(
+      url("llm/generate-description"),
+      {
+        title: task.title,
+      },
+    );
+    task.description = result;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function generateTitle(task: Task) {
+  try {
+    const { result }: { result: string } = await post(
+      url("llm/generate-title"),
+      {
+        description: task.description,
+      },
+    );
+    task.title = result;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function updateTask(task: Task) {
+  try {
+    await tasks.update(task);
+    ElMessage({
+      message: "Task updated successfully.",
+      type: "success",
+      grouping: true,
+    });
+  } catch (e: any) {
+    ElMessage.error(e?.message || "Task could not be updated.");
+  }
+}
 </script>
+
+<style scoped>
+.tasks-list :deep(.el-select__wrapper) {
+  box-shadow: none;
+}
+
+.tasks-list :deep(.el-select__wrapper:hover) {
+  box-shadow: 0 0 0 1px #c0c4cc inset;
+}
+
+.tasks-list :deep(.el-select__suffix) {
+  opacity: 0;
+}
+
+.tasks-list :deep(.el-select__wrapper:hover .el-select__suffix) {
+  opacity: 1;
+}
+</style>

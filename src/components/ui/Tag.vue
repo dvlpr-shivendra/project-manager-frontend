@@ -1,5 +1,5 @@
 <template>
-  <span class="rounded-full text-xs px-2 py-1 cursor-pointer"
+  <span class="rounded text-xs px-2 py-1 cursor-pointer"
     :style="{ color: color, backgroundColor: backgroundColor }"
     >
     {{ text }}

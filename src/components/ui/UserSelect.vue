@@ -1,7 +1,7 @@
 <template>
   <el-form-item :label="label">
     <el-select
-    class="w-full"
+      class="w-full"
       v-model="selected"
       filterable
       remote
@@ -23,7 +23,7 @@ import { ref, watch } from 'vue'
 
 const props = defineProps<{
   user?: User
-  label: string
+  label?: string
 }>()
 
 let options = ref<User[]>(props.user ? [props.user] : [])

@@ -72,7 +72,7 @@
         class="w-full"
       />
 
-      <TagsList :tags="task.tags" @remove="removeTag" @add="addTag" />
+      <!-- <TagsList :tags="task.tags" @remove="removeTag" @add="addTag" /> -->
 
       <el-form-item label="Description">
         <Editor v-model="task.description" />
@@ -107,7 +107,6 @@ import { Remove, Check, MoreFilled, Close } from "@element-plus/icons-vue";
 import { debounce } from "lodash";
 
 import Timer from "./Timer.vue";
-import TagsList from "./TagsList.vue";
 import { useRouter } from "vue-router";
 import { useTasks } from "@/stores/tasks";
 import Editor from "@/components/ui/editor/Editor.vue";
@@ -186,19 +185,6 @@ function remove() {
     .catch(() => {
       // catch error
     });
-}
-
-function addTag(tag: Tag) {
-  post(url(`tasks/${props.task.id}/tags/${tag.id}`))
-    .then(() => props.task.tags.push(tag))
-    .catch((e) => console.log(e));
-}
-
-function removeTag(tagId: number) {
-  destroy(url(`tasks/${props.task.id}/tags/${tagId}`)).then(() => {
-    const index = props.task.tags.findIndex((tag) => tag.id === tagId);
-    props.task.tags.splice(index, 1);
-  });
 }
 
 function addAttachment(attachment: Attachment) {

@@ -372,6 +372,7 @@ async function rephrase(task: Task) {
       text: task.title,
     });
     task.title = result;
+    updateTask(task)
   } catch (error) {
     console.error(error);
   }
@@ -386,6 +387,7 @@ async function generateDescription(task: Task) {
       },
     );
     task.description = result;
+    updateTask(task)
   } catch (error) {
     console.error(error);
   }
@@ -400,6 +402,7 @@ async function generateTitle(task: Task) {
       },
     );
     task.title = result;
+    updateTask(task)
   } catch (error) {
     console.error(error);
   }

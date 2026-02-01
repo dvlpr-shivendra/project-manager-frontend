@@ -48,7 +48,6 @@
         v-else
         :data="tasks.list"
         :style="{ width: '100%' }"
-        @cell-click="handleCellClick"
         highlight-current-row
         :border="true"
         @selection-change="handleSelectionChange"
@@ -56,8 +55,8 @@
         <el-table-column type="selection" width="55" />
         <!-- <el-table-column prop="id" label="ID" width="80" /> -->
         <el-table-column prop="title" label="Title" min-width="360">
-          <template #default="scope">
-            <div class="flex items-center gap-2">
+          <template #default="scope: { row: Task }">
+            <div class="flex items-center gap-2 group">
               <pimped-checkbox v-model="scope.row.is_complete" theme="green" />
               <input
                 :id="`taskTitleInput${scope.row.id}`"
@@ -67,6 +66,9 @@
                 placeholder="Task title"
                 @keypress.enter="addNewTask"
               />
+              <button class="cursor-pointer transition-opacity ease-in-out duration-100 opacity-0 group-hover:opacity-100" @click="openTask(scope.row)">
+                <el-icon :size="20"><Right /></el-icon>
+              </button>
             </div>
           </template>
         </el-table-column>
@@ -78,8 +80,8 @@
               @change="(keyword: string) => handleFilterChange('tag', keyword)"
             />
           </template>
-          <template #default="scope">
-            <tags-preview :tags="scope.row.tags" />
+          <template #default="scope: { row: Task }">
+             <TagForm v-if="allTags.length > 0" :tags="allTags" v-model="scope.row.tags" />
           </template>
         </el-table-column>
         <el-table-column prop="assignee.name" label="Assignee">
@@ -137,14 +139,14 @@ import Task from "./Task.vue";
 import { useRoute, useRouter } from "vue-router";
 import { computed, nextTick, onMounted, ref } from "vue";
 import { useTasks } from "@/stores/tasks";
-import TagsPreview from "./TagsPreview.vue";
-import { getBlob, postMultipart, url } from "@/helpers/http";
+import { get, getBlob, postMultipart, url } from "@/helpers/http";
 import Filter from "@/components/ui/table/Filter.vue";
-import { Download, Upload, MoreFilled, Delete } from "@element-plus/icons-vue";
+import { Download, Upload, MoreFilled, Delete, Right } from "@element-plus/icons-vue";
 import { pluralize } from "@/helpers/string";
 import { formatRelative, formatExact } from "@/helpers/date";
-import PimpedButton from "../ui/PimpedButton.vue";
-import PimpedCheckbox from "../ui/PimpedCheckbox.vue";
+import PimpedButton from "@/components/ui/PimpedButton.vue";
+import PimpedCheckbox from "@/components/ui/PimpedCheckbox.vue";
+import TagForm from "@/components/ui/TagForm.vue";
 
 const props = defineProps<{
   projectId: number;
@@ -159,7 +161,16 @@ const selectedTaskIds = ref<number[]>([]);
 
 onMounted(() => {
   fetchTasks();
+  fetchTags();
 });
+
+const allTags = ref<Tag[]>([])
+
+function fetchTags() {
+  get(url("tags"))
+    .then((tags) => (allTags.value = tags))
+    .catch(console.log);
+}
 
 const fetchTasks = () => {
   const query = new URLSearchParams(
@@ -176,10 +187,6 @@ const activeTask = computed(() => {
     (task) => task.id.toString() === router.currentRoute.value.query.task,
   ) as Task;
 });
-
-function handleCellClick(task: Task) {
-  openTask(task);
-}
 
 function openTask(task: Task) {
   router.replace({

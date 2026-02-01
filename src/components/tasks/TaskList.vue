@@ -53,7 +53,6 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <!-- <el-table-column prop="id" label="ID" width="80" /> -->
         <el-table-column prop="title" label="Title" min-width="360">
           <template #default="scope: { row: Task }">
             <div class="flex items-center gap-2 group">
@@ -95,7 +94,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="tags" label="Tags" width="240">
+        <el-table-column prop="tags" label="Tags" width="320">
           <template #header>
             <Filter
               routeKey="tag"
@@ -121,18 +120,6 @@
                 (keyword: string) => handleFilterChange('assignee', keyword)
               "
             />
-          </template>
-        </el-table-column>
-        <el-table-column prop="created_at" label="Created" width="160">
-          <template #default="scope">
-            <el-tooltip
-              :content="formatExact(scope.row.created_at)"
-              placement="top"
-            >
-              <span class="cursor-default">
-                {{ formatRelative(scope.row.created_at) }}
-              </span>
-            </el-tooltip>
           </template>
         </el-table-column>
         <template #append>
@@ -178,7 +165,6 @@ import {
   MagicStick,
 } from "@element-plus/icons-vue";
 import { pluralize } from "@/helpers/string";
-import { formatRelative, formatExact } from "@/helpers/date";
 import PimpedButton from "@/components/ui/PimpedButton.vue";
 import PimpedCheckbox from "@/components/ui/PimpedCheckbox.vue";
 import TagForm from "@/components/ui/TagForm.vue";

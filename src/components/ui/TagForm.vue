@@ -1,9 +1,10 @@
+<!-- TODO: Allow creating new tags from el-selecṭ̣̣ -->
 <template>
-  <span>
+  <div>
     <el-select
       :key="`tag-${tags.length}`"
       v-model="model"
-      filterable
+      filterablẹ
       multiple
       default-first-option
       :reserve-keyword="false"
@@ -36,9 +37,8 @@
         </div>
       </template>
     </el-select>
-
     <TagFormDialog v-model="dialogVisible" :tag="prefillTag" @saved="onSaved" />
-  </span>
+  </div>
 </template>
 
 <script setup lang="ts">

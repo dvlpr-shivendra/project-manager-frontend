@@ -125,21 +125,3 @@ const onSaved = (tag: Tag) => {
   dialogVisible.value = false;
 };
 </script>
-
-<style scoped>
-:deep(.el-select__wrapper) {
-  box-shadow: none;
-}
-
-:deep(.el-select__wrapper:hover) {
-  box-shadow: 0 0 0 1px #c0c4cc inset;
-}
-
-:deep(.el-select__suffix) {
-  opacity: 0;
-}
-
-:deep(.el-select__wrapper:hover .el-select__suffix) {
-  opacity: 1;
-}
-</style>

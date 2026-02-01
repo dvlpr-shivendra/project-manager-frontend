@@ -40,7 +40,7 @@
         </el-dropdown>
       </div>
     </div>
-    <div>
+    <div class="tasks-list">
       <div v-if="tasks.list.length === 0 && tasks.loading">
         <el-skeleton :rows="5" animated />
       </div>
@@ -121,6 +121,19 @@
               "
             />
           </template>
+          <template #default="scope: { row: Task }">
+            <user-select
+              class="w-full mb-0!"
+              :user="scope.row.assignee"
+              @change="
+                (user: User) => {
+                  scope.row.assignee = user;
+                  scope.row.assignee_id = user.id;
+                  updateTask(scope.row);
+                }
+              "
+            />
+          </template>
         </el-table-column>
         <template #append>
           <div class="p-4">
@@ -156,6 +169,7 @@ import { computed, nextTick, onMounted, ref } from "vue";
 import { useTasks } from "@/stores/tasks";
 import { get, getBlob, post, postMultipart, url } from "@/helpers/http";
 import Filter from "@/components/ui/table/Filter.vue";
+import UserSelect from "@/components/ui/UserSelect.vue";
 import {
   Download,
   Upload,
@@ -365,9 +379,12 @@ async function rephrase(task: Task) {
 
 async function generateDescription(task: Task) {
   try {
-    const { result }: { result: string } = await post(url("llm/generate-description"), {
-      title: task.title,
-    });
+    const { result }: { result: string } = await post(
+      url("llm/generate-description"),
+      {
+        title: task.title,
+      },
+    );
     task.description = result;
   } catch (error) {
     console.error(error);
@@ -376,13 +393,46 @@ async function generateDescription(task: Task) {
 
 async function generateTitle(task: Task) {
   try {
-    const { result }: { result: string } = await post(url("llm/generate-title"), {
-      description: task.description,
-    });
+    const { result }: { result: string } = await post(
+      url("llm/generate-title"),
+      {
+        description: task.description,
+      },
+    );
     task.title = result;
   } catch (error) {
     console.error(error);
   }
 }
 
+async function updateTask(task: Task) {
+  try {
+    await tasks.update(task);
+    ElMessage({
+      message: "Task updated successfully.",
+      type: "success",
+      grouping: true,
+    });
+  } catch (e: any) {
+    ElMessage.error(e?.message || "Task could not be updated.");
+  }
+}
 </script>
+
+<style scoped>
+.tasks-list :deep(.el-select__wrapper) {
+  box-shadow: none;
+}
+
+.tasks-list :deep(.el-select__wrapper:hover) {
+  box-shadow: 0 0 0 1px #c0c4cc inset;
+}
+
+.tasks-list :deep(.el-select__suffix) {
+  opacity: 0;
+}
+
+.tasks-list :deep(.el-select__wrapper:hover .el-select__suffix) {
+  opacity: 1;
+}
+</style>

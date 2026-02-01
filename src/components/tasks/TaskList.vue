@@ -66,7 +66,30 @@
                 placeholder="Task title"
                 @keypress.enter="addNewTask"
               />
-              <button class="cursor-pointer transition-opacity ease-in-out duration-100 opacity-0 group-hover:opacity-100" @click="openTask(scope.row)">
+              <el-dropdown>
+                <button
+                  class="cursor-pointer transition-opacity ease-in-out duration-100 opacity-0 group-hover:opacity-100"
+                >
+                  <el-icon :size="20"><MagicStick /></el-icon>
+                </button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item @click="rephrase(scope.row)"
+                      >Rephrase</el-dropdown-item
+                    >
+                    <el-dropdown-item @click="generateTitle(scope.row)"
+                      >Generate title</el-dropdown-item
+                    >
+                    <el-dropdown-item @click="generateDescription(scope.row)"
+                      >Generate description</el-dropdown-item
+                    >
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+              <button
+                class="cursor-pointer transition-opacity ease-in-out duration-100 opacity-0 group-hover:opacity-100"
+                @click="openTask(scope.row)"
+              >
                 <el-icon :size="20"><Right /></el-icon>
               </button>
             </div>
@@ -81,7 +104,12 @@
             />
           </template>
           <template #default="scope: { row: Task }">
-             <TagForm v-if="allTags.length > 0" :tags="allTags" v-model="scope.row.tags" />
+            <TagForm
+              v-if="allTags.length > 0"
+              :task-id="scope.row.id"
+              :tags="allTags"
+              v-model="scope.row.tags"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="assignee.name" label="Assignee">
@@ -139,9 +167,16 @@ import Task from "./Task.vue";
 import { useRoute, useRouter } from "vue-router";
 import { computed, nextTick, onMounted, ref } from "vue";
 import { useTasks } from "@/stores/tasks";
-import { get, getBlob, postMultipart, url } from "@/helpers/http";
+import { get, getBlob, post, postMultipart, url } from "@/helpers/http";
 import Filter from "@/components/ui/table/Filter.vue";
-import { Download, Upload, MoreFilled, Delete, Right } from "@element-plus/icons-vue";
+import {
+  Download,
+  Upload,
+  MoreFilled,
+  Delete,
+  Right,
+  MagicStick,
+} from "@element-plus/icons-vue";
 import { pluralize } from "@/helpers/string";
 import { formatRelative, formatExact } from "@/helpers/date";
 import PimpedButton from "@/components/ui/PimpedButton.vue";
@@ -164,7 +199,7 @@ onMounted(() => {
   fetchTags();
 });
 
-const allTags = ref<Tag[]>([])
+const allTags = ref<Tag[]>([]);
 
 function fetchTags() {
   get(url("tags"))
@@ -330,4 +365,38 @@ async function addNewTask() {
 
   titleInput?.focus();
 }
+
+async function rephrase(task: Task) {
+  try {
+    const { result }: { result: string } = await post(url("llm/rephrase"), {
+      text: task.title,
+    });
+    task.title = result;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function generateDescription(task: Task) {
+  try {
+    const { result }: { result: string } = await post(url("llm/generate-description"), {
+      title: task.title,
+    });
+    task.description = result;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+async function generateTitle(task: Task) {
+  try {
+    const { result }: { result: string } = await post(url("llm/generate-title"), {
+      description: task.description,
+    });
+    task.title = result;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 </script>

@@ -4,7 +4,6 @@
       :key="`tag-${tags.length}`"
       v-model="model"
       filterable
-      allow-create
       multiple
       default-first-option
       :reserve-keyword="false"
@@ -43,11 +42,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, nextTick } from "vue";
+import { computed, ref, watch } from "vue";
 import TagFormDialog from "@/components/TagFormDialog.vue";
 import Tag from "@/components/ui/Tag.vue";
+import { url, post, destroy } from "@/helpers/http";
+import { ElMessage } from "element-plus";
 
 const props = defineProps<{
+  taskId: number;
   tags: Tag[];
   modelValue: Tag[];
 }>();
@@ -71,26 +73,55 @@ const model = computed({
   get() {
     return props.modelValue.map((t) => t.id);
   },
-  async set(value: (number | string)[]) {
-    const latestInput: number | string | undefined = value.pop();
-    if (latestInput === undefined) return;
-    else if (typeof latestInput === "string") {
-      await nextTick();
-      prefillTag.value = {
-        name: latestInput,
-        color: "#000000",
-        background_color: "#ffffff",
-      } as Tag;
-      // dialogVisible.value = true;
-    } else {
-      const tag = tagsMap.value[latestInput as number];
-      emit("update:modelValue", [...props.modelValue, tag]);
-    }
+  async set(value: number[]) {
+    emit(
+      "update:modelValue",
+      value.map((tagId) => tagsMap.value[tagId]),
+    );
   },
 });
 
+watch(
+  model,
+  (newValue, oldValue = []) => {
+    if (newValue.length > oldValue.length) {
+      const added = newValue.find((id) => !oldValue.includes(id));
+      if (added) addTag(added);
+    } else if (newValue.length < oldValue.length) {
+      const removed = oldValue.find((id) => !newValue.includes(id));
+      if (removed) removeTag(removed);
+    }
+  },
+  { immediate: false },
+);
+
+function addTag(tagId: number) {
+  try {
+    post(url(`tasks/${props.taskId}/tags/${tagId}`));
+    ElMessage({
+      message: "Task updated successfully.",
+      type: "success",
+      grouping: true,
+    });
+  } catch (e: any) {
+    ElMessage.error(e?.message || "Task could not be updated.");
+  }
+}
+
+function removeTag(tagId: number) {
+  try {
+    destroy(url(`tasks/${props.taskId}/tags/${tagId}`));
+    ElMessage({
+      message: "Task updated successfully.",
+      type: "success",
+      grouping: true,
+    });
+  } catch (e: any) {
+    ElMessage.error(e?.message || "Task could not be updated.");
+  }
+}
+
 const onSaved = (tag: Tag) => {
-  emit("addTag", tag);
   dialogVisible.value = false;
 };
 </script>

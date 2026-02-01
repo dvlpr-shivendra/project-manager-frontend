@@ -66,11 +66,11 @@
                 @keypress.enter="addNewTask"
               />
               <el-dropdown>
-                <button
+                <span
                   class="cursor-pointer transition-opacity ease-in-out duration-100 opacity-0 group-hover:opacity-100"
                 >
                   <el-icon :size="20"><MagicStick /></el-icon>
-                </button>
+                </span>
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item @click="rephrase(scope.row)"
@@ -85,12 +85,12 @@
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-              <button
-                class="cursor-pointer transition-opacity ease-in-out duration-100 opacity-0 group-hover:opacity-100"
+              <span
+                class="cursor-pointer transition-opacity ease-in-out duration-100 opacity-0 group-hover:opacity-100 pt-1"
                 @click="openTask(scope.row)"
               >
                 <el-icon :size="20"><Right /></el-icon>
-              </button>
+              </span>
             </div>
           </template>
         </el-table-column>

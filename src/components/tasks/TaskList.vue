@@ -55,43 +55,11 @@
         <el-table-column type="selection" width="55" />
         <el-table-column prop="title" label="Title" min-width="360">
           <template #default="scope: { row: Task }">
-            <div class="flex items-center gap-2 group">
-              <pimped-checkbox v-model="scope.row.is_complete" theme="green" />
-              <input
-                :id="`taskTitleInput${scope.row.id}`"
-                v-model="scope.row.title"
-                type="text"
-                class="block w-full outline-none focus:outline-none border-0 focus:border-0 focus:ring-0"
-                placeholder="Task title"
-                @keypress.enter="addNewTask"
-              />
-              <el-dropdown>
-                <span
-                  class="cursor-pointer transition-opacity ease-in-out duration-100 opacity-0 group-hover:opacity-100"
-                >
-                  <el-icon :size="20"><MagicStick /></el-icon>
-                </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item @click="rephrase(scope.row)"
-                      >Rephrase</el-dropdown-item
-                    >
-                    <el-dropdown-item @click="generateTitle(scope.row)"
-                      >Generate title</el-dropdown-item
-                    >
-                    <el-dropdown-item @click="generateDescription(scope.row)"
-                      >Generate description</el-dropdown-item
-                    >
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-              <span
-                class="cursor-pointer transition-opacity ease-in-out duration-100 opacity-0 group-hover:opacity-100 pt-1"
-                @click="openTask(scope.row)"
-              >
-                <el-icon :size="20"><Right /></el-icon>
-              </span>
-            </div>
+            <task-title-cell
+              v-model="scope.row"
+              @add="addNewTask"
+              @open="openTask"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="tags" label="Tags" width="320">
@@ -165,22 +133,16 @@
 import { ElMessage, ElMessageBox } from "element-plus";
 import Task from "./Task.vue";
 import { useRoute, useRouter } from "vue-router";
-import { computed, nextTick, onMounted, ref } from "vue";
+import { computed, nextTick, onMounted, provide, ref } from "vue";
 import { useTasks } from "@/stores/tasks";
-import { get, getBlob, post, postMultipart, url } from "@/helpers/http";
+import { get, getBlob, postMultipart, url } from "@/helpers/http";
 import Filter from "@/components/ui/table/Filter.vue";
 import UserSelect from "@/components/ui/UserSelect.vue";
-import {
-  Download,
-  Upload,
-  MoreFilled,
-  Delete,
-  Right,
-  MagicStick,
-} from "@element-plus/icons-vue";
+import TaskTitleCell from "./TaskTitleCell.vue";
+
+import { Download, Upload, MoreFilled, Delete } from "@element-plus/icons-vue";
 import { pluralize } from "@/helpers/string";
 import PimpedButton from "@/components/ui/PimpedButton.vue";
-import PimpedCheckbox from "@/components/ui/PimpedCheckbox.vue";
 import TagForm from "@/components/ui/TagForm.vue";
 
 const props = defineProps<{
@@ -366,48 +328,6 @@ async function addNewTask() {
   titleInput?.focus();
 }
 
-async function rephrase(task: Task) {
-  try {
-    const { result }: { result: string } = await post(url("llm/rephrase"), {
-      text: task.title,
-    });
-    task.title = result;
-    updateTask(task)
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function generateDescription(task: Task) {
-  try {
-    const { result }: { result: string } = await post(
-      url("llm/generate-description"),
-      {
-        title: task.title,
-      },
-    );
-    task.description = result;
-    updateTask(task)
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-async function generateTitle(task: Task) {
-  try {
-    const { result }: { result: string } = await post(
-      url("llm/generate-title"),
-      {
-        description: task.description,
-      },
-    );
-    task.title = result;
-    updateTask(task)
-  } catch (error) {
-    console.error(error);
-  }
-}
-
 async function updateTask(task: Task) {
   try {
     await tasks.update(task);
@@ -420,6 +340,8 @@ async function updateTask(task: Task) {
     ElMessage.error(e?.message || "Task could not be updated.");
   }
 }
+
+provide("updateTask", updateTask);
 </script>
 
 <style scoped>

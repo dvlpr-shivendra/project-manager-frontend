@@ -100,7 +100,7 @@
 <script lang="ts" setup>
 import UserSelect from "@/components/ui/UserSelect.vue";
 import { destroy, post, put, url } from "@/helpers/http";
-import { onMounted, onUpdated, ref, watch, type Ref } from "vue";
+import { inject, onMounted, onUpdated, ref, watch, type Ref } from "vue";
 
 import { Remove, Check, MoreFilled, Close } from "@element-plus/icons-vue";
 
@@ -110,7 +110,7 @@ import Timer from "./Timer.vue";
 import { useRouter } from "vue-router";
 import { useTasks } from "@/stores/tasks";
 import Editor from "@/components/ui/editor/Editor.vue";
-import { ElMessage, ElMessageBox } from "element-plus";
+import { ElMessageBox } from "element-plus";
 import Followers from "@/components/ui/Followers.vue";
 import Attachments from "@/components/ui/Attachments.vue";
 import Comments from "@/components/ui/Comments.vue";
@@ -123,6 +123,8 @@ const tasks = useTasks();
 const router = useRouter();
 
 const emit = defineEmits(["close"]);
+
+const updateTask = inject<(task: Task) => void>("updateTask")!;
 
 /**
  * This is a workaround for the task update and should be fixed when better solution is known. Task update was not triggering once the props.task was changing
@@ -138,19 +140,6 @@ onUpdated(() => {
   unwatch();
   unwatch = watch(props.task, debounce(updateTask, 750));
 });
-
-async function updateTask() {
-  try {
-    await tasks.update(props.task);
-    ElMessage({
-      message: "Task updated successfully.",
-      type: "success",
-      grouping: true,
-    });
-  } catch (e: any) {
-    ElMessage.error(e?.message || "Task could not be updated.");
-  }
-}
 
 function assignTo(user: User) {
   props.task.assignee = user;

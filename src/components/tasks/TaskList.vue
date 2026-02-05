@@ -121,7 +121,7 @@
       <div
         v-if="activeTask"
         class="bg-white dark:bg-neutral-900 absolute w-screen h-screen z-10 left-0 top-0 md:w-full md:h-full md:right-0 md:left-auto"
-        :class="{ 'md:w-1/2 lg:w-4/12 2xl:w-3/12': activeTask }"
+        :class="{ 'md:w-1/2 lg:w-[545px]': activeTask }"
       >
         <task :task="activeTask" @close="closeTask" />
       </div>

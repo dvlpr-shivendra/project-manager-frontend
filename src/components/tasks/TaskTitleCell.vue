@@ -1,6 +1,13 @@
 <template>
   <div class="flex items-center gap-2 group">
-    <pimped-checkbox v-model="task.is_complete" theme="green" />
+    <el-tooltip
+      class="box-item"
+      effect="dark"
+      :content="'Mark ' + (task.is_complete ? 'Incomplete' : 'Complete')"
+      placement="bottom"
+    >
+      <pimped-checkbox v-model="task.is_complete" theme="green" @update:model-value="() => updateTask(task)" />
+    </el-tooltip>
 
     <el-skeleton v-if="updatingTitle" animated>
       <template #template>
@@ -36,12 +43,19 @@
       </template>
     </el-dropdown>
 
+    <el-tooltip
+      class="box-item"
+      effect="dark"
+      content="Open details"
+      placement="right"
+    >
     <span
       class="cursor-pointer transition-opacity duration-100 opacity-0 group-hover:opacity-100 pt-1"
       @click="emit('open', modelValue)"
     >
       <el-icon :size="20"><Right /></el-icon>
     </span>
+    </el-tooltip>
   </div>
 </template>
 
@@ -91,5 +105,4 @@ async function generateTitle() {
     updatingTitle.value = false;
   }
 }
-
 </script>

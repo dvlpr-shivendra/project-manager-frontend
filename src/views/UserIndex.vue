@@ -4,7 +4,7 @@
 
     <section>
       <pimped-subheading>Roles</pimped-subheading>
-      <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
         <pimped-card class="mb-4">
           <pimped-section-heading>Create Role</pimped-section-heading>
           <el-input
@@ -12,14 +12,14 @@
             v-model="newRole"
             placeholder="Role name"
           />
-          <el-button class="mt-2 xl:mt-0 xl:ml-2" @click="createRole">Add Role</el-button>
+          <el-button class="mt-2" @click="createRole">Add Role</el-button>
         </pimped-card>
       </div>
     </section>
 
     <section>
       <pimped-subheading>Permissions</pimped-subheading>
-      <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-4 mb-4">
         <pimped-card v-for="role in roles" :key="role.id">
           <pimped-section-heading>{{ role.name }}</pimped-section-heading>
           <el-checkbox-group

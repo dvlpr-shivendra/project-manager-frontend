@@ -12,7 +12,7 @@
             v-model="newRole"
             placeholder="Role name"
           />
-          <el-button class="ml-2" @click="createRole">Add Role</el-button>
+          <el-button class="mt-2 xl:mt-0 xl:ml-2" @click="createRole">Add Role</el-button>
         </pimped-card>
       </div>
     </section>

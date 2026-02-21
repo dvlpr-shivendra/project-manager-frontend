@@ -9,7 +9,7 @@
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item @click.prevent="handleDelete">Delete</el-dropdown-item>
-              <el-dropdown-item>Update</el-dropdown-item>
+              <el-dropdown-item @click.prevent="updateDialogVisible = true">Update</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -18,15 +18,23 @@
       <div class="mb-5">{{ description }}</div>
     </card>
   </router-link>
+
+  <project-update-form
+  v-model="updateDialogVisible"
+  :project="project"
+  @submit="(data) => projects.update(project.id, data)"
+/>
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import truncate from "@/helpers/string";
 import { ElMessageBox } from "element-plus";
 import { useProjects } from "@/stores/projects";
 import { MoreFilled } from "@element-plus/icons-vue";
 import Card from "@/components/ui/PimpedCard.vue";
+
+import ProjectUpdateForm from './ProjectUpdateForm.vue';
 
 const props = defineProps<{
   project: Project;
@@ -37,6 +45,8 @@ const projects = useProjects();
 const description = computed(() => {
   return truncate(props.project.description, 150);
 });
+
+const updateDialogVisible = ref(false);
 
 function handleDelete() {
   ElMessageBox.confirm("Do you really want to delete this project?")

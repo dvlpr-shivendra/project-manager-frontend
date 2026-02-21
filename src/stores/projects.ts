@@ -1,4 +1,4 @@
-import { destroy, get, post, url } from "@/helpers/http";
+import { destroy, get, post, put, url } from "@/helpers/http";
 import { defineStore } from "pinia";
 
 export const useProjects = defineStore("projects", {
@@ -23,6 +23,15 @@ export const useProjects = defineStore("projects", {
     add(data: ProjectForm) {
       post(url("projects"), data)
         .then((task) => this.list.push(task))
+        .catch((e) => console.log(e));
+    },
+
+    update(id: number, data: ProjectForm) {
+      put(url(`projects/${id}`), data)
+        .then((updated) => {
+          const index = this.list.findIndex((p) => p.id === id);
+          if (index !== -1) this.list[index] = updated;
+        })
         .catch((e) => console.log(e));
     },
 

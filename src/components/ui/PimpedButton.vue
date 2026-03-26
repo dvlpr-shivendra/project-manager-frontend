@@ -1,54 +1,13 @@
 <template>
-  <button
-    class="cursor-pointer group relative px-5 py-2.5 font-semibold text-white bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 bg-size-200 bg-pos-0 hover:bg-pos-100 rounded-lg shadow-lg hover:shadow-xl hover:shadow-purple-500/50 transition-all duration-300 ease-out hover:scale-105 active:scale-95 overflow-hidden"
-  >
-    <div
-      class="absolute inset-0 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-300"
-    ></div>
-    <span class="relative flex items-center gap-2">
-      <!-- Element Plus Icon -->
-      <el-icon 
-        v-if="icon" 
-        class="group-hover:rotate-90 transition-transform duration-300"
-      >
-        <component :is="icon" />
-      </el-icon>
-      <!-- Default SVG Plus icon -->
-      <svg 
-        v-else
-        class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" 
-        fill="none" 
-        stroke="currentColor" 
-        viewBox="0 0 24 24"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-      </svg>
-      <span class="group-hover:tracking-wider transition-all duration-300">
-        {{ label }}
-      </span>
-    </span>
+  <button class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 active:scale-[0.98] text-white text-[13px] font-semibold shadow-sm hover:shadow-md hover:shadow-indigo-500/25 transition-all duration-150 cursor-pointer select-none" v-bind="$attrs">
+    <el-icon v-if="icon" class="text-[14px]"><component :is="icon" /></el-icon>
+    <svg v-else width="14" height="14" viewBox="0 0 14 14" fill="none" class="shrink-0 transition-transform duration-200 group-hover:rotate-90">
+      <path d="M7 1v12M1 7h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span v-if="label">{{ label }}</span>
   </button>
 </template>
-
 <script lang="ts" setup>
 import { type Component } from 'vue';
-
-defineProps<{
-  label?: string;
-  icon?: Component;
-}>();
+defineProps<{ label?: string; icon?: Component }>();
 </script>
-
-<style scoped>
-.bg-size-200 {
-  background-size: 200%;
-}
-
-.bg-pos-0 {
-  background-position: 0%;
-}
-
-.hover\:bg-pos-100:hover {
-  background-position: 100%;
-}
-</style>

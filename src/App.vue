@@ -1,17 +1,20 @@
 <template>
-  <Navbar />
-  <div class="grid grid-cols-12">
-    <aside class="hidden lg:block lg:col-span-2" v-if="loggedIn">
-      <Sidebar />
-    </aside>
-    <main
-      class="col-span-12"
-      :class="loggedIn ? 'lg:col-span-10' : 'lg:col-span-12'"
-    >
-      <div class="content p-8">
-        <RouterView :key="route.path" />
-      </div>
-    </main>
+  <div class="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
+    <Navbar />
+    <div class="flex flex-1 overflow-hidden" style="height: calc(100vh - 56px)">
+      <aside v-if="loggedIn" class="hidden lg:flex w-[220px] flex-shrink-0 h-full overflow-y-auto">
+        <Sidebar />
+      </aside>
+      <main class="flex-1 overflow-y-auto min-w-0">
+        <div class="p-6 lg:p-8 max-w-screen-xl">
+          <RouterView :key="route.path" v-slot="{ Component }">
+            <Transition name="page" mode="out-in">
+              <component :is="Component" />
+            </Transition>
+          </RouterView>
+        </div>
+      </main>
+    </div>
   </div>
 </template>
 
@@ -23,21 +26,7 @@ import Sidebar from "./components/navigation/Sidebar.vue";
 import { getLoggedIn } from "./helpers/auth";
 import { get, url } from "@/helpers/http";
 
-const loggedIn = getLoggedIn()
-
-const route = useRoute()
-
-onMounted(() => {
-  if (loggedIn) {
-    get(url("me")).then(data => console.log(data))
-  }
-});
+const loggedIn = getLoggedIn();
+const route = useRoute();
+onMounted(() => { if (loggedIn) get(url("me")).then(data => console.log(data)); });
 </script>
-
-<style scoped>
-aside,
-.content {
-  height: calc(100vh - 3rem);
-  overflow-y: auto;
-}
-</style>

@@ -1,26 +1,13 @@
 <template>
-  <div
-    class="group relative h-full overflow-hidden rounded-2xl bg-white text-gray-900 shadow-xl dark:bg-gray-900 dark:text-white transition-all duration-500 transform hover:-translate-y-1"
-  >
-    <!-- Animated overlay -->
-    <div
-    v-if="showHoverOverlay"
-      class="absolute inset-0 bg-gradient-to-br from-indigo-400 via-purple-400 to-pink-400 dark:from-indigo-500 dark:via-purple-500 dark:to-pink-500 transition-[clip-path] duration-500 ease-out [clip-path:circle(0%_at_100%_0%)] group-hover:[clip-path:circle(150%_at_100%_0%)]"
-    ></div>
-
-    <!-- Content -->
-    <div class="relative p-6 space-y-3">
-      <h3 class="text-xl font-semibold"><slot name="title"></slot></h3>
-      <div><slot></slot></div>
+  <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-sm overflow-hidden transition-all duration-200"
+    :class="interactive ? 'hover:shadow-md hover:-translate-y-0.5 cursor-pointer' : ''">
+    <div v-if="$slots.title" class="px-5 py-3.5 border-b border-gray-100 dark:border-gray-800 font-['Syne'] font-bold text-[14px] text-gray-900 dark:text-white">
+      <slot name="title" />
     </div>
+    <div class="p-5"><slot /></div>
   </div>
 </template>
-
 <script lang="ts" setup>
-defineOptions({
-  name: "Card",
-});
-defineProps<{
-  showHoverOverlay?: boolean;
-}>();
+defineOptions({ name: 'Card' });
+defineProps<{ interactive?: boolean; showHoverOverlay?: boolean }>();
 </script>

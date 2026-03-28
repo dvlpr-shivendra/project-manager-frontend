@@ -1,12 +1,9 @@
 <template>
-  <div class="min-h-screen flex bg-white dark:bg-gray-950">
+  <div class="min-h-screen flex bg-white dark:bg-gray-950 -m-6 lg:-m-8">
     <div class="hidden lg:flex flex-col justify-between w-[45%] bg-gray-950 dark:bg-gray-900 p-10 relative overflow-hidden">
       <div class="absolute top-0 left-0 w-64 h-64 bg-indigo-600/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
       <div class="absolute bottom-0 right-0 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
-      <div class="relative z-10 flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" class="text-white"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="currentColor"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-        <span class="font-['Syne'] font-bold text-lg text-white">{{ appTitle }}</span>
-      </div>
+      <div class="relative z-10 flex items-center gap-3"></div>
       <div class="relative z-10">
         <h1 class="font-['Syne'] font-extrabold text-4xl text-white leading-tight mb-3">Start managing<br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">smarter today.</span></h1>
         <p class="text-gray-400 text-[15px] leading-relaxed mb-6 max-w-xs">Join your team on {{ appTitle }} and take control of your projects from day one.</p>

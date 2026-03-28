@@ -6,7 +6,7 @@
         <Sidebar />
       </aside>
       <main class="flex-1 overflow-y-auto min-w-0">
-        <div class="p-6 lg:p-8 max-w-screen-xl">
+        <div class="p-6 lg:p-8">
           <RouterView :key="route.path" v-slot="{ Component }">
             <Transition name="page" mode="out-in">
               <component :is="Component" />

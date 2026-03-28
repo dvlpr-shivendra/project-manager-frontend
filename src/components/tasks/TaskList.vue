@@ -43,7 +43,7 @@
       </div>
     </div>
     <Transition name="task-panel">
-      <div v-if="activeTask" class="fixed top-0 right-0 bottom-0 w-full md:w-[520px] z-10 shadow-2xl border-l border-gray-200 dark:border-gray-800 rounded-r-xl overflow-hidden">
+      <div v-if="activeTask" class="fixed top-14 right-0 bottom-0 w-full md:w-[520px] z-10 shadow-2xl border-l border-gray-200 dark:border-gray-800 rounded-r-xl overflow-hidden">
         <task :task="activeTask" @close="closeTask" />
       </div>
     </Transition>

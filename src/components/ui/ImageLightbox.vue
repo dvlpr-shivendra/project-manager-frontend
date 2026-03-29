@@ -8,13 +8,15 @@
     :z-index="9010"
     @close="handleClose"
   >
-    <div class="lightbox-container relative">
+    <div class="relative bg-black lightbox-container">
       <!-- Toolbar -->
-      <div class="absolute top-0 left-0 right-0 z-10 flex items-center justify-between p-4 bg-black bg-opacity-50">
+      <div
+        class="absolute left-0 right-0 top-0 z-10 flex items-center justify-between bg-black bg-opacity-50 p-4"
+      >
         <div class="flex items-center gap-2">
           <el-tooltip content="Zoom Out" placement="bottom">
             <button
-              class="p-2 bg-white rounded hover:bg-gray-200 transition-colors"
+              class="rounded bg-white p-2 transition-colors hover:bg-gray-200"
               :disabled="scale <= 0.5"
               type="button"
               @click="zoomOut"
@@ -24,12 +26,14 @@
               </el-icon>
             </button>
           </el-tooltip>
-          
-          <span class="text-white font-medium px-3">{{ Math.round(scale * 100) }}%</span>
-          
+
+          <span class="px-3 font-medium text-white"
+            >{{ Math.round(scale * 100) }}%</span
+          >
+
           <el-tooltip content="Zoom In" placement="bottom">
             <button
-              class="p-2 bg-white rounded hover:bg-gray-200 transition-colors"
+              class="rounded bg-white p-2 transition-colors hover:bg-gray-200"
               :disabled="scale >= 3"
               type="button"
               @click="zoomIn"
@@ -39,10 +43,10 @@
               </el-icon>
             </button>
           </el-tooltip>
-          
+
           <el-tooltip content="Reset Zoom" placement="bottom">
             <button
-              class="p-2 bg-white rounded hover:bg-gray-200 transition-colors"
+              class="rounded bg-white p-2 transition-colors hover:bg-gray-200"
               type="button"
               @click="resetZoom"
             >
@@ -52,10 +56,10 @@
             </button>
           </el-tooltip>
         </div>
-        
+
         <el-tooltip content="Close" placement="bottom">
           <button
-            class="p-2 bg-white rounded hover:bg-gray-200 transition-colors"
+            class="rounded bg-white p-2 transition-colors hover:bg-gray-200"
             type="button"
             @click="handleClose"
           >
@@ -65,15 +69,15 @@
           </button>
         </el-tooltip>
       </div>
-      
+
       <!-- Image Container -->
-      <div 
-        class="image-wrapper flex items-center justify-center min-h-[80vh] max-h-[80vh] overflow-auto p-4"
-        @wheel="handleWheel"
+      <div
+        class="flex max-h-[80vh] min-h-[80vh] cursor-grab items-center justify-center overflow-auto p-4 active:cursor-grabbing"
         ref="imageContainer"
+        @wheel="handleWheel"
       >
-        <img 
-          :src="imageSrc" 
+        <img
+          :src="imageSrc"
           :style="imageStyle"
           class="max-w-none cursor-move transition-transform duration-200"
           alt="Preview"
@@ -142,24 +146,24 @@ const handleWheel = (e: WheelEvent) => {
 
 const startDrag = (e: MouseEvent) => {
   if (scale.value <= 1) return;
-  
+
   isDragging.value = true;
   dragStartX.value = e.clientX - translateX.value;
   dragStartY.value = e.clientY - translateY.value;
-  
+
   const onMouseMove = (moveEvent: MouseEvent) => {
     if (isDragging.value) {
       translateX.value = moveEvent.clientX - dragStartX.value;
       translateY.value = moveEvent.clientY - dragStartY.value;
     }
   };
-  
+
   const onMouseUp = () => {
     isDragging.value = false;
     document.removeEventListener("mousemove", onMouseMove);
     document.removeEventListener("mouseup", onMouseUp);
   };
-  
+
   document.addEventListener("mousemove", onMouseMove);
   document.addEventListener("mouseup", onMouseUp);
 };
@@ -170,28 +174,20 @@ const handleClose = () => {
 };
 
 // Reset zoom when image changes
-watch(() => props.imageSrc, () => {
-  resetZoom();
-});
-
-// Reset zoom when dialog opens
-watch(() => props.modelValue, (newValue) => {
-  if (newValue) {
+watch(
+  () => props.imageSrc,
+  () => {
     resetZoom();
   }
-});
+);
+
+// Reset zoom when dialog opens
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (newValue) {
+      resetZoom();
+    }
+  }
+);
 </script>
-
-<style scoped>
-.lightbox-container {
-  background: #000;
-}
-
-.image-wrapper {
-  cursor: grab;
-}
-
-.image-wrapper:active {
-  cursor: grabbing;
-}
-</style>

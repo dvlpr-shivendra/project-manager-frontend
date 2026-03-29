@@ -42,8 +42,18 @@
         <div class="text-center"><p class="font-['Syne'] font-bold text-[15px] text-gray-600 dark:text-gray-400 mb-1">No tasks yet</p><p class="text-[13px]">Click "Add Task" to create your first one</p></div>
       </div>
     </div>
-    <Transition name="task-panel">
-      <div v-if="activeTask" class="fixed top-14 right-0 bottom-0 w-full md:w-[520px] z-10 shadow-2xl border-l border-gray-200 dark:border-gray-800 rounded-r-xl overflow-hidden">
+    <Transition
+      enter-active-class="transition duration-[220ms] ease-out"
+      enter-from-class="translate-x-5 opacity-0"
+      enter-to-class="translate-x-0 opacity-100"
+      leave-active-class="transition duration-[160ms] ease-in"
+      leave-from-class="translate-x-0 opacity-100"
+      leave-to-class="translate-x-5 opacity-0"
+    >
+      <div
+        v-if="activeTask"
+        class="fixed bottom-0 right-0 top-14 z-10 w-full overflow-hidden border-l border-gray-200 shadow-2xl rounded-r-xl dark:border-gray-800 md:w-[520px]"
+      >
         <task :task="activeTask" @close="closeTask" />
       </div>
     </Transition>
@@ -88,8 +98,4 @@ provide('updateTask', updateTask);
 .el-table :deep(.el-select__wrapper:hover) { box-shadow: 0 0 0 1px #c0c4cc inset !important; }
 .el-table :deep(.el-select__suffix) { opacity: 0; }
 .el-table :deep(.el-select__wrapper:hover .el-select__suffix) { opacity: 1; }
-.task-panel-enter-active { animation: panelIn 220ms cubic-bezier(0.16,1,0.3,1); }
-.task-panel-leave-active { animation: panelOut 160ms ease-in; }
-@keyframes panelIn  { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
-@keyframes panelOut { from{opacity:1;transform:translateX(0)} to{opacity:0;transform:translateX(20px)} }
 </style>

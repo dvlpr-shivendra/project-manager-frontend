@@ -15,6 +15,7 @@
         </div>
       </main>
     </div>
+    <Chat />
   </div>
 </template>
 
@@ -23,6 +24,7 @@ import { onMounted } from "vue";
 import { RouterView, useRoute } from "vue-router";
 import Navbar from "./components/navigation/Navbar.vue";
 import Sidebar from "./components/navigation/Sidebar.vue";
+import Chat from "./components/Chat.vue";
 import { getLoggedIn } from "./helpers/auth";
 import { get, url } from "@/helpers/http";
 

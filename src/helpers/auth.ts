@@ -18,3 +18,8 @@ export function getUser(): User|null {
 export function getLoggedIn() {
   return localStorage.token && localStorage.user
 }
+
+export function logout() {
+  localStorage.clear();
+  location.replace("/login");
+}

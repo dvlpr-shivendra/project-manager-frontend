@@ -152,7 +152,7 @@
 <script lang="ts" setup>
 import { ref, computed } from "vue";
 import { ArrowDown } from "@element-plus/icons-vue";
-import { getLoggedIn } from "@/helpers/auth";
+import { getLoggedIn, logout } from "@/helpers/auth";
 import SearchDrawer from "@/components/ui/SearchDrawer.vue";
 import DarkModeToggle from "@/components/ui/DarkModeToggle.vue";
 import Sidebar from "@/components/navigation/Sidebar.vue";
@@ -171,10 +171,7 @@ const initials = computed(
       .join("")
       .toUpperCase() ?? "?"
 );
-function logout() {
-  localStorage.clear();
-  location.replace("/login");
-}
+
 function companyName() {
   return import.meta.env.VITE_APP_TITLE;
 }

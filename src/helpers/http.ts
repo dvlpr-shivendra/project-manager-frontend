@@ -1,4 +1,4 @@
-import { getToken } from "./auth";
+import { getToken, logout } from "./auth";
 
 async function request(
   url: string,
@@ -10,6 +10,9 @@ async function request(
   if (res.status === 204) return;
 
   if (!res.ok) {
+    if (res.status === 401) {
+      logout();
+    }
     const text = await res.text();
     throw text ? JSON.parse(text) : res.statusText;
   }

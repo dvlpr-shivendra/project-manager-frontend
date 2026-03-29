@@ -63,7 +63,7 @@
           <span
             class="hidden text-[13px] font-medium text-gray-700 sm:block dark:text-gray-300"
           >
-            {{ user.name }}
+            {{ user?.name }}
           </span>
           <el-icon class="text-xs text-gray-400"><arrow-down /></el-icon>
         </button>
@@ -75,7 +75,7 @@
               <p
                 class="font-['Syne'] text-[13px] font-semibold text-gray-900 dark:text-white"
               >
-                {{ user.name }}
+                {{ user?.name }}
               </p>
             </div>
             <el-dropdown-item @click="logout" style="color: #ef4444"
@@ -150,15 +150,17 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, type Ref } from "vue";
+import { ref, computed } from "vue";
 import { ArrowDown } from "@element-plus/icons-vue";
-import { getUser, getLoggedIn } from "@/helpers/auth";
+import { getLoggedIn } from "@/helpers/auth";
 import SearchDrawer from "@/components/ui/SearchDrawer.vue";
 import DarkModeToggle from "@/components/ui/DarkModeToggle.vue";
 import Sidebar from "@/components/navigation/Sidebar.vue";
+import { useMeStore } from "@/stores/me";
 
-const user: Ref<User> = ref(getUser() as User);
-const loggedIn: Ref<boolean> = ref(getLoggedIn());
+const meStore = useMeStore();
+const user = computed(() => meStore.user);
+const loggedIn = ref(getLoggedIn());
 const mobileOpen = ref(false);
 const initials = computed(
   () =>

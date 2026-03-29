@@ -31,11 +31,21 @@ import Navbar from "./components/navigation/Navbar.vue";
 import Sidebar from "./components/navigation/Sidebar.vue";
 import Chat from "./components/agent/Chat.vue";
 import { getLoggedIn } from "./helpers/auth";
-import { get, url } from "@/helpers/http";
+import { fetchMe } from "./services/meService";
+import { useMeStore } from "./stores/me";
 
 const loggedIn = getLoggedIn();
 const route = useRoute();
-onMounted(() => {
-  if (loggedIn) get(url("me")).then((data) => console.log(data));
+const meStore = useMeStore();
+
+onMounted(async () => {
+  if (loggedIn) {
+    try {
+      const data = await fetchMe();
+      meStore.setUser(data);
+    } catch (e) {
+      console.error("Failed to fetch user data:", e);
+    }
+  }
 });
 </script>

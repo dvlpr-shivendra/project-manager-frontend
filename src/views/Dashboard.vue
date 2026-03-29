@@ -84,9 +84,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, onMounted, type Ref } from "vue";
-import { getUser } from "@/helpers/auth";
-import { get, url } from "@/helpers/http";
+import { computed } from "vue";
+import { useMeStore } from "@/stores/me";
 import {
   Folder,
   List,
@@ -96,7 +95,8 @@ import {
   Avatar,
 } from "@element-plus/icons-vue";
 
-const user: Ref<User | null> = ref(getUser());
+const meStore = useMeStore();
+const user = computed(() => meStore.user);
 
 const firstName = computed(() => user.value?.name?.split(" ")[0] || "there");
 
@@ -157,13 +157,4 @@ const quickLinks = [
     iconBg: "bg-gradient-to-br from-emerald-500 to-teal-500",
   },
 ];
-
-onMounted(async () => {
-  try {
-    const response = await get(url("me"));
-    user.value = response;
-  } catch (error) {
-    console.error("Failed to fetch user data:", error);
-  }
-});
 </script>

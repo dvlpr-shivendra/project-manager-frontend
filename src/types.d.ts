@@ -21,7 +21,13 @@ type User = {
   id: number,
   name: string,
   email: string,
-  roles: Role[]
+  roles: Role[],
+  stats?: {
+    projects_count: number,
+    open_tasks_count: number,
+    completed_tasks_count: number,
+    overdue_tasks_count: number,
+  }
 }
 
 type UserWithToken = {

@@ -56,49 +56,61 @@ export function useChatActions(state: ChatState) {
     messages.value[msgIndex].confirmation = null
     loading.value = true
 
+    const isTask = intent.resource_type === 'task'
+    const endpoint = isTask ? 'tasks' : 'projects'
+    const id = isTask ? intent.task_id : intent.project_id
+
     try {
       switch (intent.action) {
         case 'create': {
-          await post(url('tasks'), stripNulls(intent.data ?? {}))
-          pushMessage({ role: 'assistant', text: '✓ Task created successfully.', confirmation: null })
+          await post(url(endpoint), stripNulls(intent.data ?? {}))
+          pushMessage({ role: 'assistant', text: `✓ ${isTask ? 'Task' : 'Project'} created successfully.`, confirmation: null })
           break
         }
 
         case 'update': {
-          if (!intent.task_id) throw new Error('No task ID to update.')
-          await put(url(`tasks/${intent.task_id}`), stripNulls(intent.data ?? {}))
-          pushMessage({ role: 'assistant', text: '✓ Task updated successfully.', confirmation: null })
+          if (!id) throw new Error(`No ${isTask ? 'task' : 'project'} ID to update.`)
+          await put(url(`${endpoint}/${id}`), stripNulls(intent.data ?? {}))
+          pushMessage({ role: 'assistant', text: `✓ ${isTask ? 'Task' : 'Project'} updated successfully.`, confirmation: null })
           break
         }
 
         case 'delete': {
-          if (!intent.task_id) throw new Error('No task ID to delete.')
-          await destroy(url(`tasks/${intent.task_id}`))
-          pushMessage({ role: 'assistant', text: '✓ Task deleted.', confirmation: null })
+          if (!id) throw new Error(`No ${isTask ? 'task' : 'project'} ID to delete.`)
+          await destroy(url(`${endpoint}/${id}`))
+          pushMessage({ role: 'assistant', text: `✓ ${isTask ? 'Task' : 'Project'} deleted.`, confirmation: null })
           break
         }
 
         case 'list': {
           const params = new URLSearchParams()
           const f = intent.filters ?? {}
-          if (f.assignee_id)    params.set('assignee_id',    String(f.assignee_id))
-          if (f.project_id)     params.set('project_id',     String(f.project_id))
-          if (f.is_complete !== null && f.is_complete !== undefined) params.set('is_complete', f.is_complete ? '1' : '0')
-          if (f.deadline_before) params.set('deadline_before', f.deadline_before)
-
-          const result = await get(url(`tasks?${params.toString()}`)) as { data: any[] }
-          const tasks = result?.data ?? result ?? []
-
-          if (!tasks.length) {
-            pushMessage({ role: 'assistant', text: 'No tasks found matching your criteria.', confirmation: null })
+          
+          if (isTask) {
+            if (f.assignee_id) params.set('assignee_id', String(f.assignee_id))
+            if (f.project_id) params.set('project_id', String(f.project_id))
+            if (f.is_complete !== null && f.is_complete !== undefined) params.set('is_complete', f.is_complete ? '1' : '0')
+            if (f.deadline_before) params.set('deadline_before', f.deadline_before)
           } else {
-            const list = tasks
+            if (f.search) params.set('search', f.search)
+          }
+
+          const result = await get(url(`${endpoint}?${params.toString()}`)) as { data: any[] }
+          const items = result?.data ?? result ?? []
+
+          if (!items.length) {
+            pushMessage({ role: 'assistant', text: `No ${isTask ? 'tasks' : 'projects'} found matching your criteria.`, confirmation: null })
+          } else {
+            const list = items
               .slice(0, 10)
-              .map((t: any) => `• ${t.title}${t.deadline ? ` — due ${t.deadline}` : ''}`)
+              .map((item: any) => isTask 
+                ? `• ${item.title}${item.deadline ? ` — due ${item.deadline}` : ''}`
+                : `• ${item.name}`)
               .join('\n')
+            
             pushMessage({
               role: 'assistant',
-              text: `Found ${tasks.length} task(s):\n\n${list}${tasks.length > 10 ? `\n…and ${tasks.length - 10} more.` : ''}`,
+              text: `Found ${items.length} ${isTask ? 'task' : 'project'}(s):\n\n${list}${items.length > 10 ? `\n…and ${items.length - 10} more.` : ''}`,
               confirmation: null,
             })
           }

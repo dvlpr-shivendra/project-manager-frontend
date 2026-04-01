@@ -1,5 +1,6 @@
-export interface TaskData {
+export interface ResourceData {
   title?: string | null
+  name?: string | null
   description?: string | null
   assignee_id?: number | null
   project_id?: number | null
@@ -8,18 +9,21 @@ export interface TaskData {
   is_complete?: boolean | null
 }
 
-export interface TaskFilters {
+export interface ResourceFilters {
   assignee_id?: number | null
   project_id?: number | null
   is_complete?: boolean | null
   deadline_before?: string | null
+  search?: string | null
 }
 
 export interface ChatIntent {
   action: 'create' | 'update' | 'delete' | 'list' | 'clarify'
+  resource_type: 'task' | 'project'
   task_id?: number | null
-  data?: TaskData
-  filters?: TaskFilters
+  project_id?: number | null
+  data?: ResourceData
+  filters?: ResourceFilters
   confirmation_message: string
   question?: string | null
 }

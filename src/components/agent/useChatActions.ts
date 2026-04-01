@@ -1,8 +1,11 @@
 import { ElMessage } from 'element-plus'
-import { post, get, destroy, put, url } from '@/helpers/http'
+import { post, get, url } from '@/helpers/http'
 import type { ChatIntent, Message } from './types'
 import { stripNulls } from './utils'
 import type { Ref } from 'vue'
+
+import { useTasks } from '@/stores/tasks'
+import { useProjects } from '@/stores/projects'
 
 interface ChatState {
   input: Ref<string>
@@ -13,6 +16,8 @@ interface ChatState {
 
 export function useChatActions(state: ChatState) {
   const { input, loading, messages, pushMessage } = state
+  const tasksStore = useTasks()
+  const projectsStore = useProjects()
 
   async function sendMessage(text?: string) {
     const message = text ?? input.value.trim()
@@ -57,27 +62,35 @@ export function useChatActions(state: ChatState) {
     loading.value = true
 
     const isTask = intent.resource_type === 'task'
-    const endpoint = isTask ? 'tasks' : 'projects'
     const id = isTask ? intent.task_id : intent.project_id
+    const store = isTask ? tasksStore : projectsStore
 
     try {
       switch (intent.action) {
         case 'create': {
-          await post(url(endpoint), stripNulls(intent.data ?? {}))
+          if (isTask) {
+            await tasksStore.add(stripNulls(intent.data ?? {}) as any)
+          } else {
+            await projectsStore.add(stripNulls(intent.data ?? {}) as any)
+          }
           pushMessage({ role: 'assistant', text: `✓ ${isTask ? 'Task' : 'Project'} created successfully.`, confirmation: null })
           break
         }
 
         case 'update': {
           if (!id) throw new Error(`No ${isTask ? 'task' : 'project'} ID to update.`)
-          await put(url(`${endpoint}/${id}`), stripNulls(intent.data ?? {}))
+          if (isTask) {
+            await tasksStore.update({ id, ...stripNulls(intent.data ?? {}) } as any)
+          } else {
+            await projectsStore.update(id, stripNulls(intent.data ?? {}) as any)
+          }
           pushMessage({ role: 'assistant', text: `✓ ${isTask ? 'Task' : 'Project'} updated successfully.`, confirmation: null })
           break
         }
 
         case 'delete': {
           if (!id) throw new Error(`No ${isTask ? 'task' : 'project'} ID to delete.`)
-          await destroy(url(`${endpoint}/${id}`))
+          await store.remove(id)
           pushMessage({ role: 'assistant', text: `✓ ${isTask ? 'Task' : 'Project'} deleted.`, confirmation: null })
           break
         }
@@ -85,6 +98,7 @@ export function useChatActions(state: ChatState) {
         case 'list': {
           const params = new URLSearchParams()
           const f = intent.filters ?? {}
+          const endpoint = isTask ? 'tasks' : 'projects'
           
           if (isTask) {
             if (f.assignee_id) params.set('assignee_id', String(f.assignee_id))

@@ -7,6 +7,9 @@ export interface ResourceData {
   deadline?: string | null
   time_estimate?: number | null
   is_complete?: boolean | null
+  tags?: string[] | null
+  add_tags?: string[] | null
+  remove_tags?: string[] | null
 }
 
 export interface ResourceFilters {

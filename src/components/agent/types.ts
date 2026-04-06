@@ -29,6 +29,7 @@ export interface ChatIntent {
   filters?: ResourceFilters
   confirmation_message: string
   question?: string | null
+  conversation_id?: string | null
 }
 
 export interface Message {

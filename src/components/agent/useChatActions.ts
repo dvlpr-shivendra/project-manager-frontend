@@ -12,10 +12,11 @@ interface ChatState {
   loading: Ref<boolean>
   messages: Ref<Message[]>
   pushMessage: (msg: Message) => void
+  conversationId: Ref<string | null>
 }
 
 export function useChatActions(state: ChatState) {
-  const { input, loading, messages, pushMessage } = state
+  const { input, loading, messages, pushMessage, conversationId } = state
   const tasksStore = useTasks()
   const projectsStore = useProjects()
 
@@ -28,7 +29,15 @@ export function useChatActions(state: ChatState) {
     loading.value = true
 
     try {
-      const intent = await post(url('chat'), { message }) as ChatIntent
+      const intent = await post(url('chat'), { 
+        message, 
+        conversation_id: conversationId.value 
+      }) as ChatIntent
+
+      // Store the conversation ID for the next message
+      if (intent.conversation_id) {
+        conversationId.value = intent.conversation_id
+      }
 
       if (intent.action === 'clarify') {
         pushMessage({
@@ -116,10 +125,10 @@ export function useChatActions(state: ChatState) {
             pushMessage({ role: 'assistant', text: `No ${isTask ? 'tasks' : 'projects'} found matching your criteria.`, confirmation: null })
           } else {
             const list = items
-              .slice(0, 10)
+              .slice(0, 15)
               .map((item: any) => isTask 
-                ? `• ${item.title}${item.deadline ? ` — due ${item.deadline}` : ''}`
-                : `• ${item.name}`)
+                ? `• ${item.title} (ID ${item.id})${item.deadline ? ` — due ${item.deadline}` : ''}`
+                : `• ${item.name} (ID ${item.id})`)
               .join('\n')
             
             pushMessage({

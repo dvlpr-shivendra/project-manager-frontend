@@ -7,6 +7,7 @@ export function useChatState() {
   const loading = ref(false)
   const messages = ref<Message[]>([])
   const messagesEl = ref<HTMLElement | null>(null)
+  const conversationId = ref<string | null>(null)
 
   function scrollToBottom() {
     nextTick(() => {
@@ -26,12 +27,18 @@ export function useChatState() {
     pushMessage({ role: 'assistant', text: 'Action cancelled.', confirmation: null })
   }
 
+  const width = ref(380)
+  const height = ref(560)
+
   return {
     isOpen,
     input,
     loading,
     messages,
     messagesEl,
+    conversationId,
+    width,
+    height,
     scrollToBottom,
     pushMessage,
     cancelConfirmation

@@ -10,6 +10,8 @@
       :messages="messages"
       :loading="loading"
       @send-message="sendMessage($event)"
+      v-model:width="width"
+      v-model:height="height"
       @execute-intent="executeIntent"
       @cancel-confirmation="cancelConfirmation"
       @set-messages-el="messagesEl = $event"
@@ -26,7 +28,7 @@ import ChatPanel from "./ChatPanel.vue";
 // ─── State Management (Composable) ──────────────────────────────────────────
 
 const state = useChatState();
-const { isOpen, input, loading, messages, messagesEl, cancelConfirmation } =
+const { isOpen, input, loading, messages, messagesEl, width, height, cancelConfirmation } =
   state;
 
 // ─── Chat Actions (Composable) ──────────────────────────────────────────────

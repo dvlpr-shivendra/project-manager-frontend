@@ -43,10 +43,12 @@ export const useTasks = defineStore('tasks', {
       this.list = this.list.filter(task => !ids.includes(task.id));
     },
 
-     async update(task: Task) {
-      await put(url(`tasks/${task.id}`), task);
-      const i = this.list.findIndex(t => t.id === task.id);
-      if (i !== -1) this.list[i] = { ...task };
+    async update(partialTask: Partial<Task> & { id: number }) {
+      const updatedTask = await put(url(`tasks/${partialTask.id}`), partialTask);
+      const i = this.list.findIndex(t => t.id === partialTask.id);
+      if (i !== -1) {
+        this.list[i] = { ...this.list[i], ...updatedTask };
+      }
     },
   },
 })

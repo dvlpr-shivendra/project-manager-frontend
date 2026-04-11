@@ -1,5 +1,5 @@
 <template>
-  <nav class="flex flex-col w-full h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 py-3 px-2 transition-colors duration-300">
+  <nav class="flex flex-col w-full h-full bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 py-3 px-2 transition-colors duration-300 min-h-[calc(100vh-56px)]">
     <div class="lg:hidden flex items-center gap-2.5 px-2 pb-3 mb-1 border-b border-gray-100 dark:border-gray-800">
       <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" class="text-white">

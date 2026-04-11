@@ -12,7 +12,7 @@
 
     <div class="flex flex-col gap-0.5 flex-1">
       <router-link
-        v-for="item in menuItems" :key="item.index" :to="item.route" @click="emit('navigate')"
+        v-for="item in visibleMenuItems" :key="item.index" :to="item.route" @click="emit('navigate')"
         class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13.5px] font-medium no-underline transition-all duration-150 group"
         :class="isActive(item.route)
           ? 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/50'
@@ -34,13 +34,26 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router';
 import { Odometer, Folder, PriceTag, Avatar } from '@element-plus/icons-vue';
+import { useCan } from '@/composables/useCan';
+import { computed } from 'vue';
+
 const emit = defineEmits(['navigate']);
 const route = useRoute();
+const { hasRole } = useCan();
+
 const menuItems = [
   { index: '1', route: '/',         label: 'Dashboard', icon: Odometer },
   { index: '2', route: '/projects', label: 'Projects',  icon: Folder   },
   { index: '3', route: '/tags',     label: 'Tags',      icon: PriceTag },
-  { index: '4', route: '/users',    label: 'Users',     icon: Avatar   },
+  { index: '4', route: '/users',    label: 'Users',     icon: Avatar,   requiredRole: 'admin' },
 ];
+
+const visibleMenuItems = computed(() => {
+  return menuItems.filter(item => {
+    if (item.requiredRole && !hasRole(item.requiredRole)) return false;
+    return true;
+  });
+});
+
 const isActive = (r: string) => r === '/' ? route.path === '/' : route.path.startsWith(r);
 </script>

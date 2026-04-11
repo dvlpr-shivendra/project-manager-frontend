@@ -1,15 +1,15 @@
 <template>
   <div class="relative">
     <div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
-      <pimped-button label="Add Task" @click="addNewTask" />
-      <el-dropdown @command="handleMenuCommand">
+      <pimped-button v-if="can('create-task')" label="Add Task" @click="addNewTask" />
+      <el-dropdown v-if="can('create-task') || can('delete-task')" @command="handleMenuCommand">
         <button class="flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer"><MoreFilled style="width:14px;height:14px;" /></button>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="import"><span class="flex items-center gap-2"><Upload class="w-3.5 h-3.5" /> Import tasks</span></el-dropdown-item>
+            <el-dropdown-item v-if="can('create-task')" command="import"><span class="flex items-center gap-2"><Upload class="w-3.5 h-3.5" /> Import tasks</span></el-dropdown-item>
             <el-dropdown-item command="export"><span class="flex items-center gap-2"><Download class="w-3.5 h-3.5" /> Export all tasks</span></el-dropdown-item>
             <el-dropdown-item v-if="selectedTaskIds.length" command="exportSelectedTasks"><span class="flex items-center gap-2"><Download class="w-3.5 h-3.5" /> Export {{ selectedTaskIds.length }} {{ pluralize('task', selectedTaskIds.length) }}</span></el-dropdown-item>
-            <el-dropdown-item v-if="selectedTaskIds.length" command="deleteSelectedTasks"><span class="flex items-center gap-2 text-red-500"><Delete class="w-3.5 h-3.5" /> Delete {{ selectedTaskIds.length }} {{ pluralize('task', selectedTaskIds.length) }}</span></el-dropdown-item>
+            <el-dropdown-item v-if="selectedTaskIds.length && can('delete-task')" command="deleteSelectedTasks"><span class="flex items-center gap-2 text-red-500"><Delete class="w-3.5 h-3.5" /> Delete {{ selectedTaskIds.length }} {{ pluralize('task', selectedTaskIds.length) }}</span></el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -19,16 +19,27 @@
       <el-table v-else :data="tasks.list" style="width:100%" highlight-current-row :border="false" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="46" />
         <el-table-column prop="title" label="Title" min-width="360">
-          <template #default="scope: { row: Task }"><task-title-cell v-model="scope.row" @add="addNewTask" @open="openTask" /></template>
+          <template #default="scope: { row: Task }"><task-title-cell v-model="scope.row" :can-edit="can('update-task')" @add="addNewTask" @open="openTask" /></template>
         </el-table-column>
         <el-table-column prop="tags" label="Tags" width="300">
           <template #header><Filter routeKey="tag" placeholder="Filter by tag" @change="(k: string) => handleFilterChange('tag', k)" /></template>
-          <template #default="scope: { row: Task }"><TagForm v-if="allTags.length > 0" :task-id="scope.row.id" :tags="allTags" v-model="scope.row.tags" /></template>
+          <template #default="scope: { row: Task }">
+            <template v-if="can('update-task')">
+              <TagForm v-if="allTags.length > 0" :task-id="scope.row.id" :tags="allTags" v-model="scope.row.tags" />
+            </template>
+            <div v-else class="flex flex-wrap gap-1">
+              <el-tag v-for="tag in scope.row.tags" :key="tag.id" :color="tag.background_color" :style="{ color: tag.color }" effect="dark" size="small">{{ tag.name }}</el-tag>
+            </div>
+          </template>
         </el-table-column>
         <el-table-column prop="assignee.name" label="Assignee" min-width="180">
           <template #header><Filter routeKey="assignee" placeholder="Filter by assignee" @change="(k: string) => handleFilterChange('assignee', k)" /></template>
           <template #default="scope: { row: Task }">
-            <user-select class="w-full" :user="scope.row.assignee" @change="(user: User) => { scope.row.assignee = user; scope.row.assignee_id = user.id; updateTask(scope.row); }" />
+            <user-select v-if="can('update-task')" class="w-full" :user="scope.row.assignee" @change="(user: User) => { scope.row.assignee = user; scope.row.assignee_id = user.id; updateTask(scope.row); }" />
+            <div v-else class="flex items-center gap-2 px-3">
+              <el-avatar :size="24" :src="`https://ui-avatars.com/api/?name=${scope.row.assignee?.name || 'U'}&background=6366f1&color=fff`" />
+              <span class="text-[13px] text-gray-700 dark:text-gray-300">{{ scope.row.assignee?.name || 'Unassigned' }}</span>
+            </div>
           </template>
         </el-table-column>
         <template #append>
@@ -39,7 +50,10 @@
       </el-table>
       <div v-if="!tasks.loading && tasks.list.length === 0" class="flex flex-col items-center gap-3 py-16 text-gray-400 dark:text-gray-600">
         <svg width="36" height="36" viewBox="0 0 24 24" fill="none"><path d="M9 12l2 2 4-4m5 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="text-center"><p class="font-['Syne'] font-bold text-[15px] text-gray-600 dark:text-gray-400 mb-1">No tasks yet</p><p class="text-[13px]">Click "Add Task" to create your first one</p></div>
+        <div class="text-center">
+          <p class="font-['Syne'] font-bold text-[15px] text-gray-600 dark:text-gray-400 mb-1">No tasks yet</p>
+          <p v-if="can('create-task')" class="text-[13px]">Click "Add Task" to create your first one</p>
+        </div>
       </div>
     </div>
     <Transition
@@ -73,8 +87,12 @@ import { Download, Upload, MoreFilled, Delete } from '@element-plus/icons-vue';
 import { pluralize } from '@/helpers/string';
 import PimpedButton from '@/components/ui/PimpedButton.vue';
 import TagForm from '@/components/ui/TagForm.vue';
+import { useCan } from '@/composables/useCan';
+
 const props = defineProps<{ projectId: number }>();
 const router = useRouter(); const route = useRoute(); const tasks = useTasks(); const selectedTaskIds = ref<number[]>([]); const allTags = ref<Tag[]>([]);
+const { can } = useCan();
+
 onMounted(() => { fetchTasks(); fetchTags(); });
 function fetchTags() { get(url('tags')).then(tags => (allTags.value = tags)).catch(console.log); }
 const fetchTasks = () => { const query = new URLSearchParams(route.query as Record<string, string>).toString(); tasks.getAll(url(`tasks?project_id=${props.projectId}&${query}`)); };

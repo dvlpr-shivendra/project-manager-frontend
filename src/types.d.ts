@@ -22,6 +22,8 @@ type User = {
   name: string,
   email: string,
   roles: Role[],
+  permissions?: string[],
+  permissionNames?: string[],
   stats?: {
     projects_count: number,
     open_tasks_count: number,

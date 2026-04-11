@@ -8,6 +8,7 @@
           <back />
         </button>
         <button
+          v-if="can('update-task')"
           @click="markComplete"
           class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-semibold border transition-all duration-200 cursor-pointer"
           :class="
@@ -42,8 +43,26 @@
           </svg>
           {{ task.is_complete ? "Completed" : "Mark complete" }}
         </button>
+        <div v-else class="flex items-center gap-2 px-3 py-1.5 rounded-full text-[12px] font-semibold" :class="task.is_complete ? 'text-emerald-600' : 'text-gray-500'">
+           <svg
+            v-if="task.is_complete"
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M9 12l2 2 4-4m5 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          {{ task.is_complete ? "Completed" : "Incomplete" }}
+        </div>
       </div>
-      <div class="flex items-center gap-1">
+      <div v-if="can('delete-task')" class="flex items-center gap-1">
         <el-dropdown trigger="click" placement="bottom-end">
           <button
             class="flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
@@ -62,14 +81,17 @@
     </div>
     <div class="flex-1 overflow-y-auto px-5 py-5 flex flex-col gap-1">
       <input
+        v-if="can('update-task')"
         type="text"
         v-model="task.title"
         placeholder="Task title"
         class="w-full font-['Syne'] font-bold text-xl text-gray-900 dark:text-white bg-transparent border-none outline-none placeholder:text-gray-300 dark:placeholder:text-gray-700 mb-4 leading-snug"
       />
+      <h1 v-else class="w-full font-['Syne'] font-bold text-xl text-gray-900 dark:text-white mb-4 leading-snug">{{ task.title }}</h1>
       <el-form label-position="top" class="flex flex-col gap-1">
         <el-form-item label="Deadline"
           ><el-date-picker
+            :disabled="!can('update-task')"
             style="width: 100%"
             placeholder="Set a deadline"
             v-model="task.deadline"
@@ -77,24 +99,34 @@
             value-format="YYYY-MM-DD HH:mm:ss"
         /></el-form-item>
         <user-select
+          v-if="can('update-task')"
           label="Assignee"
           :user="task.assignee"
           @change="assignTo"
           class="w-full"
         />
+        <div v-else class="flex flex-col gap-2 mb-4">
+          <span class="text-[13px] text-gray-400 font-medium">Assignee</span>
+          <div class="flex items-center gap-2">
+            <el-avatar :size="24" :src="`https://ui-avatars.com/api/?name=${task.assignee?.name || 'U'}&background=6366f1&color=fff`" />
+            <span class="text-[13px] text-gray-700 dark:text-gray-300">{{ task.assignee?.name || 'Unassigned' }}</span>
+          </div>
+        </div>
         <el-form-item label="Description">
-          <Editor v-model="task.description" />
+          <Editor v-model="task.description" :read-only="!can('update-task')" />
         </el-form-item>
         <div class="flex flex-col gap-2 mt-1">
           <attachments
             :action="url(`tasks/${task.id}/attachments`)"
             :taskId="task.id"
             :attachments="task.attachments"
+            :disabled="!can('update-task')"
             @add="addAttachment"
             @remove="removeAttachment"
           />
           <followers
             :followers="task.followers"
+            :disabled="!can('update-task')"
             @add="addFollower"
             @remove="removeFollower"
           />
@@ -118,17 +150,22 @@ import { ElMessageBox } from "element-plus";
 import Followers from "@/components/ui/Followers.vue";
 import Attachments from "@/components/ui/Attachments.vue";
 import Comments from "@/components/ui/Comments.vue";
+import { useCan } from "@/composables/useCan";
+
 const props = defineProps<{ task: Task }>();
 const tasks = useTasks();
 const router = useRouter();
 const emit = defineEmits(["close"]);
 const updateTask = inject<(task: Task) => void>("updateTask")!;
+const { can } = useCan();
 
 let unwatch = () => {};
 
 onMounted(() => {
   unwatch();
-  unwatch = watch(props.task, debounce(updateTask, 750));
+  if (can('update-task')) {
+    unwatch = watch(props.task, debounce(updateTask, 750));
+  }
 });
 
 function assignTo(user: User) {

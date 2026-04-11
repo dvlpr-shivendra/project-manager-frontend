@@ -3,13 +3,13 @@
     <div class="group relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 h-full flex flex-col gap-3 shadow-sm hover:shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-0.5 hover:border-indigo-200 dark:hover:border-indigo-900 transition-all duration-200 cursor-pointer">
       <div class="flex items-start justify-between gap-2">
         <h3 class="font-['Syne'] font-bold text-[15px] text-gray-900 dark:text-white leading-snug flex-1">{{ project.name }}</h3>
-        <div @click.prevent>
+        <div v-if="can('update-project') || can('delete-project')" @click.prevent>
           <el-dropdown trigger="click" placement="bottom-end">
             <button class="flex items-center justify-center w-7 h-7 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shrink-0"><MoreFilled style="width:14px;height:14px;" /></button>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item @click.prevent="updateDialogVisible = true">Edit project</el-dropdown-item>
-                <el-dropdown-item @click.prevent="handleDelete" style="color:#ef4444">Delete project</el-dropdown-item>
+                <el-dropdown-item v-if="can('update-project')" @click.prevent="updateDialogVisible = true">Edit project</el-dropdown-item>
+                <el-dropdown-item v-if="can('delete-project')" @click.prevent="handleDelete" style="color:#ef4444">Delete project</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -31,8 +31,12 @@ import { ElMessageBox } from 'element-plus';
 import { useProjects } from '@/stores/projects';
 import { MoreFilled } from '@element-plus/icons-vue';
 import ProjectUpdateForm from './ProjectUpdateForm.vue';
+import { useCan } from '@/composables/useCan';
+
 const props = defineProps<{ project: Project }>();
 const projects = useProjects();
+const { can } = useCan();
+
 const description = computed(() => truncate(props.project.description, 130));
 const updateDialogVisible = ref(false);
 function handleDelete() { ElMessageBox.confirm('Delete this project? This cannot be undone.', 'Delete project', { confirmButtonText: 'Delete', cancelButtonText: 'Cancel', type: 'warning' }).then(() => projects.remove(props.project.id)).catch(() => {}); }

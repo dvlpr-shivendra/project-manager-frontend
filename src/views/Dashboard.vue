@@ -54,7 +54,7 @@
     </div>
     <div class="grid sm:grid-cols-3 gap-4">
       <router-link
-        v-for="link in quickLinks"
+        v-for="link in visibleQuickLinks"
         :key="link.label"
         :to="link.to"
         class="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 flex flex-col gap-3 no-underline hover:border-indigo-200 dark:hover:border-indigo-900 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
@@ -94,8 +94,10 @@ import {
   PriceTag,
   Avatar,
 } from "@element-plus/icons-vue";
+import { useCan } from "@/composables/useCan";
 
 const meStore = useMeStore();
+const { hasRole } = useCan();
 const user = computed(() => meStore.user);
 
 const firstName = computed(() => user.value?.name?.split(" ")[0] || "there");
@@ -155,6 +157,14 @@ const quickLinks = [
     to: "/users",
     icon: Avatar,
     iconBg: "bg-gradient-to-br from-emerald-500 to-teal-500",
+    requiredRole: "admin",
   },
 ];
+
+const visibleQuickLinks = computed(() => {
+  return quickLinks.filter((link) => {
+    if (link.requiredRole && !hasRole(link.requiredRole)) return false;
+    return true;
+  });
+});
 </script>

@@ -40,12 +40,9 @@ const meStore = useMeStore();
 
 onMounted(async () => {
   if (loggedIn) {
-    try {
-      const data = await fetchMe();
-      meStore.setUser(data);
-    } catch (e) {
-      console.error("Failed to fetch user data:", e);
-    }
+    await meStore.fetchData().catch((e) => {
+      console.error("Failed to load user data on app mount:", e);
+    });
   }
 });
 </script>

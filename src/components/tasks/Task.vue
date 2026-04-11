@@ -86,6 +86,8 @@
         v-model="task.title"
         placeholder="Task title"
         class="w-full font-['Syne'] font-bold text-xl text-gray-900 dark:text-white bg-transparent border-none outline-none placeholder:text-gray-300 dark:placeholder:text-gray-700 mb-4 leading-snug"
+        @blur="updateTask(task)"
+        @change="updateTask(task)"
       />
       <h1 v-else class="w-full font-['Syne'] font-bold text-xl text-gray-900 dark:text-white mb-4 leading-snug">{{ task.title }}</h1>
       <el-form label-position="top" class="flex flex-col gap-1">

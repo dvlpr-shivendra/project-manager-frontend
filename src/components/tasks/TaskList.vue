@@ -68,7 +68,7 @@
         v-if="activeTask"
         class="fixed bottom-0 right-0 top-14 z-10 w-full overflow-hidden border-l border-gray-200 shadow-2xl rounded-r-xl dark:border-gray-800 md:w-[520px]"
       >
-        <task :task="activeTask" @close="closeTask" />
+        <task :key="activeTask.id" :task="activeTask" @close="closeTask" />
       </div>
     </Transition>
   </div>

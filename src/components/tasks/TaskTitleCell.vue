@@ -10,7 +10,7 @@
     <input v-else :id="`taskTitleInput${task.id}`" v-model="task.title" type="text"
       class="flex-1 min-w-0 bg-transparent border-none outline-none text-[13px] text-gray-800 dark:text-gray-200 placeholder:text-gray-300 dark:placeholder:text-gray-600"
       :class="task.is_complete ? 'line-through text-gray-400 dark:text-gray-600' : ''"
-      placeholder="Task title" @keypress.enter="emit('add')" />
+      placeholder="Task title" @keypress.enter="emit('add')" @blur="updateTask(task)" @change="updateTask(task)" />
     <el-dropdown v-if="canEdit" class="opacity-0 group-hover/row:opacity-100 transition-opacity shrink-0">
       <button class="flex items-center justify-center w-6 h-6 rounded text-gray-400 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 transition-colors cursor-pointer"><el-icon :size="14"><MagicStick /></el-icon></button>
       <template #dropdown>

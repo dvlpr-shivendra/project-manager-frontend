@@ -9,6 +9,7 @@
     "test:unit": "vitest --environment jsdom --exclude e2e/**",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
     "typecheck": "vue-tsc --noEmit && vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-pattern .gitignore"
   },
@@ -36,6 +37,7 @@
     "@vue/test-utils": "^2.4.6",
     "@vue/tsconfig": "^0.7.0",
     "autoprefixer": "^10.4.21",
+    "dotenv": "^17.4.1",
     "eslint": "^9.24.0",
     "eslint-plugin-vue": "^10.0.0",
     "jsdom": "^26.1.0",

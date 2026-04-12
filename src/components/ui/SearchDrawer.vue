@@ -49,11 +49,12 @@
   </el-drawer>
 </template>
 <script lang="ts" setup>
-import { ref, type Ref } from 'vue';
+import { ref, type Ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { get, url } from '@/helpers/http';
 import { Search } from '@element-plus/icons-vue';
 import { debounce } from 'lodash';
+
 const router = useRouter();
 const drawer = ref(false);
 const searching = ref(false);
@@ -61,9 +62,25 @@ const query = ref('');
 type SearchResult = { projects: Project[]; tasks: Task[] };
 const result: Ref<SearchResult> = ref({ projects: [], tasks: [] });
 const searchInput = ref();
+
 function openSearch() { drawer.value = true; setTimeout(() => searchInput.value?.focus(), 300); }
 function debounceSearch() { result.value = { projects: [], tasks: [] }; if (query.value.length < 2) return; searching.value = true; debounce(search, 500)(); }
 function search() { get(url(`search/${query.value}`)).then(d => { result.value = d; }).finally(() => { searching.value = false; }); }
 function openTask(t: Task) { drawer.value = false; result.value = { projects: [], tasks: [] }; query.value = ''; router.push({ name: 'Project', params: { id: t.project_id }, query: { task: t.id } }); }
 function openProject(p: Project) { drawer.value = false; result.value = { projects: [], tasks: [] }; query.value = ''; router.push({ name: 'Project', params: { id: p.id } }); }
+
+const handleKeydown = (e: KeyboardEvent) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    openSearch();
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeydown);
+});
 </script>

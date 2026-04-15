@@ -12,38 +12,20 @@
         >
           <button
             type="button"
-            class="mr-2"
+            class="mr-2 cursor-pointer"
             @click="editor.chain().focus()[button.action]().run()"
             :class="{ 'is-active': editor.isActive(button.title) }"
           >
             <span v-html="button.icon"></span>
           </button>
         </el-tooltip>
-
-        <el-dropdown @command="handleCommand">
-          <button type="button" class="cursor-pointer" :disabled="isRephrasing">
-            <el-icon :size="24">
-              <MagicStick />
-            </el-icon>
-          </button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="rephrase">
-                <el-icon class="mr-2"><Refresh /></el-icon>
-                Rephrase
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
       </div>
 
       <div class="flex items-center gap-2">
-        
-
         <el-tooltip content="Fullscreen" placement="top">
           <button
             type="button"
-            class="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded"
+            class="mr-2 cursor-pointer"
             @click="toggleFullscreen"
           >
             <el-icon :size="20">
@@ -79,6 +61,20 @@
             </button>
           </el-tooltip>
         </div>
+        <div class="flex items-center gap-2">
+        <el-tooltip content="Fullscreen" placement="top">
+          <button
+            type="button"
+            class="mr-2 cursor-pointer"
+            @click="toggleFullscreen"
+          >
+            <el-icon :size="20">
+              <FullScreen v-if="!isFullscreen" />
+              <Close v-else />
+            </el-icon>
+          </button>
+        </el-tooltip>
+      </div>
       </div>
 
       <div class="editor-wrapper">
@@ -440,7 +436,7 @@ onBeforeUnmount(() => {
 
 .fullscreen-container {
   position: fixed;
-  top: 0;
+  top: 56px;
   left: 0;
   right: 0;
   bottom: 0;
@@ -457,6 +453,7 @@ onBeforeUnmount(() => {
 
 .fullscreen-container .ProseMirror {
   height: 100%;
+  min-height: calc(100vh - 170px);
   flex: 1;
 }
 
